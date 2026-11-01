@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>MRO Control Tower — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3f4f2; --surface:#ffffff; --surface2:#eef0ec; --ink:#131a1e; --muted:#5c686f; --faint:#8a959c;
+    --line:#dde1dc; --line2:#cbd2cc;
+    --navy:#12242e; --navy2:#1b3644;
+    --ok:#177245; --ok-bg:#e2f2e7;
+    --po:#1d5fd1; --po-bg:#e2ebfb;
+    --transfer:#0e7a8a; --transfer-bg:#dcf2f4;
+    --alt:#6d4fc2; --alt-bg:#ebe6fb;
+    --short:#c62828; --short-bg:#fde7e5;
+    --insuff:#b45309; --insuff-bg:#fef0d3;
+    --amber:#e8a317;
+    --shadow:0 1px 2px rgba(18,36,46,.06),0 8px 24px rgba(18,36,46,.06);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0d1417; --surface:#162026; --surface2:#1c2a31; --ink:#e9eef0; --muted:#a3b0b7; --faint:#74848c;
+      --line:#2a3a41; --line2:#35474f;
+      --navy:#0a1a22; --navy2:#122a36;
+      --ok:#4ade80; --ok-bg:#143526;
+      --po:#7aaef5; --po-bg:#1a2f52;
+      --transfer:#4cc3d4; --transfer-bg:#123a41;
+      --alt:#b39df0; --alt-bg:#2d2350;
+      --short:#f87171; --short-bg:#4a1f1f;
+      --insuff:#fbbf24; --insuff-bg:#453311;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Barlow",system-ui,-apple-system,Segoe UI,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--po)}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 20px 56px}
+
+  /* ---------- Header ---------- */
+  header{background:var(--navy);color:#eef4f6;margin:0 calc(50% - 50vw);padding:28px max(20px,calc(50vw - 570px)) 26px;position:relative;overflow:hidden}
+  header::after{content:"";position:absolute;inset:auto -40px -70px auto;width:340px;height:180px;background:repeating-linear-gradient(90deg,transparent 0 34px,rgba(255,255,255,.045) 34px 35px);pointer-events:none}
+  .header-top{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between;position:relative;z-index:1}
+  .live-dot{display:inline-flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#b8ccd4}
+  .live-dot i{width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block;box-shadow:0 0 0 4px rgba(232,163,23,.18)}
+  .header-meta{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;color:#8fa8b3;text-transform:uppercase}
+  h1{font-family:"Barlow Condensed","Barlow",sans-serif;font-size:clamp(40px,6.5vw,64px);line-height:.95;letter-spacing:.01em;text-transform:uppercase;font-weight:700;margin:16px 0 10px;position:relative;z-index:1}
+  h1 span{color:var(--amber)}
+  .subtitle{max-width:720px;color:#c3d2d9;font-size:17px;line-height:1.55;margin:0;position:relative;z-index:1}
+  .subtitle strong{color:#fff;font-weight:600}
+  .meta-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;position:relative;z-index:1}
+  .meta-pills span{border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:13px;color:#dbe7eb;background:rgba(255,255,255,.06)}
+  .meta-pills b{color:#fff;font-weight:700}
+  .meta-pills code{font-family:"JetBrains Mono",monospace;font-size:12px;color:#ffd970}
+
+  /* ---------- KPI cards ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:-0;padding-top:22px}
+  .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 20px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--navy2)}
+  .kpi.green::before{background:var(--ok)} .kpi.amber::before{background:var(--amber)} .kpi.red::before{background:var(--short)}
+  .kpi-label{font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:700;line-height:1.35}
+  .kpi-value{font-size:52px;line-height:1;font-weight:800;letter-spacing:-.02em;margin:10px 0 6px;font-variant-numeric:tabular-nums}
+  .kpi-value small{font-size:24px;color:var(--muted);font-weight:600}
+  .kpi-sub{font-size:14px;color:var(--muted);line-height:1.45}
+  .kpi-sub strong{color:var(--ink)}
+
+  /* ---------- Sections ---------- */
+  section{margin-top:34px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .sec-num{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:700;color:var(--amber);background:var(--navy);border-radius:6px;padding:3px 8px;letter-spacing:.06em}
+  @media (prefers-color-scheme: dark){.sec-num{background:var(--amber);color:#1a1405}}
+  h2{font-family:"Barlow Condensed","Barlow",sans-serif;font-size:30px;line-height:1.05;text-transform:uppercase;letter-spacing:.02em;margin:0;font-weight:700}
+  .sec-lede{color:var(--muted);font-size:15.5px;max-width:780px;margin:4px 0 16px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid-donut{display:grid;grid-template-columns:300px 1fr;gap:8px;align-items:center}
+
+  /* Eval cards */
+  .eval-card{padding:20px}
+  .eval-card h3{margin:0 0 2px;font-size:17px;font-weight:700}
+  .eval-card .when{font-size:13px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+  .eval-score{display:flex;align-items:baseline;gap:10px;margin:14px 0 4px}
+  .eval-score .big{font-size:46px;font-weight:800;line-height:1}
+  .pass-badge{background:var(--ok-bg);color:var(--ok);font-weight:800;font-size:12px;letter-spacing:.08em;padding:4px 10px;border-radius:999px;text-transform:uppercase}
+  .token-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  .token-row div b{display:block;font-size:19px;font-variant-numeric:tabular-nums}
+  .token-row div span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+
+  /* Table */
+  .table-wrap{overflow:hidden;border-radius:var(--radius)}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  thead th{text-align:left;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:13px 16px;background:var(--surface2);border-bottom:1px solid var(--line)}
+  tbody td{padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--surface2)}
+  .mono{font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:700}
+  .shortage{text-align:center;font-variant-numeric:tabular-nums;font-weight:700}
+  .pass-cell{font-weight:800;color:var(--ok);font-size:13px;letter-spacing:.05em;white-space:nowrap}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.02em;padding:4px 9px;border-radius:999px;white-space:nowrap}
+  .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+  .pill.ok{background:var(--ok-bg);color:var(--ok)}
+  .pill.po{background:var(--po-bg);color:var(--po)}
+  .pill.transfer{background:var(--transfer-bg);color:var(--transfer)}
+  .pill.alt{background:var(--alt-bg);color:var(--alt)}
+  .pill.short{background:var(--short-bg);color:var(--short)}
+  .pill.insuff{background:var(--insuff-bg);color:var(--insuff)}
+  .pill.plain{background:var(--surface2);color:var(--muted)}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+  .filters button{appearance:none;border:1px solid var(--line2);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+  .filters button[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+  @media (prefers-color-scheme: dark){.filters button[aria-pressed="true"]{background:var(--amber);color:#1a1405;border-color:var(--amber)}}
+  .filters button:focus-visible, a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+
+  /* Donut + bars */
+  .donut-box{padding:22px 10px 22px 22px;display:flex;flex-direction:column;align-items:center;gap:14px}
+  .donut{width:210px;height:210px;border-radius:50%;background:conic-gradient(var(--ok) 0 57.58%, var(--po) 57.58% 69.70%, var(--transfer) 69.70% 81.82%, var(--alt) 81.82% 84.85%, var(--short) 84.85% 93.94%, var(--insuff) 93.94% 100%);display:grid;place-items:center;flex:none}
+  .donut-hole{width:132px;height:132px;border-radius:50%;background:var(--surface);display:grid;place-items:center;text-align:center;padding:10px}
+  .donut-hole b{font-size:34px;line-height:1;display:block}
+  .donut-hole span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+  .exception-callout{background:var(--short-bg);border:1px solid var(--line);border-radius:10px;padding:10px 16px;text-align:center;font-size:14.5px;width:100%}
+  .exception-callout strong{color:var(--short);font-size:18px}
+  .bars{padding:22px 22px 22px 8px;display:flex;flex-direction:column;gap:13px}
+  .bar-row{display:grid;grid-template-columns:172px 1fr 64px;gap:12px;align-items:center}
+  .bar-row .blabel{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:7px;min-width:0}
+  .swatch{width:10px;height:10px;border-radius:3px;flex:none}
+  .track{height:16px;background:var(--surface2);border-radius:5px;overflow:hidden}
+  .fill{height:100%;border-radius:5px;width:0;transition:width .9s cubic-bezier(.2,.7,.2,1)}
+  .bar-row .bval{font-variant-numeric:tabular-nums;font-weight:700;text-align:right;font-size:15px}
+  .bar-row .bval small{color:var(--muted);font-weight:500;font-size:12.5px;display:block;line-height:1.1}
+
+  /* Runs / tokens */
+  .stat-list{padding:20px;display:flex;flex-direction:column;gap:16px}
+  .stat-line{display:flex;justify-content:space-between;gap:16px;align-items:baseline;border-bottom:1px dashed var(--line);padding-bottom:12px}
+  .stat-line:last-child{border-bottom:none;padding-bottom:0}
+  .stat-line .k{color:var(--muted);font-size:14.5px}
+  .stat-line .v{font-weight:800;font-size:21px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .stat-line .v small{font-size:13px;color:var(--muted);font-weight:600}
+  .token-split{display:flex;height:22px;border-radius:6px;overflow:hidden;margin-top:4px}
+  .token-split .in{background:var(--po)} .token-split .out{background:var(--amber)}
+  .token-legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13.5px;color:var(--muted);margin-top:8px}
+  .token-legend b{color:var(--ink)}
+
+  /* Grounding */
+  .ground-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .ground-card{padding:20px;text-align:left}
+  .ground-card .big{font-size:44px;font-weight:800;line-height:1}
+  .ground-card .big small{font-size:22px;color:var(--muted)}
+  .ground-card p{margin:8px 0 0;color:var(--muted);font-size:14.5px;line-height:1.5}
+  .ground-card p strong{color:var(--ink)}
+  .meter{height:10px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-top:14px}
+  .meter i{display:block;height:100%;background:var(--ok);border-radius:99px}
+
+  /* Human gate */
+  .gate{padding:22px}
+  .gate-counts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;text-align:center}
+  .gate-counts div{background:var(--surface2);border-radius:10px;padding:16px 8px}
+  .gate-counts b{display:block;font-size:36px;line-height:1;font-variant-numeric:tabular-nums}
+  .gate-counts span{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .dots{display:flex;gap:8px;justify-content:center;margin:20px 0 6px;flex-wrap:wrap}
+  .dots i{width:22px;height:22px;border-radius:50%;border:2.5px dashed var(--line2);background:transparent}
+  .gate-note{text-align:center;color:var(--muted);font-size:15px;max-width:640px;margin:10px auto 0}
+  .gate-note strong{color:var(--ink)}
+
+  /* Fixes */
+  .fix-card{padding:22px}
+  .fix-card h3{margin:0 0 8px;font-size:18px;display:flex;gap:10px;align-items:center}
+  .fix-num{width:28px;height:28px;border-radius:50%;background:var(--ok);color:#fff;display:inline-grid;place-items:center;font-size:15px;font-weight:800;flex:none}
+  .fix-card p{margin:0;color:var(--muted);font-size:15.5px;line-height:1.6}
+  .fix-card p strong{color:var(--ink)}
+  .before-after{display:flex;gap:10px;align-items:stretch;margin-top:14px;flex-wrap:wrap}
+  .ba{flex:1;min-width:180px;border-radius:10px;padding:12px 14px;font-size:14px}
+  .ba small{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:800;margin-bottom:4px}
+  .ba.before{background:var(--short-bg)} .ba.before small{color:var(--short)}
+  .ba.after{background:var(--ok-bg)} .ba.after small{color:var(--ok)}
+  .ba b{font-size:16px}
+  .arrow{align-self:center;font-size:20px;color:var(--faint);font-weight:700}
+
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:13.5px;line-height:1.6;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  footer .mono{font-size:12px}
+
+  @media (max-width:900px){
+    .kpis{grid-template-columns:1fr 1fr}
+    .grid-donut{grid-template-columns:1fr}
+    .donut-box{padding:22px}
+    .bars{padding:6px 22px 22px}
+    .ground-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:640px){
+    .grid-2{grid-template-columns:1fr}
+    .gate-counts{grid-template-columns:1fr 1fr}
+    /* Table -> stacked rows */
+    table,thead,tbody,tr,td{display:block;width:100%}
+    thead{position:absolute;left:-9999px}
+    tbody tr{padding:12px 4px;border-bottom:1px solid var(--line)}
+    tbody tr:last-child{border-bottom:none}
+    tbody td{border:none;padding:3px 16px}
+    tbody td:first-child{padding-top:2px}
+    .bar-row{grid-template-columns:118px 1fr 52px;gap:8px}
+    .bar-row .blabel{font-size:12px}
+    .kpi-value{font-size:44px}
+    .token-row{grid-template-columns:1fr 1fr 1fr;gap:6px}
+    .token-row div b{font-size:16px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .fill{transition:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="header-top">
+      <span class="live-dot"><i></i> Control Tower · Snapshot</span>
+      <span class="header-meta">Evaluations · 1 Nov 2026</span>
+    </div>
+    <h1>MRO Control Tower <span>— Dashboard</span></h1>
+    <p class="subtitle">One screen that proves the agent works: <strong>evaluation scores, run history, cost, grounding, and the human decision gate</strong> — for an AI agent that checks parts coverage for aircraft maintenance events.</p>
+    <div class="meta-pills">
+      <span><b>Synthetic-data</b> prototype</span>
+      <span>Reference date pinned: <b>2 Nov 2026</b></span>
+      <span>Model: <code>claude-haiku-4-5</code></span>
+      <span><b>Read-only</b> — figures fixed at build</span>
+    </div>
+  </header>
+
+  <!-- Headline cards -->
+  <div class="kpis" role="region" aria-label="Headline figures">
+    <div class="kpi green">
+      <div class="kpi-label">Evaluation accuracy — latest run</div>
+      <div class="kpi-value">10<small>/10</small></div>
+      <div class="kpi-sub">Status <strong>and</strong> shortage matched ground truth on all 10 scenarios</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Total agent runs logged</div>
+      <div class="kpi-value">25</div>
+      <div class="kpi-sub">Every run recorded in the monitoring log</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">Total live-testing cost</div>
+      <div class="kpi-value">$0.27</div>
+      <div class="kpi-sub">US dollars, at Haiku list prices — the whole project's live testing</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">Human decisions pending</div>
+      <div class="kpi-value">10<small> of 10</small></div>
+      <div class="kpi-sub">Assessed lines waiting on the planner — <strong>none decided yet</strong></div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <section aria-labelledby="s1">
+    <div class="sec-head"><span class="sec-num">01</span><h2 id="s1">Evaluation scorecard</h2></div>
+    <p class="sec-lede">Two full evaluations, each scored on status + shortage against ground truth. Both runs scored a perfect 10/10 — the second after the Stage 6 fixes.</p>
+
+    <div class="grid-2">
+      <div class="card eval-card">
+        <h3>Stage 5 evaluation</h3>
+        <div class="when">2026-11-01 · FIRST FULL RUN</div>
+        <div class="eval-score"><span class="big">10/10</span><span class="pass-badge">✓ All pass</span></div>
+        <div class="token-row">
+          <div><b>59,782</b><span>Input tokens</span></div>
+          <div><b>7,825</b><span>Output tokens</span></div>
+          <div><b>≈ $0.10</b><span>Run cost</span></div>
+        </div>
+      </div>
+      <div class="card eval-card">
+        <h3>Stage 6 evaluation — after fixes</h3>
+        <div class="when">2026-11-01 · LATEST RUN</div>
+        <div class="eval-score"><span class="big">10/10</span><span class="pass-badge">✓ All pass</span></div>
+        <div class="token-row">
+          <div><b>75,960</b><span>Input tokens</span></div>
+          <div><b>8,276</b><span>Output tokens</span></div>
+          <div><b>≈ $0.12</b><span>Run cost</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:14px"></div>
+    <div class="filters" role="group" aria-label="Filter scenarios by verdict">
+      <button type="button" data-filter="all" aria-pressed="true">All 10 scenarios</button>
+      <button type="button" data-filter="short" aria-pressed="false">Short — uncovered (3)</button>
+      <button type="button" data-filter="covered" aria-pressed="false">Covered (4)</button>
+      <button type="button" data-filter="ok" aria-pressed="false">OK (2)</button>
+      <button type="button" data-filter="insuff" aria-pressed="false">Insufficient data (1)</button>
+    </div>
+
+    <div class="card table-wrap">
+      <table aria-label="Evaluation scenarios, latest run">
+        <thead><tr><th scope="col">Scenario</th><th scope="col">Event / Part</th><th scope="col">Agent verdict</th><th scope="col">Shortage</th><th scope="col">Result</th></tr></thead>
+        <tbody id="scenarioBody">
+          <tr data-group="short"><td class="mono">S01</td><td class="mono">E001 / P001</td><td><span class="pill short">SHORT_UNCOVERED</span></td><td class="shortage">1</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="covered"><td class="mono">S02</td><td class="mono">E001 / P002</td><td><span class="pill po">COVERED_BY_PO</span></td><td class="shortage">0</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="covered"><td class="mono">S03</td><td class="mono">E002 / P016</td><td><span class="pill transfer">COVERED_BY_TRANSFER</span></td><td class="shortage">0</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="covered"><td class="mono">S04</td><td class="mono">E003 / P003</td><td><span class="pill alt">COVERED_BY_ALTERNATE</span></td><td class="shortage">0</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="ok"><td class="mono">S05</td><td class="mono">E003 / P005</td><td><span class="pill ok">OK</span></td><td class="shortage">0</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="insuff"><td class="mono">S06</td><td class="mono">E004 / P019</td><td><span class="pill insuff">INSUFFICIENT_DATA</span></td><td class="shortage">0</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="short"><td class="mono">S07</td><td class="mono">E005 / P007</td><td><span class="pill short">SHORT_UNCOVERED</span></td><td class="shortage">2</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="covered"><td class="mono">S08</td><td class="mono">E002 / P006</td><td><span class="pill po">COVERED_BY_PO</span></td><td class="shortage">0</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="ok"><td class="mono">S09</td><td class="mono">E006 / P011</td><td><span class="pill ok">OK</span></td><td class="shortage">0</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="short"><td class="mono">S10</td><td class="mono">E005 / P020</td><td><span class="pill short">SHORT_UNCOVERED</span></td><td class="shortage">1</td><td class="pass-cell">✓ PASS</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0" id="filterNote">Showing all 10 scenarios from the Stage 6 (latest) run. S01 is E001 / P001 — the turbine blade set, short by 1.</p>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section aria-labelledby="s2">
+    <div class="sec-head"><span class="sec-num">02</span><h2 id="s2">Verdict mix — all demand lines</h2></div>
+    <p class="sec-lede">The deterministic rule engine's verdict on every one of the <strong>33 demand lines</strong> across the 6 maintenance events. Only 19 lines are simply OK — the other 14 need a purchase order, a transfer, an alternate part, or escalation.</p>
+    <div class="card grid-donut">
+      <div class="donut-box">
+        <div class="donut" role="img" aria-label="Donut chart of 33 demand lines: OK 19, covered by purchase order 4, covered by transfer 4, covered by alternate 1, short uncovered 3, insufficient data 2">
+          <div class="donut-hole"><div><b>33</b><span>Demand<br>lines</span></div></div>
+        </div>
+        <div class="exception-callout"><strong>14 exceptions</strong> — lines that are not OK and need action</div>
+      </div>
+      <div class="bars" id="verdictBars">
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--ok)"></i>OK</span><div class="track"><div class="fill" style="background:var(--ok)" data-w="100"></div></div><span class="bval">19<small>57.6%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--po)"></i>Covered by PO</span><div class="track"><div class="fill" style="background:var(--po)" data-w="21.1"></div></div><span class="bval">4<small>12.1%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--transfer)"></i>Covered by transfer</span><div class="track"><div class="fill" style="background:var(--transfer)" data-w="21.1"></div></div><span class="bval">4<small>12.1%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--alt)"></i>Covered by alternate</span><div class="track"><div class="fill" style="background:var(--alt)" data-w="5.3"></div></div><span class="bval">1<small>3.0%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--short)"></i>Short — uncovered</span><div class="track"><div class="fill" style="background:var(--short)" data-w="15.8"></div></div><span class="bval">3<small>9.1%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--insuff)"></i>Insufficient data</span><div class="track"><div class="fill" style="background:var(--insuff)" data-w="10.5"></div></div><span class="bval">2<small>6.1%</small></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section aria-labelledby="s3">
+    <div class="sec-head"><span class="sec-num">03</span><h2 id="s3">Runs &amp; cost</h2></div>
+    <p class="sec-lede">Everything the agent has ever run on this prototype, from the monitoring log (<span class="mono">runs.jsonl</span>, summarised in <span class="mono">monitoring/summary.md</span>).</p>
+    <div class="grid-2">
+      <div class="card stat-list">
+        <div class="stat-line"><span class="k">Total runs logged</span><span class="v">25</span></div>
+        <div class="stat-line"><span class="k">Total tokens</span><span class="v">187,024</span></div>
+        <div>
+          <div class="token-split" role="img" aria-label="Token split: 167,142 input tokens and 19,882 output tokens"><div class="in" style="width:89.4%"></div><div class="out" style="width:10.6%"></div></div>
+          <div class="token-legend"><span><b>167,142</b> input tokens</span><span><b>19,882</b> output tokens</span></div>
+        </div>
+        <div class="stat-line"><span class="k">Estimated total cost</span><span class="v">$0.27 <small>USD</small></span></div>
+        <div class="stat-line"><span class="k">Pricing basis</span><span class="v" style="font-size:15px">$1 / $5 <small>per 1M in / out</small></span></div>
+      </div>
+      <div class="card">
+        <div class="bars" style="padding:20px" id="runBars">
+          <div style="font-weight:700;font-size:15px;margin-bottom:2px">Run status mix — all 25 runs</div>
+          <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--short)"></i>Short — uncovered</span><div class="track"><div class="fill" style="background:var(--short)" data-w="100"></div></div><span class="bval">×7</span></div>
+          <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--insuff)"></i>Insufficient data</span><div class="track"><div class="fill" style="background:var(--insuff)" data-w="71.4"></div></div><span class="bval">×5</span></div>
+          <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--po)"></i>Covered by PO</span><div class="track"><div class="fill" style="background:var(--po)" data-w="57.1"></div></div><span class="bval">×4</span></div>
+          <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--ok)"></i>OK</span><div class="track"><div class="fill" style="background:var(--ok)" data-w="57.1"></div></div><span class="bval">×4</span></div>
+          <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--alt)"></i>Covered by alternate</span><div class="track"><div class="fill" style="background:var(--alt)" data-w="42.9"></div></div><span class="bval">×3</span></div>
+          <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--transfer)"></i>Covered by transfer</span><div class="track"><div class="fill" style="background:var(--transfer)" data-w="28.6"></div></div><span class="bval">×2</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section aria-labelledby="s4">
+    <div class="sec-head"><span class="sec-num">04</span><h2 id="s4">Grounding — answers tied to policy notes</h2></div>
+    <p class="sec-lede">A recommendation only counts if it can point to the knowledge note behind it. This is the recorded audit trail of what grounded each run.</p>
+    <div class="ground-grid">
+      <div class="card ground-card">
+        <div class="big">17<small> / 25</small></div>
+        <p><strong>Runs cited at least one knowledge note</strong> — 68% of all runs grounded their recommendation in a cited note.</p>
+        <div class="meter" aria-hidden="true"><i style="width:68%"></i></div>
+      </div>
+      <div class="card ground-card">
+        <div class="big">6<small> / 6</small></div>
+        <p><strong>Policy-driven scenarios cited their notes</strong> in the Stage 6 evaluation — every scenario that relied on a policy note named it.</p>
+        <div class="meter" aria-hidden="true"><i style="width:100%"></i></div>
+      </div>
+      <div class="card ground-card">
+        <div class="big">1</div>
+        <p><strong>Citation safety-net retry fired</strong> in Stage 6 — the check caught a missing citation and the automatic retry fixed it on the spot.</p>
+        <div class="meter" aria-hidden="true"><i style="width:100%;background:var(--amber)"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section aria-labelledby="s5">
+    <div class="sec-head"><span class="sec-num">05</span><h2 id="s5">The human gate</h2></div>
+    <p class="sec-lede">The agent recommends. A person decides. These are the 10 assessed lines from the evaluations, waiting in the planner screen.</p>
+    <div class="card gate">
+      <div class="gate-counts">
+        <div><b>10</b><span>Assessed lines</span></div>
+        <div><b style="color:var(--ok)">0</b><span>Approved</span></div>
+        <div><b style="color:var(--short)">0</b><span>Rejected</span></div>
+        <div><b style="color:var(--insuff)">10</b><span>Pending</span></div>
+      </div>
+      <div class="dots" aria-label="10 decisions pending, shown as 10 empty circles">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <p class="gate-note"><strong>Decisions are made by the planner in the planner screen</strong> — each assessed line has its own Approve and Reject there. This dashboard starts clean: nothing has been decided yet, all 10 are waiting.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 6 -->
+  <section aria-labelledby="s6">
+    <div class="sec-head"><span class="sec-num">06</span><h2 id="s6">Stage 6 fixes — verified</h2></div>
+    <p class="sec-lede">Two wording problems found in the first evaluation, fixed in code, then proven by re-running the full evaluation. Both fixes held at 10/10.</p>
+    <div class="grid-2">
+      <div class="card fix-card">
+        <h3><span class="fix-num">1</span> Day-counts computed by code, not the model</h3>
+        <p>Day differences are now <strong>computed by the rule engine</strong>, never estimated by the model. The scenario that once produced a wrong figure now states the exact code-computed gap.</p>
+        <div class="before-after">
+          <div class="ba before"><small>Before — model said</small><b>“miss by 227 days”</b><br>Invented number, wrong.</div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="ba after"><small>After — engine computes</small><b>265 days after event start</b><br>Exact, from the dates.</div>
+        </div>
+      </div>
+      <div class="card fix-card">
+        <h3><span class="fix-num">2</span> Citation check on every recommendation</h3>
+        <p>A policy-driven recommendation <strong>must cite the note it relies on</strong>. If the citation is missing, an automatic check catches it and retries — in the Stage 6 run it fired <strong>once</strong> and fixed a missing citation before the result was recorded.</p>
+        <div class="before-after">
+          <div class="ba before"><small>Before</small><b>1 verdict cited no note</b><br>Recommendation with nothing behind it.</div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="ba after"><small>After</small><b>All 6 policy scenarios cited</b><br>Every claim traceable to its note.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>MRO Control Tower — synthetic-data prototype. All figures from the project's own records: <span class="mono">monitoring/summary.md</span> · <span class="mono">evals/results_2026-11-01.json</span> · <span class="mono">evals/results_stage6_2026-11-01.json</span> · <span class="mono">evals/planner_data.json</span></div>
+    <div class="mono">SNAPSHOT · 2026-11-01 · REF 2026-11-02</div>
+  </footer>
+
+</div>
+<script>
+(function(){
+  // Animate bars when they scroll into view (respects reduced motion via CSS transition override)
+  var fills = document.querySelectorAll('.fill');
+  function setWidths(scope){
+    (scope||document).querySelectorAll('.fill').forEach(function(f){ f.style.width = f.getAttribute('data-w') + '%'; });
+  }
+  // Fill bars shortly after load so they are always rendered, with the CSS transition providing the motion
+  setTimeout(function(){ setWidths(); }, 300);
+
+  // Scenario table filter
+  var buttons = document.querySelectorAll('.filters button');
+  var rows = document.querySelectorAll('#scenarioBody tr');
+  var note = document.getElementById('filterNote');
+  var labels = { all:'Showing all 10 scenarios from the Stage 6 (latest) run. S01 is E001 / P001 — the turbine blade set, short by 1.',
+    short:'Showing the 3 uncovered shortages — the lines that cannot proceed as planned.',
+    covered:'Showing the 4 lines covered by a purchase order, a transfer, or an alternate part.',
+    ok:'Showing the 2 lines that are simply OK — stock already in place.',
+    insuff:'Showing the 1 line where the data itself is missing — no inventory record, no purchase order.' };
+  buttons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      buttons.forEach(function(b){ b.setAttribute('aria-pressed','false'); });
+      btn.setAttribute('aria-pressed','true');
+      var f = btn.getAttribute('data-filter');
+      rows.forEach(function(r){ r.style.display = (f==='all' || r.getAttribute('data-group')===f) ? '' : 'none'; });
+      if (note && labels[f]) note.textContent = labels[f];
+    });
+  });
+})();
+</script>
+</body>
+</html>
