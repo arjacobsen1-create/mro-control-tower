@@ -5,7 +5,9 @@ has been built so far, and what remains, stage by stage.
 
 - **Project:** Agentic MRO Supply Chain Control Tower (prototype)
 - **Setting:** hypothetical aerospace maintenance, repair and overhaul (MRO)
-- **Status as of 31 Oct 2026:** Stages 1–2 complete and verified. Stages 3–6 planned.
+- **Status as of 1 Nov 2026:** Stages 1–3 complete and verified; dataset at
+  v1.1; agent live; Stage 5 evaluation complete (10/10). Code published on
+  GitHub. Stages 4 and 6 remain.
 
 ---
 
@@ -96,6 +98,15 @@ match ground truth.** The check caught one design error on its first run
 viewer live:
 https://huggingface.co/datasets/Anahitarj/synthetic-mro-supply-chain
 
+**v1.1 update (1 Nov 2026) — realistic lead times.** Real engine hot-section
+parts take 12–24 months to procure (titanium disks 18–24 months, HPT blades
+9–15+, castings/forgings 12–18), so the lead times were rebuilt to match
+public industry reporting (blade and nozzle sets 450–540 days; common
+consumables 30–120 days) and PO order dates shifted back accordingly.
+Scenario outcomes unchanged — lead time feeds the timing check, not the
+classification. Republished, commit `cdeb899`; all checks re-run green
+(dataset 10/10, retrieval 10/10, tool layer 13/13).
+
 ### Stage 2 — Ingestion + retrieval (complete, 31 Oct 2026)
 
 **Ingestion** (`ingest/ingest.py`): all 8 tables load into a local SQLite
@@ -120,26 +131,53 @@ match scored −1.05, so the acceptance threshold is set at −2.5. Below that,
 retrieval returns nothing, and the agent layer treats "no grounding found" as
 an escalation, not an invitation to improvise.
 
+### Stage 3 — Agent workflow (complete, 1 Nov 2026)
+
+**Built:** `app/availability.py` (the deterministic rule engine, including a
+code-computed lead-time check: lead time, order-by date, already-passed flag,
+earliest arrival if ordered on the reference date), `app/tools.py` (five
+read-only tools: `get_event`, `get_demand`, `get_part`, `check_availability`,
+`search_knowledge`), and `app/agent.py` (Claude tool-use loop producing a
+schema-validated JSON assessment; every run logged to `monitoring/runs.jsonl`).
+Tool-layer tests: **13/13**. Model: `claude-haiku-4-5`.
+
+**API access:** Anahita created an Anthropic Console account (Individual),
+bought $5 credit, declined auto-reload, and created a key (30-day expiry,
+~1 Dec 2026) stored via the secure connector — never in code, chat, or the
+repo. Total spend across Stages 3 and 5: under US$0.25.
+
+**Live verification:** first three assessments (E001/P001, E004/P019,
+E003/P003) all matched ground truth exactly. One narrative flaw found and
+fixed during verification: the model presented an already-passed order-by
+date as forward advice, in prose. The lead-time check was moved into the
+rule engine so dates are code-computed, and the system prompt requires the
+agent to state plainly when an order-by date has passed.
+
+### Stage 5 — Evaluation (complete, 1 Nov 2026)
+
+`evals/run_evaluation.py` ran all 10 published ground-truth scenarios live.
+**Score: 10/10, status and shortage exact on every scenario**, for ≈ US$0.10
+of API usage. Full findings in `evals/evaluation_report.md`, including the
+honest narrative review: verdicts machine-exact (they are code-derived),
+with one unverified day-count in S06's prose (227 days, matching neither
+the start-based 265 nor end-based 256), citation behaviour varying between
+runs (S06 cited N05/N11 previously, none in the scored run), and one muddled
+sentence in S07. Both fixes are recorded as Stage 6 items.
+
+### Publication (1 Nov 2026)
+
+Code published publicly at
+https://github.com/arjacobsen1-create/mro-control-tower — README (with the
+Data Source section), code, and docs only. The dataset is **not** duplicated
+there; Hugging Face remains its single home and the README links to it.
+Account note: the owner's GitHub username is `arjacobsen1-create`
+(Google-linked, password set 1 Nov 2026 and stored in the vault); the GitHub
+handle "Anahitarj" belongs to a different person — it is her Hugging Face
+username only.
+
 ---
 
 ## 4. What remains
-
-### Stage 3 — Agent workflow
-
-**What gets built:** the detect → assess → recommend loop over the store.
-Tool functions the agent calls: availability computation (code, per the
-documented rule), purchase-order and schedule lookups, lead-time estimation,
-and `search_notes()` for grounding in policy and interchangeability notes.
-Output is a validated JSON assessment per exception (status, shortage,
-evidence, recommendation). Every run and every human decision is logged.
-
-**What Anahita needs to do:** provide the Claude API key (the same key used
-for the Building with the Claude API course) when runs against the model
-start. Prototype-scale spend only.
-
-**How we verify:** the agent's assessments are checked field-by-field against
-hand-computed results for known demand lines before the full evaluation in
-Stage 5.
 
 ### Stage 4 — Planner view
 
@@ -155,26 +193,17 @@ approve and one reject as an acceptance test.
 in the log; no action exists in the UI that changes any underlying data
 (read-only by design).
 
-### Stage 5 — Evaluation
-
-**What gets built:** a runner that executes the agent on all 10 published
-eval scenarios and scores its output against the ground truth in
-`eval_scenarios.csv` — status match, shortage quantity match, and grounding
-(the note(s) cited must support the recommendation).
-
-**What Anahita needs to do:** nothing to run it; review the results.
-
-**How we verify:** the score is whatever it is — misses are reported as
-misses, with the failing scenario and the agent's reasoning preserved for the
-README. Reference date pinned at 2026-11-02, as everywhere.
-
 ### Stage 6 — Monitoring + README
 
 **What gets built:** run/approval logging surfaced in a simple dashboard
 (runs, decisions, latency, retrieval hit/abstain rates), and the project
 README: problem, data, architecture, how to run, evaluation results, and a
 rubric-style self-assessment including limitations — following the reference
-repository's practice of documenting what did not work.
+repository's practice of documenting what did not work. Two fixes from the
+Stage 5 evaluation belong to this stage: (1) day-counts inside
+recommendations must be computed by the rule engine, extending the
+lead-time fix; (2) citation behaviour should be stabilised so a verdict
+that leans on a policy cites it on every run, not most runs.
 
 **What Anahita needs to do:** read the README once before it is published.
 
@@ -196,13 +225,23 @@ Project root: `~/workspace/mro-control-tower/`
 | `ingest/ingest.py` | Stage 2 ingestion + integrity checks |
 | `ingest/retrieval.py` | `search_notes()` — BM25 retrieval with abstention threshold |
 | `ingest/test_retrieval.py` | Retrieval tests (10/10) |
-| `app/`, `evals/`, `monitoring/` | Reserved for Stages 3–6, per the reference layout |
+| `app/availability.py` | Deterministic rule engine, incl. code-computed lead-time check |
+| `app/tools.py` | The agent's five read-only tools |
+| `app/agent.py` | Claude tool-use agent; validated JSON assessments |
+| `app/test_tools.py` | Tool-layer tests (13/13) |
+| `evals/run_evaluation.py` | Stage 5 evaluation runner |
+| `evals/evaluation_report.md` | Stage 5 findings (10/10, with narrative review) |
+| `evals/results_2026-11-01.json` | Raw agent output from the scored run |
+| `monitoring/runs.jsonl` | Local run log (not published) |
 | `docs/data_dictionary.md` | Full availability rule, column definitions, testing rule |
 | `docs/process-and-roadmap.md` | This document |
+| `docs/step-by-step-guide.md` | Plain-language rebuild guide: every step, accounts to publication |
 | `README.md` | Dataset card (also the Hugging Face dataset page text) |
+| `repo_README.md` | Source of the GitHub repository's README.md |
 
 Outside the project root:
 
 - Architecture brief: `~/workspace/your_files/mro-control-tower-architecture-brief.md`
 - Published dataset: https://huggingface.co/datasets/Anahitarj/synthetic-mro-supply-chain
+- Published code: https://github.com/arjacobsen1-create/mro-control-tower
 - Packaged dataset (zip): `~/workspace/your_files/mro-synthetic-dataset.zip`
