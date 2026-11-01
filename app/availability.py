@@ -64,7 +64,7 @@ def check_availability(event_id, part_id, db_path=DB_PATH):
     if ev is None or dem is None or part is None:
         con.close()
         return {"error": "unknown event/part or no demand line for this combination"}
-    site, start, req = ev["site"], ev["planned_start"], dem["qty_required"]
+    site, start, end, req = ev["site"], ev["planned_start"], ev["planned_end"], dem["qty_required"]
 
     site_avail = _site_available(con, part_id, site)
     po_rows = con.execute("SELECT * FROM purchase_orders WHERE part_id=?", (part_id,)).fetchall()
@@ -72,15 +72,16 @@ def check_availability(event_id, part_id, db_path=DB_PATH):
     if site_avail is None and not po_rows:
         con.close()
         return {"event_id": event_id, "part_id": part_id, "part_description": part["description"],
-                "site": site, "event_start": start, "qty_required": req,
+                "site": site, "event_start": start, "event_end": end, "qty_required": req,
                 "status": "INSUFFICIENT_DATA", "shortage_qty": 0,
                 "evidence": {"site_available": None, "inbound_before_need": 0,
                              "network_available": 0, "alternate_available": 0},
-                "lead_time_check": _lead_time_check(part["lead_time_days"], start),
+                "lead_time_check": _lead_time_check(part["lead_time_days"], start, end),
                 "po_detail": [], "network_detail": {},
                 "reason": "No inventory record at the event site and no purchase orders for this part."}
 
     inbound, po_detail = 0, []
+    start_d, end_d = date.fromisoformat(start), date.fromisoformat(end)
     for po in po_rows:
         outstanding = po["qty_ordered"] - po["qty_received"]
         counted = (po["status"] in ("open", "partially_received")
@@ -88,9 +89,15 @@ def check_availability(event_id, part_id, db_path=DB_PATH):
                    and outstanding > 0)
         if counted:
             inbound += outstanding
+        exp_d = date.fromisoformat(po["expected_date"])
         po_detail.append({"po_id": po["po_id"], "outstanding": outstanding,
                           "expected_date": po["expected_date"], "delivery_site": po["delivery_site"],
-                          "status": po["status"], "counted": counted})
+                          "status": po["status"], "counted": counted,
+                          # Day differences computed in code (Stage 6 fix 1):
+                          # positive = delivery lands that many days AFTER the
+                          # date; negative = that many days before it.
+                          "days_vs_event_start": (exp_d - start_d).days,
+                          "days_vs_event_end": (exp_d - end_d).days})
     network_detail = {s: (_site_available(con, part_id, s) or 0) for s in SITES if s != site}
     network = sum(network_detail.values())
     alt_id = part["alternate_part_id"]
@@ -111,24 +118,32 @@ def check_availability(event_id, part_id, db_path=DB_PATH):
 
     return {"event_id": event_id, "part_id": part_id, "part_description": part["description"],
             "criticality": part["criticality"], "site": site, "event_start": start,
+            "event_end": end,
             "qty_required": req, "status": status, "shortage_qty": shortage,
             "evidence": {"site_available": sa, "inbound_before_need": inbound,
                          "network_available": network, "alternate_available": alt_avail},
-            "lead_time_check": _lead_time_check(part["lead_time_days"], start),
+            "lead_time_check": _lead_time_check(part["lead_time_days"], start, end),
             "alternate_part_id": alt_id, "po_detail": po_detail, "network_detail": network_detail}
 
 
-def _lead_time_check(lead_days, event_start):
+def _lead_time_check(lead_days, event_start, event_end=None):
     """Date arithmetic done in code, as of the pinned reference date.
     order_by_date = latest order date that still arrives by the event start.
     If that date is already past, ordering today is the only option left and
-    its earliest arrival is reference date + lead time."""
+    its earliest arrival is reference date + lead time. Day differences are
+    computed here too (Stage 6 fix 1): positive = arrival lands that many
+    days AFTER the event date; negative = before it."""
     ref = date.fromisoformat(REFERENCE_DATE)
     start = date.fromisoformat(event_start)
     order_by = start - timedelta(days=lead_days)
-    return {"lead_time_days": lead_days,
-            "reference_date": REFERENCE_DATE,
-            "order_by_date": order_by.isoformat(),
-            "order_by_already_passed": order_by < ref,
-            "earliest_arrival_if_ordered_now": (ref + timedelta(days=lead_days)).isoformat(),
-            "days_until_event_start": (start - ref).days}
+    earliest = ref + timedelta(days=lead_days)
+    out = {"lead_time_days": lead_days,
+           "reference_date": REFERENCE_DATE,
+           "order_by_date": order_by.isoformat(),
+           "order_by_already_passed": order_by < ref,
+           "earliest_arrival_if_ordered_now": earliest.isoformat(),
+           "days_until_event_start": (start - ref).days,
+           "earliest_arrival_days_vs_event_start": (earliest - start).days}
+    if event_end:
+        out["earliest_arrival_days_vs_event_end"] = (earliest - date.fromisoformat(event_end)).days
+    return out

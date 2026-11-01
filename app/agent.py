@@ -42,7 +42,8 @@ Rules you must follow:
 3. If status is INSUFFICIENT_DATA, recommend escalation for a physical count - never an estimate.
 4. If status is SHORT_UNCOVERED and the part's criticality is AOG, set escalation_required to true. If SHORT_UNCOVERED, also state the earliest inbound date from the PO detail (or that none exists).
 5. Dates: check_availability returns a lead_time_check computed in code. Use only those dates. If order_by_already_passed is true, state plainly that the order-by date has already passed and give the earliest_arrival_if_ordered_now as the consequence - never present a past date as a future deadline, and never compute dates yourself.
-6. Finish with exactly one JSON object, no prose after it, matching:
+6. Day-counts: any number of days you state (days late, days early, days of gap) MUST come from the tool output - the days_vs_event_start / days_vs_event_end fields in po_detail, or the earliest_arrival_days_vs_event_start / earliest_arrival_days_vs_event_end fields in lead_time_check. Positive means the delivery lands that many days AFTER that event date; negative means before it. If the difference you need is not among those provided numbers, leave the number out entirely rather than computing or estimating it yourself.
+7. Finish with exactly one JSON object, no prose after it, matching:
 {"event_id": str, "part_id": str, "status": one of OK|COVERED_BY_PO|COVERED_BY_TRANSFER|COVERED_BY_ALTERNATE|SHORT_UNCOVERED|INSUFFICIENT_DATA, "shortage_qty": int, "coverage_summary": str (one sentence, citing the evidence numbers), "recommendation": str (the planner's next action), "escalation_required": bool, "notes_cited": [note_id strings]}"""
 
 
@@ -78,11 +79,46 @@ def validate(a, event_id, part_id):
     return a
 
 
+# Stage 6 fix 2 — citation stability. A recommendation for one of these
+# statuses is policy-driven by construction (transfer procedure, alternate
+# approval, count-and-escalate on missing data), so it must cite the
+# knowledge note(s) behind it on EVERY run, not most runs. SHORT_UNCOVERED
+# joins the list when the run escalates (AOG escalation policy).
+POLICY_CITATION_STATUSES = {"COVERED_BY_TRANSFER", "COVERED_BY_ALTERNATE",
+                            "INSUFFICIENT_DATA"}
+
+
+def _needs_citation(a):
+    if a.get("notes_cited"):
+        return False
+    return (a["status"] in POLICY_CITATION_STATUSES
+            or (a["status"] == "SHORT_UNCOVERED" and a.get("escalation_required")))
+
+
 def assess(key, event_id, part_id):
     messages = [{"role": "user", "content":
                  f"Assess coverage for event {event_id}, part {part_id}. "
                  "Use your tools, then return the JSON assessment."}]
     usage = {"input_tokens": 0, "output_tokens": 0}
+    a = _run_loop(key, messages, usage, event_id, part_id)
+    if _needs_citation(a):
+        # One retry, with the gap named explicitly. The retried result is
+        # accepted as-is (still schema-validated inside _run_loop).
+        usage["citation_retry"] = 1
+        messages.append({"role": "user", "content":
+                         "Your assessment's recommendation relies on a policy-driven "
+                         "action, but notes_cited is empty. Call search_knowledge for "
+                         "the policy or procedure behind this recommendation "
+                         "(escalation, inter-site transfer, approved alternate use, "
+                         "or the missing-record / physical-count procedure), then "
+                         "return the corrected JSON assessment with notes_cited "
+                         "listing the supporting note_id(s). Keep the status and "
+                         "shortage_qty exactly as check_availability computed them."})
+        a = _run_loop(key, messages, usage, event_id, part_id)
+    return a, usage
+
+
+def _run_loop(key, messages, usage, event_id, part_id):
     for _ in range(12):
         resp = call_api(key, messages)
         u = resp.get("usage", {})
@@ -92,8 +128,7 @@ def assess(key, event_id, part_id):
         tool_uses = [b for b in resp["content"] if b.get("type") == "tool_use"]
         if not tool_uses:
             text = "".join(b.get("text", "") for b in resp["content"] if b.get("type") == "text")
-            a = validate(extract_json(text), event_id, part_id)
-            return a, usage
+            return validate(extract_json(text), event_id, part_id)
         results = [{"type": "tool_result", "tool_use_id": b["id"],
                     "content": json.dumps(run_tool(b["name"], b["input"]))} for b in tool_uses]
         messages.append({"role": "user", "content": results})
