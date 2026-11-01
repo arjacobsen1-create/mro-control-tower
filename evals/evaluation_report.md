@@ -78,3 +78,51 @@ trivial cost. The remaining work is prose discipline — extending the same
 "code computes it or it doesn't get said" rule to the day-counts inside
 recommendations, and stabilising citation behaviour. Both are Stage 6
 write-up items, recorded here rather than smoothed over.
+
+---
+
+## Stage 6 addendum — re-run after the two fixes (1 November 2026)
+
+Both fixes from the review above were implemented and the full evaluation
+was re-run fresh, live, same method. Raw output:
+`evals/results_stage6_2026-11-01.json`.
+
+**Score: 10/10 again** — status and shortage exact on every scenario.
+Usage 75,960 input + 8,276 output tokens ≈ **US$0.12**.
+
+**Fix 1 — day-counts computed by code: verified.** `app/availability.py`
+now returns day differences alongside every date: `days_vs_event_start` /
+`days_vs_event_end` for each purchase order, and
+`earliest_arrival_days_vs_event_start` / `..._vs_event_end` in the
+lead-time check; the agent prompt forbids stating any day-count that is
+not one of those numbers. S06 — the scenario that produced the invented
+"227 days" — now reads *"earliest arrival 2027-08-29 is 265 days after
+event start 2026-12-07"*: exactly the code-computed figure. Every other
+day-count in the run (8 statements across S01, S02, S05, S07, S08, S10)
+was checked against the rule engine and is exact. Two wording residues,
+neither a wrong number: S06's recommendation calls the 35 code-provided
+days-to-event a "35-day event timeline" (loose phrasing, right number),
+and S07's summary carries one convoluted sentence about net shortage —
+its verdict and shortage (2) are correct, and the Stage 5 "count to
+expedite" muddle is gone.
+
+**Fix 2 — citation stability: verified for the runs it governs.** The
+agent now validates its own output: if a policy-driven status
+(SHORT_UNCOVERED with escalation, COVERED_BY_TRANSFER,
+COVERED_BY_ALTERNATE, INSUFFICIENT_DATA) returns with `notes_cited`
+empty, the call is retried once with the gap named explicitly, and the
+retry is flagged in the run log (`usage.citation_retry`). In this re-run,
+every one of the 6 policy-driven scenarios cited at least one note —
+S06 cited N11 and N05 on the first pass, closing the exact gap the
+Stage 5 review flagged. The retry fired once (S01), and the retried
+answer cited N05, N03, N11. Overall runs citing ≥1 note is unchanged at
+6/10 — but the composition is different: the four non-citing runs are now
+the OK and COVERED_BY_PO cases, whose recommendations are monitoring
+actions (watch a delivery, confirm receipt) rather than policy actions.
+Citations are recorded where a policy drives the recommendation; whether
+routine-coverage runs should also always cite is left as a judgement
+call, noted rather than forced.
+
+**What did not change:** verdicts were already exact and remain so — the
+fixes touched only the prose layer and the citation gate, which is where
+the Stage 5 findings lived.

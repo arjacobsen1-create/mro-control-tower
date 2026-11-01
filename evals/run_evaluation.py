@@ -23,7 +23,8 @@ sys.path.insert(0, os.path.join(ROOT, "app"))
 from agent import assess, MODEL, LOG_PATH  # noqa: E402
 from config import REFERENCE_DATE  # noqa: E402  (via ingest/ on path in agent)
 
-RESULTS_PATH = os.path.join(ROOT, "evals", "results_2026-11-01.json")
+RESULTS_PATH = os.path.join(ROOT, "evals",
+                            sys.argv[1] if len(sys.argv) > 1 else "results_2026-11-01.json")
 
 
 def main():
