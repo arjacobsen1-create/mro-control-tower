@@ -1,0 +1,205 @@
+{
+  "model": "claude-haiku-4-5",
+  "reference_date": "2026-11-02",
+  "score": "10/10",
+  "total_usage": {
+    "input_tokens": 59782,
+    "output_tokens": 7825
+  },
+  "results": [
+    {
+      "scenario": "S01",
+      "event": "E001",
+      "part": "P001",
+      "expected_status": "SHORT_UNCOVERED",
+      "agent_status": "SHORT_UNCOVERED",
+      "status_match": true,
+      "expected_shortage": 1,
+      "agent_shortage": 1,
+      "shortage_match": true,
+      "notes_cited": [
+        "N05"
+      ],
+      "coverage_summary": "1 of 2 units available on-site; PO-1001 (2 units, due 2026-12-05) arrives after event end (2026-11-27); no alternate part; new order lead time 540 days with order-by date already passed.",
+      "recommendation": "Escalate immediately to supply chain leadership per AOG policy. Event cannot proceed as planned without 1 additional unit. Evaluate: (1) event deferral, (2) expedite PO-1001 to pre-event delivery or emergency sourcing, (3) identify emergency substitutes. Do not proceed without resolving the 1-unit gap.",
+      "usage": {
+        "input_tokens": 6398,
+        "output_tokens": 1028
+      }
+    },
+    {
+      "scenario": "S02",
+      "event": "E001",
+      "part": "P002",
+      "expected_status": "COVERED_BY_PO",
+      "agent_status": "COVERED_BY_PO",
+      "status_match": true,
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "shortage_match": true,
+      "notes_cited": [
+        "N06"
+      ],
+      "coverage_summary": "4 units required; 1 on-site available + 4 inbound via PO-1002 (expected 2026-11-12) = full coverage before event start 2026-11-16.",
+      "recommendation": "Monitor PO-1002 delivery to YUL-H1 for on-time arrival by 2026-11-12. No immediate action required; confirm receipt 4 days prior to event.",
+      "usage": {
+        "input_tokens": 6202,
+        "output_tokens": 685
+      }
+    },
+    {
+      "scenario": "S03",
+      "event": "E002",
+      "part": "P016",
+      "expected_status": "COVERED_BY_TRANSFER",
+      "agent_status": "COVERED_BY_TRANSFER",
+      "status_match": true,
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "shortage_match": true,
+      "notes_cited": [
+        "N03",
+        "N12"
+      ],
+      "coverage_summary": "6 units required; 2 available at YYZ-H2, 5 available at network sites (YUL-H1: 3, YYC-H3: 2) for total coverage of 7 units.",
+      "recommendation": "Initiate inter-site transfer for 4 units (3 from YUL-H1, 1 from YYC-H3) to YYZ-H2 per N03. Lead time of 21 days before event start is adequate. Execute transfer and confirm receipt before 2026-11-23.",
+      "usage": {
+        "input_tokens": 8834,
+        "output_tokens": 925
+      }
+    },
+    {
+      "scenario": "S04",
+      "event": "E003",
+      "part": "P003",
+      "expected_status": "COVERED_BY_ALTERNATE",
+      "agent_status": "COVERED_BY_ALTERNATE",
+      "status_match": true,
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "shortage_match": true,
+      "notes_cited": [
+        "N01"
+      ],
+      "coverage_summary": "Demand of 8 units covered: 3 on-site + 1 network (total 4 primary) + 5 alternate P023 units available, per interchangeability note N01.",
+      "recommendation": "Confirm approval of alternate part P023 substitution with engineering; no procurement action required. Proceed with kit consolidation from YUL-H1 (3) + YYZ-H2 (1) + P023 alternates (4 of 5 available) to meet 8-unit requirement.",
+      "usage": {
+        "input_tokens": 8798,
+        "output_tokens": 871
+      }
+    },
+    {
+      "scenario": "S05",
+      "event": "E003",
+      "part": "P005",
+      "expected_status": "OK",
+      "agent_status": "OK",
+      "status_match": true,
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "shortage_match": true,
+      "notes_cited": [],
+      "coverage_summary": "12 units required; 20 available at site YUL-H1 provides full coverage with zero shortage.",
+      "recommendation": "No action required. Part is in stock and sufficient for event. Planner may monitor condition of site inventory if multiple events are scheduled.",
+      "usage": {
+        "input_tokens": 3723,
+        "output_tokens": 541
+      }
+    },
+    {
+      "scenario": "S06",
+      "event": "E004",
+      "part": "P019",
+      "expected_status": "INSUFFICIENT_DATA",
+      "agent_status": "INSUFFICIENT_DATA",
+      "status_match": true,
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "shortage_match": true,
+      "notes_cited": [],
+      "coverage_summary": "No inventory record at YYC-H3 and no purchase orders on file for 2 units of Fire detection loop (P019) required by 2026-12-07.",
+      "recommendation": "Escalate immediately for physical inventory count at YYC-H3 and network sites to locate any available stock. Given 300-day lead time and order-by date already passed (2026-02-10), if no stock is found, order placement now would result in arrival 2027-08-29, missing the event by 227 days. Confirm with logistics if any emergency procurement or expediting channels are available given AOG criticality.",
+      "usage": {
+        "input_tokens": 3613,
+        "output_tokens": 692
+      }
+    },
+    {
+      "scenario": "S07",
+      "event": "E005",
+      "part": "P007",
+      "expected_status": "SHORT_UNCOVERED",
+      "agent_status": "SHORT_UNCOVERED",
+      "status_match": true,
+      "expected_shortage": 2,
+      "agent_shortage": 2,
+      "shortage_match": true,
+      "notes_cited": [
+        "N05",
+        "N03"
+      ],
+      "coverage_summary": "0 on-site, 0 inbound before event, 1 network available (YYZ-H2), 0 alternates; 1 PO unit arriving 2026-12-20 (post-event); lead-time order-by date 2025-12-14 already passed, new order arrives 2027-11-02.",
+      "recommendation": "Escalate immediately per AOG policy N05. (1) Authorize inter-site transfer of 1 unit from YYZ-H2 per N03. (2) Order physical count of PO-1010 partially-received inventory to expedite receipt of outstanding unit before event start. (3) If combined sources yield <2 units by 2026-12-14, invoke emergency supplier escalation.",
+      "usage": {
+        "input_tokens": 6496,
+        "output_tokens": 1049
+      }
+    },
+    {
+      "scenario": "S08",
+      "event": "E002",
+      "part": "P006",
+      "expected_status": "COVERED_BY_PO",
+      "agent_status": "COVERED_BY_PO",
+      "status_match": true,
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "shortage_match": true,
+      "notes_cited": [],
+      "coverage_summary": "10 units required; 9 available on site + 2 inbound via PO-1011 (expected 2026-11-20) = 11 units total coverage.",
+      "recommendation": "Confirm PO-1011 delivery status and monitor arrival at YYZ-H2 by 2026-11-20 to ensure stock is on hand 3 days before event start on 2026-11-23. No action required unless PO delivery is delayed.",
+      "usage": {
+        "input_tokens": 6204,
+        "output_tokens": 652
+      }
+    },
+    {
+      "scenario": "S09",
+      "event": "E006",
+      "part": "P011",
+      "expected_status": "OK",
+      "agent_status": "OK",
+      "status_match": true,
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "shortage_match": true,
+      "notes_cited": [],
+      "coverage_summary": "6 units required; 6 units available at site YYZ-H2 before event start 2026-12-21.",
+      "recommendation": "No action required. Sufficient stock is in place at the event site.",
+      "usage": {
+        "input_tokens": 3632,
+        "output_tokens": 506
+      }
+    },
+    {
+      "scenario": "S10",
+      "event": "E005",
+      "part": "P020",
+      "expected_status": "SHORT_UNCOVERED",
+      "agent_status": "SHORT_UNCOVERED",
+      "status_match": true,
+      "expected_shortage": 1,
+      "agent_shortage": 1,
+      "shortage_match": true,
+      "notes_cited": [
+        "N02"
+      ],
+      "coverage_summary": "1 of 2 required units available on-site; 0 units inbound, 0 network available, alternate P024 also unavailable; 365-day lead time order window has already passed with earliest new order arrival 2027-11-02.",
+      "recommendation": "Escalate immediately to supply chain leadership. The order-by date (2025-12-14) has already passed. Explore emergency options: (1) confirm availability and expedite alternate P024 if approved by engineering (N02), (2) investigate network emergency loan from YYZ-H2 or YYC-H3, (3) contact BrakeSystems Intl for any emergency stock or expedited production. If no solution materializes within 7 days, recommend deferring or rescheduling event E005.",
+      "usage": {
+        "input_tokens": 5882,
+        "output_tokens": 876
+      }
+    }
+  ]
+}
