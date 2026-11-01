@@ -236,6 +236,8 @@ Anahita herself and confirmed by the live pages and GitHub's own emails.
 
 ## Part 9 — What is left to build
 
+*(All three are now done — see Part 10.)*
+
 - **Stage 4 — the planner screen.** A simple page where the human sees
   the recommendation and clicks Approve or Reject. Every decision is
   written down.
@@ -245,6 +247,42 @@ Anahita herself and confirmed by the live pages and GitHub's own emails.
   been exact).
 - **Stage 6 — the report.** Run history, costs, and an honest write-up
   of what the prototype does and does not prove.
+
+## Part 10 — What happened next (Stages 4 and 6, finished 1 Nov 2026)
+
+1. **The planner screen (Stage 4).** There are two copies of the same
+   screen: one on the web, and one that lives with the code, in a file
+   called `app/planner.py`. To open the code copy:
+   - Run `python3 app/planner.py`
+   - Open **http://127.0.0.1:8765** in your browser.
+   You see the 6 jobs. Click one, and you see every part it needs. The 10
+   parts the AI was examined on show its answer and its recommendation,
+   with two big buttons: **Approve** and **Reject**. Your choice is saved
+   in a small file on this computer only (`monitoring/planner_decisions.json`),
+   with the time you clicked. You can undo or change any decision. The
+   screen cannot change the data — it can only record *your* decisions.
+   That is the whole point: the AI recommends, the human decides.
+2. **Fix 1 — the AI may not invent day-counts (Stage 6).** In the exam,
+   the AI once wrote "missing the event by 227 days." The real numbers
+   were 265 and 256 — it had done maths in its head and got it wrong.
+   Now the checker works out "how many days late or early" for every
+   order and every "if we ordered today" date, and hands the AI the
+   numbers. The AI is only allowed to repeat numbers it was handed.
+3. **Fix 2 — the AI must show its sources (Stage 6).** When the answer
+   depends on a policy note (for example "escalate" or "you may use the
+   substitute part"), the program now checks: did the AI name the note?
+   If the list is empty, the AI is sent back once to fetch the note and
+   name it. No empty source lists for policy answers.
+4. **The exam was run again after the fixes.** Still **10/10**. The
+   "227 days" sentence is now "265 days after the event start" — the
+   checker's own number. Every policy answer named its note. Cost of the
+   re-run: about **12 cents**.
+5. **The report page (Stage 6).** Run `python3 monitoring/summarize_runs.py`.
+   It reads the run diary and your decision file and writes
+   `monitoring/summary.md`: how many runs, the latest score, what it all
+   cost (about 27 cents in total so far), and how many decisions are
+   approved, rejected, or still waiting for you (10 waiting, until you
+   click).
 
 ---
 

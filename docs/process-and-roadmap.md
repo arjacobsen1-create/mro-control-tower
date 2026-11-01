@@ -5,9 +5,10 @@ has been built so far, and what remains, stage by stage.
 
 - **Project:** Agentic MRO Supply Chain Control Tower (prototype)
 - **Setting:** hypothetical aerospace maintenance, repair and overhaul (MRO)
-- **Status as of 1 Nov 2026:** Stages 1–3 complete and verified; dataset at
-  v1.1; agent live; Stage 5 evaluation complete (10/10). Code published on
-  GitHub. Stages 4 and 6 remain.
+- **Status as of 1 Nov 2026:** Stages 1–6 complete and verified; dataset at
+  v1.1; agent live; Stage 5 evaluation 10/10, Stage 6 re-run 10/10 after the
+  two prose fixes. Code for Stages 1–3 and 5 published on GitHub; the
+  Stage 4/6 files are built locally and published via the same route.
 
 ---
 
@@ -164,6 +165,53 @@ the start-based 265 nor end-based 256), citation behaviour varying between
 runs (S06 cited N05/N11 previously, none in the scored run), and one muddled
 sentence in S07. Both fixes are recorded as Stage 6 items.
 
+### Stage 4 — Planner view (complete, 1 Nov 2026)
+
+The human approval gate, made visible, in two forms with identical
+behaviour: a web planner screen (built first) and a repo version,
+`app/planner.py` (Python standard library only — `python3 app/planner.py`,
+then open http://127.0.0.1:8765). Both read `evals/planner_data.json`
+(all 6 events, all 33 demand lines with rule-engine verdicts; the 10
+evaluated lines carry their full agent assessments). The planner picks an
+event, reads each assessed line's verdict, coverage summary,
+recommendation, and cited notes, and records **Approve** or **Reject**
+per line — with undo and change, and a timestamped decision log.
+Decisions are written to `monitoring/planner_decisions.json` (local only,
+gitignored). Nothing in the screen can alter the underlying data:
+read-only by design, exactly as specified. The screen starts clean — all
+10 assessed lines pending a decision.
+
+### Stage 6 — Monitoring + fixes (complete, 1 Nov 2026)
+
+The two fixes recorded from the Stage 5 evaluation, landed and re-tested:
+
+1. **Day-counts are code-computed.** `check_availability` now returns day
+   differences next to every date it reports: per-PO `days_vs_event_start`
+   / `days_vs_event_end`, and `earliest_arrival_days_vs_event_start` /
+   `..._vs_event_end` in the lead-time check. The agent prompt forbids
+   stating a day-count that is not one of those numbers, and requires
+   omitting the number when the needed difference was not provided.
+2. **Citation stability.** The agent validates its own assessment: a
+   policy-driven status (SHORT_UNCOVERED with escalation,
+   COVERED_BY_TRANSFER, COVERED_BY_ALTERNATE, INSUFFICIENT_DATA) returned
+   with an empty `notes_cited` is retried once, with the gap named, and
+   the retry flagged in the run log (`usage.citation_retry`).
+
+**Re-evaluation:** `evals/run_evaluation.py` re-run fresh after the fixes
+— **10/10 again** (75,960 input + 8,276 output tokens ≈ US$0.12). S06 now
+states the code-computed "265 days after event start" instead of the
+invented 227; every day-count in the run traces to a tool-provided
+number; all 6 policy-driven scenarios cited at least one note (S06 cited
+N11 + N05 unprompted; the citation retry fired once, on S01, and worked).
+Full addendum in `evals/evaluation_report.md`.
+
+**Monitoring summary:** `monitoring/summarize_runs.py` reads the run log
+and the decision file and writes `monitoring/summary.md` — run totals,
+latest-run status per scenario vs ground truth, token totals and
+estimated cost, citation behaviour, and decisions
+approved/rejected/pending. First production: 25 runs logged, latest-run
+score 10/10, cumulative estimated cost US$0.27, decisions 0/0/10 pending.
+
 ### Publication (1 Nov 2026)
 
 Code published publicly at
@@ -179,36 +227,18 @@ username only.
 
 ## 4. What remains
 
-### Stage 4 — Planner view
+All six stages are built and verified. What remains is use and upkeep,
+not construction:
 
-**What gets built:** a Streamlit screen listing detected exceptions with
-their assessments, evidence, and an approve/reject control per
-recommendation — the human approval gate made visible. Decisions are written
-to the run log.
-
-**What Anahita needs to do:** review the screen layout; click through one
-approve and one reject as an acceptance test.
-
-**How we verify:** an approved and a rejected decision both appear correctly
-in the log; no action exists in the UI that changes any underlying data
-(read-only by design).
-
-### Stage 6 — Monitoring + README
-
-**What gets built:** run/approval logging surfaced in a simple dashboard
-(runs, decisions, latency, retrieval hit/abstain rates), and the project
-README: problem, data, architecture, how to run, evaluation results, and a
-rubric-style self-assessment including limitations — following the reference
-repository's practice of documenting what did not work. Two fixes from the
-Stage 5 evaluation belong to this stage: (1) day-counts inside
-recommendations must be computed by the rule engine, extending the
-lead-time fix; (2) citation behaviour should be stabilised so a verdict
-that leans on a policy cites it on every run, not most runs.
-
-**What Anahita needs to do:** read the README once before it is published.
-
-**How we verify:** a fresh clone-style run from the README instructions alone
-reproduces ingestion, tests, and the evaluation.
+- **Anahita's planner decisions.** The 10 assessed lines sit pending in
+  the planner screen; approving/rejecting them is the acceptance test of
+  the human gate, done by hand, whenever she chooses.
+- **README read-through.** The final README text is hers to read once
+  before the Stage 4/6 files are published — the same rule as Stage 5.
+- **Publication of the Stage 4/6 files** to GitHub via the established
+  route (code and docs only; no data, no logs, no decision file).
+- **API key renewal.** The current Anthropic key expires ~1 Dec 2026;
+  a fresh key is created the same way when runs start returning 401.
 
 ---
 
@@ -228,11 +258,17 @@ Project root: `~/workspace/mro-control-tower/`
 | `app/availability.py` | Deterministic rule engine, incl. code-computed lead-time check |
 | `app/tools.py` | The agent's five read-only tools |
 | `app/agent.py` | Claude tool-use agent; validated JSON assessments |
+| `app/planner.py` | Stage 4 planner screen (local web UI, stdlib only) |
 | `app/test_tools.py` | Tool-layer tests (13/13) |
-| `evals/run_evaluation.py` | Stage 5 evaluation runner |
-| `evals/evaluation_report.md` | Stage 5 findings (10/10, with narrative review) |
-| `evals/results_2026-11-01.json` | Raw agent output from the scored run |
+| `evals/run_evaluation.py` | Stage 5/6 evaluation runner |
+| `evals/evaluation_report.md` | Stage 5 findings (10/10, with narrative review) + Stage 6 addendum |
+| `evals/results_2026-11-01.json` | Raw agent output from the Stage 5 scored run |
+| `evals/results_stage6_2026-11-01.json` | Raw agent output from the Stage 6 re-run (10/10) |
+| `evals/planner_data.json` | All 6 events / 33 lines + the 10 stored assessments (planner screen input) |
 | `monitoring/runs.jsonl` | Local run log (not published) |
+| `monitoring/summarize_runs.py` | Stage 6 monitoring summary generator |
+| `monitoring/summary.md` | Generated monitoring summary (runs, cost, decisions) |
+| `monitoring/planner_decisions.json` | Planner approve/reject record (local only, not published) |
 | `docs/data_dictionary.md` | Full availability rule, column definitions, testing rule |
 | `docs/process-and-roadmap.md` | This document |
 | `docs/step-by-step-guide.md` | Plain-language rebuild guide: every step, accounts to publication |
