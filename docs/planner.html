@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="description" content="Interactive planner screen for the MRO Control Tower prototype: the agent recommends, the human planner approves or rejects. Decisions are saved in your browser only." />
+<title>MRO Control Tower — Planner Screen</title>
+<style>
+  :root{--ink:#16202e;--mut:#5a6a7d;--line:#d8e0ea;--bg:#f4f6f9;--card:#ffffff;
+        --ok:#1f7a4d;--bad:#b3372c;--warn:#9a6a12;--accent:#2563eb}
+  *{box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;background:var(--bg);color:var(--ink)}
+  header{background:#101c2c;color:#eef3fa;padding:22px 20px 16px}
+  header h1{margin:0 0 6px;font-size:24px}
+  header p{margin:2px 0;color:#b9c7da;font-size:14px}
+  header a{color:#9db9e8}
+  #stats{display:flex;gap:10px;flex-wrap:wrap;padding:14px 20px 4px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 16px;min-width:120px}
+  .tile b{display:block;font-size:22px}
+  .tile span{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+  #notice{margin:10px 20px 0;background:#fff7e0;border:1px solid #ecd28a;border-radius:10px;padding:10px 14px;font-size:13.5px}
+  #notice button{margin-left:10px}
+  main{display:flex;gap:16px;padding:16px 20px;align-items:flex-start;flex-wrap:wrap}
+  #events{min-width:220px;flex:0 1 240px}
+  #events button{display:block;width:100%;text-align:left;margin:0 0 8px;padding:10px 12px;
+    border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);cursor:pointer;font-size:14px}
+  #events button.sel{border-color:var(--accent);box-shadow:0 0 0 2px rgba(37,99,235,.25)}
+  #detail{flex:1;min-width:320px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 12px}
+  .status{font-weight:700;padding:2px 9px;border-radius:999px;font-size:12px;white-space:nowrap}
+  .SHORT_UNCOVERED{background:#fbe3e0;color:var(--bad)}
+  .INSUFFICIENT_DATA{background:#fdf0d3;color:var(--warn)}
+  .COVERED_BY_PO,.COVERED_BY_TRANSFER,.COVERED_BY_ALTERNATE{background:#e0f2e7;color:var(--ok)}
+  .OK{background:#e6ecf4;color:#3c546e}
+  .btn{padding:10px 18px;border-radius:9px;border:0;font-size:15px;cursor:pointer;margin:8px 8px 0 0}
+  .approve{background:#1f9d57;color:#fff}.reject{background:#c0392b;color:#fff}
+  .ghost{background:#e6ecf4;color:#24405e}
+  .small{color:var(--mut);font-size:13px}
+  .decided{font-weight:700;margin-top:8px}
+  #log{background:var(--card);border-top:1px solid var(--line);padding:14px 20px 26px}
+  #log h3{margin:4px 0 8px}
+  footer{padding:0 20px 22px;color:var(--mut);font-size:12.5px}
+</style>
+</head>
+<body>
+<header>
+  <h1>MRO Control Tower — Planner Screen</h1>
+  <p>Synthetic data only · Reference date 2026-11-02 · The agent recommends; you decide.</p>
+  <p><a href="dashboard.html">← Back to the dashboard</a></p>
+</header>
+
+<div id="stats"></div>
+
+<div id="notice">
+  Decisions on this page are saved <b>in this browser only</b> (they are not sent anywhere and do not change the project data).
+  <button class="ghost" style="padding:6px 12px;font-size:13px" onclick="exportDecisions()">Export decisions (JSON)</button>
+  <button class="ghost" style="padding:6px 12px;font-size:13px" onclick="resetAll()">Reset all</button>
+</div>
+
+<main><div id="events"></div><div id="detail"></div></main>
+
+<div id="log"><h3>Decision log</h3><div id="logrows" class="small">No decisions yet.</div></div>
+
+<footer>The local audit copy of this screen lives in the repository as <b>app/planner.py</b>; run it on a computer and it writes the decision file <b>monitoring/planner_decisions.json</b>. This web version mirrors its behaviour for viewing and trying the human gate.</footer>
+
+<script>
+const DATA = {"events": [{"event_id": "E001", "check_type": "Engine overhaul", "aircraft": "A320", "tail": "FIN-701", "site": "YUL-H1", "start": "2026-11-16", "end": "2026-11-27", "lines": [{"part_id": "P001", "part_name": "Turbine blade set, stage 1", "required": 2, "status": "SHORT_UNCOVERED", "shortage": 1, "assessed": true, "coverage_summary": "1 of 2 units available on-site; PO-1001 (2 units, due 2026-12-05) arrives after event end (2026-11-27); no alternate part; new order lead time 540 days with order-by date already passed.", "recommendation": "Escalate immediately to supply chain leadership per AOG policy. Event cannot proceed as planned without 1 additional unit. Evaluate: (1) event deferral, (2) expedite PO-1001 to pre-event delivery or emergency sourcing, (3) identify emergency substitutes. Do not proceed without resolving the 1-unit gap.", "notes_cited": ["N05"]}, {"part_id": "P002", "part_name": "HPT seal kit", "required": 4, "status": "COVERED_BY_PO", "shortage": 0, "assessed": true, "coverage_summary": "4 units required; 1 on-site available + 4 inbound via PO-1002 (expected 2026-11-12) = full coverage before event start 2026-11-16.", "recommendation": "Monitor PO-1002 delivery to YUL-H1 for on-time arrival by 2026-11-12. No immediate action required; confirm receipt 4 days prior to event.", "notes_cited": ["N06"]}, {"part_id": "P004", "part_name": "Main shaft bearing set", "required": 2, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P005", "part_name": "Oil filter element", "required": 4, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P008", "part_name": "EGT temperature sensor", "required": 3, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P009", "part_name": "Compressor gasket kit", "required": 2, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}]}, {"event_id": "E002", "check_type": "C-check", "aircraft": "B737-800", "tail": "FIN-812", "site": "YYZ-H2", "start": "2026-11-23", "end": "2026-12-04", "lines": [{"part_id": "P006", "part_name": "Igniter plug", "required": 10, "status": "COVERED_BY_PO", "shortage": 0, "assessed": true, "coverage_summary": "10 units required; 9 available on site + 2 inbound via PO-1011 (expected 2026-11-20) = 11 units total coverage.", "recommendation": "Confirm PO-1011 delivery status and monitor arrival at YYZ-H2 by 2026-11-20 to ensure stock is on hand 3 days before event start on 2026-11-23. No action required unless PO delivery is delayed.", "notes_cited": []}, {"part_id": "P011", "part_name": "Hydraulic filter element", "required": 5, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P015", "part_name": "Landing gear seal kit", "required": 4, "status": "COVERED_BY_PO", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P016", "part_name": "Steel brake unit", "required": 6, "status": "COVERED_BY_TRANSFER", "shortage": 0, "assessed": true, "coverage_summary": "6 units required; 2 available at YYZ-H2, 5 available at network sites (YUL-H1: 3, YYC-H3: 2) for total coverage of 7 units.", "recommendation": "Initiate inter-site transfer for 4 units (3 from YUL-H1, 1 from YYC-H3) to YYZ-H2 per N03. Lead time of 21 days before event start is adequate. Execute transfer and confirm receipt before 2026-11-23.", "notes_cited": ["N03", "N12"]}, {"part_id": "P017", "part_name": "Cabin pressure sensor", "required": 2, "status": "COVERED_BY_TRANSFER", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P018", "part_name": "De-ice boot valve", "required": 3, "status": "INSUFFICIENT_DATA", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}]}, {"event_id": "E003", "check_type": "Engine overhaul", "aircraft": "A330-300", "tail": "FIN-903", "site": "YUL-H1", "start": "2026-11-30", "end": "2026-12-11", "lines": [{"part_id": "P001", "part_name": "Turbine blade set, stage 1", "required": 1, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P003", "part_name": "Fuel nozzle set", "required": 8, "status": "COVERED_BY_ALTERNATE", "shortage": 0, "assessed": true, "coverage_summary": "Demand of 8 units covered: 3 on-site + 1 network (total 4 primary) + 5 alternate P023 units available, per interchangeability note N01.", "recommendation": "Confirm approval of alternate part P023 substitution with engineering; no procurement action required. Proceed with kit consolidation from YUL-H1 (3) + YYZ-H2 (1) + P023 alternates (4 of 5 available) to meet 8-unit requirement.", "notes_cited": ["N01"]}, {"part_id": "P005", "part_name": "Oil filter element", "required": 12, "status": "OK", "shortage": 0, "assessed": true, "coverage_summary": "12 units required; 20 available at site YUL-H1 provides full coverage with zero shortage.", "recommendation": "No action required. Part is in stock and sufficient for event. Planner may monitor condition of site inventory if multiple events are scheduled.", "notes_cited": []}, {"part_id": "P009", "part_name": "Compressor gasket kit", "required": 3, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P010", "part_name": "Bleed valve actuator", "required": 2, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P012", "part_name": "Starter motor", "required": 1, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}]}, {"event_id": "E004", "check_type": "Heavy maintenance visit", "aircraft": "A320", "tail": "FIN-715", "site": "YYC-H3", "start": "2026-12-07", "end": "2026-12-16", "lines": [{"part_id": "P011", "part_name": "Hydraulic filter element", "required": 6, "status": "COVERED_BY_TRANSFER", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P013", "part_name": "Generator drive seal", "required": 4, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P015", "part_name": "Landing gear seal kit", "required": 2, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P019", "part_name": "Fire detection loop", "required": 2, "status": "INSUFFICIENT_DATA", "shortage": 0, "assessed": true, "coverage_summary": "No inventory record at YYC-H3 and no purchase orders on file for 2 units of Fire detection loop (P019) required by 2026-12-07.", "recommendation": "Escalate immediately for physical inventory count at YYC-H3 and network sites to locate any available stock. Given 300-day lead time and order-by date already passed (2026-02-10), if no stock is found, order placement now would result in arrival 2027-08-29, missing the event by 227 days. Confirm with logistics if any emergency procurement or expediting channels are available given AOG criticality.", "notes_cited": []}, {"part_id": "P021", "part_name": "Cargo door actuator", "required": 1, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}]}, {"event_id": "E005", "check_type": "Engine shop visit", "aircraft": "B737-800", "tail": "FIN-820", "site": "YUL-H1", "start": "2026-12-14", "end": "2026-12-22", "lines": [{"part_id": "P002", "part_name": "HPT seal kit", "required": 2, "status": "COVERED_BY_PO", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P005", "part_name": "Oil filter element", "required": 6, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P007", "part_name": "Engine fuel pump", "required": 3, "status": "SHORT_UNCOVERED", "shortage": 2, "assessed": true, "coverage_summary": "0 on-site, 0 inbound before event, 1 network available (YYZ-H2), 0 alternates; 1 PO unit arriving 2026-12-20 (post-event); lead-time order-by date 2025-12-14 already passed, new order arrives 2027-11-02.", "recommendation": "Escalate immediately per AOG policy N05. (1) Authorize inter-site transfer of 1 unit from YYZ-H2 per N03. (2) Order physical count of PO-1010 partially-received inventory to expedite receipt of outstanding unit before event start. (3) If combined sources yield <2 units by 2026-12-14, invoke emergency supplier escalation.", "notes_cited": ["N05", "N03"]}, {"part_id": "P008", "part_name": "EGT temperature sensor", "required": 2, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P020", "part_name": "Anti-skid control unit", "required": 2, "status": "SHORT_UNCOVERED", "shortage": 1, "assessed": true, "coverage_summary": "1 of 2 required units available on-site; 0 units inbound, 0 network available, alternate P024 also unavailable; 365-day lead time order window has already passed with earliest new order arrival 2027-11-02.", "recommendation": "Escalate immediately to supply chain leadership. The order-by date (2025-12-14) has already passed. Explore emergency options: (1) confirm availability and expedite alternate P024 if approved by engineering (N02), (2) investigate network emergency loan from YYZ-H2 or YYC-H3, (3) contact BrakeSystems Intl for any emergency stock or expedited production. If no solution materializes within 7 days, recommend deferring or rescheduling event E005.", "notes_cited": ["N02"]}]}, {"event_id": "E006", "check_type": "C-check", "aircraft": "A321", "tail": "FIN-730", "site": "YYZ-H2", "start": "2026-12-21", "end": "2026-12-30", "lines": [{"part_id": "P006", "part_name": "Igniter plug", "required": 8, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P011", "part_name": "Hydraulic filter element", "required": 6, "status": "OK", "shortage": 0, "assessed": true, "coverage_summary": "6 units required; 6 units available at site YYZ-H2 before event start 2026-12-21.", "recommendation": "No action required. Sufficient stock is in place at the event site.", "notes_cited": []}, {"part_id": "P013", "part_name": "Generator drive seal", "required": 3, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P016", "part_name": "Steel brake unit", "required": 4, "status": "COVERED_BY_TRANSFER", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}, {"part_id": "P022", "part_name": "Nose gear steering actuator", "required": 1, "status": "OK", "shortage": 0, "assessed": false, "coverage_summary": "", "recommendation": "", "notes_cited": []}]}], "reference_date": "2026-11-02"};
+const LS_KEY = "mroPlannerDecisionsV1";
+let DEC = {};
+try { DEC = JSON.parse(localStorage.getItem(LS_KEY) || "{}"); } catch(e) { DEC = {}; }
+let SEL = DATA.events[0].event_id;
+
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(DEC)); }
+function assessedCount(e){ return e.lines.filter(l=>l.assessed).length; }
+function decidedCount(e){ return e.lines.filter(l=>l.assessed && DEC[e.event_id+"/"+l.part_id]).length; }
+
+function renderStats(){
+  let total=0, ap=0, rj=0;
+  for(const e of DATA.events) for(const l of e.lines) if(l.assessed){
+    total++; const d=DEC[e.event_id+"/"+l.part_id];
+    if(d){ if(d.decision==="approved") ap++; else rj++; }
+  }
+  const tiles=[["Assessed lines",total],["Pending",total-ap-rj],["Approved",ap],["Rejected",rj]];
+  document.getElementById("stats").innerHTML =
+    tiles.map(t=>`<div class="tile"><b>${t[1]}</b><span>${t[0]}</span></div>`).join("");
+}
+
+function render(){
+  renderStats();
+  const ev=document.getElementById("events"); ev.innerHTML="";
+  for(const e of DATA.events){
+    const b=document.createElement("button");
+    b.className = e.event_id===SEL ? "sel" : "";
+    b.innerHTML = `<b>${e.event_id}</b> — ${e.check_type}<br><span class="small">${e.aircraft} ${e.tail} · ${e.site} · ${e.start} → ${e.end}<br>${decidedCount(e)}/${assessedCount(e)} decided</span>`;
+    b.onclick=()=>{ SEL=e.event_id; render(); };
+    ev.appendChild(b);
+  }
+  const dt=document.getElementById("detail"); dt.innerHTML="";
+  const evObj = DATA.events.find(e=>e.event_id===SEL);
+  for(const l of evObj.lines){
+    const key=SEL+"/"+l.part_id, d=DEC[key];
+    const c=document.createElement("div"); c.className="card";
+    let h=`<div><b>${l.part_id} — ${l.part_name}</b> &nbsp;<span class="status ${l.status}">${l.status.replaceAll("_"," ")}</span></div>
+           <p class="small">Required: ${l.required}${l.shortage?` · Shortage: <b>${l.shortage}</b>`:""}</p>`;
+    if(l.assessed){
+      h+=`<p>${l.coverage_summary}</p><p><b>Recommendation:</b> ${l.recommendation}</p>
+          <p class="small">Policy notes cited: ${l.notes_cited.length?l.notes_cited.join(", "):"—"}</p>`;
+      if(d){
+        h+=`<p class="decided">${d.decision==="approved"?"✅ Approved by you":"❌ Rejected by you"} <span class="small">${d.decided_at}</span></p>
+            <button class="btn ghost" onclick="decide('${key}',null)">Undo</button>
+            <button class="btn ${d.decision==="approved"?"reject":"approve"}" onclick="decide('${key}','${d.decision==="approved"?"rejected":"approved"}')">Change to ${d.decision==="approved"?"Reject":"Approve"}</button>`;
+      } else {
+        h+=`<button class="btn approve" onclick="decide('${key}','approved')">Approve</button>
+            <button class="btn reject" onclick="decide('${key}','rejected')">Reject</button>`;
+      }
+    } else {
+      h+=`<p class="small">Rule-engine verdict only (not one of the 10 evaluated agent assessments) — no decision required.</p>`;
+    }
+    c.innerHTML=h; dt.appendChild(c);
+  }
+  const rows=Object.values(DEC).sort((a,b)=>a.decided_at<b.decided_at?-1:1);
+  document.getElementById("logrows").innerHTML = rows.length
+    ? rows.map(d=>`${d.decided_at} — ${d.event_id}/${d.part_id}: <b>${d.decision}</b>`).join("<br>")
+    : "No decisions yet.";
+}
+
+function decide(key, decision){
+  const [event_id, part_id]=key.split("/");
+  if(decision===null) delete DEC[key];
+  else DEC[key]={event_id, part_id, decision, decided_at:new Date().toISOString()};
+  save(); render();
+}
+function exportDecisions(){
+  const blob=new Blob([JSON.stringify(DEC,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download="planner_decisions.json"; a.click();
+  URL.revokeObjectURL(a.href);
+}
+function resetAll(){
+  if(confirm("Clear all planner decisions saved in this browser?")){ DEC={}; save(); render(); }
+}
+render();
+</script>
+</body>
+</html>
