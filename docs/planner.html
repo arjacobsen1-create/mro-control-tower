@@ -5,41 +5,68 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="description" content="Interactive planner screen for the MRO Control Tower prototype: the agent recommends, the human planner approves or rejects. Decisions are saved in your browser only." />
 <title>MRO Control Tower — Planner Screen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#16202e;--mut:#5a6a7d;--line:#d8e0ea;--bg:#f4f6f9;--card:#ffffff;
-        --ok:#1f7a4d;--bad:#b3372c;--warn:#9a6a12;--accent:#2563eb}
+  :root{
+    --bg:#f3f4f2; --surface:#ffffff; --surface2:#eef0ec; --ink:#131a1e; --muted:#5c686f; --faint:#8a959c;
+    --line:#dde1dc; --line2:#cbd2cc;
+    --navy:#12242e; --navy2:#1b3644;
+    --ok:#177245; --ok-bg:#e2f2e7;
+    --po:#1d5fd1; --po-bg:#e2ebfb;
+    --transfer:#0e7a8a; --transfer-bg:#dcf2f4;
+    --alt:#6d4fc2; --alt-bg:#ebe6fb;
+    --short:#c62828; --short-bg:#fde7e5;
+    --insuff:#b45309; --insuff-bg:#fef0d3;
+    --amber:#e8a317;
+    --shadow:0 1px 2px rgba(18,36,46,.06),0 8px 24px rgba(18,36,46,.06);
+    --radius:14px;
+  }
   *{box-sizing:border-box}
-  body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;background:var(--bg);color:var(--ink)}
-  header{background:#101c2c;color:#eef3fa;padding:22px 20px 16px}
-  header h1{margin:0 0 6px;font-size:24px}
-  header p{margin:2px 0;color:#b9c7da;font-size:14px}
-  header a{color:#9db9e8}
-  #stats{display:flex;gap:10px;flex-wrap:wrap;padding:14px 20px 4px}
-  .tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 16px;min-width:120px}
-  .tile b{display:block;font-size:22px}
-  .tile span{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
-  #notice{margin:10px 20px 0;background:#fff7e0;border:1px solid #ecd28a;border-radius:10px;padding:10px 14px;font-size:13.5px}
+  body{font-family:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#eef3fa;padding:24px 20px 18px;border-bottom:4px solid var(--amber)}
+  header h1{font-family:"Barlow Condensed",sans-serif;font-weight:700;letter-spacing:.02em;margin:0 0 6px;font-size:32px}
+  header p{margin:2px 0;color:#b9c7da;font-size:14.5px}
+  header a{color:var(--amber);font-weight:600;text-decoration:none}
+  #stats{display:flex;gap:10px;flex-wrap:wrap;padding:16px 20px 4px}
+  .tile{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:var(--radius);box-shadow:var(--shadow);padding:10px 16px;min-width:128px}
+  .tile b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:30px;line-height:1.05}
+  .tile span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+  .tile.t-pending{border-top-color:var(--amber)} .tile.t-approved{border-top-color:var(--ok)} .tile.t-rejected{border-top-color:var(--short)}
+  #legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 20px 0;font-size:13px;color:var(--muted)}
+  #legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+  #notice{margin:12px 20px 0;background:var(--insuff-bg);border:1px solid #ecd28a;border-left:6px solid var(--amber);border-radius:var(--radius);padding:10px 14px;font-size:14px}
   #notice button{margin-left:10px}
   main{display:flex;gap:16px;padding:16px 20px;align-items:flex-start;flex-wrap:wrap}
-  #events{min-width:220px;flex:0 1 240px}
-  #events button{display:block;width:100%;text-align:left;margin:0 0 8px;padding:10px 12px;
-    border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);cursor:pointer;font-size:14px}
-  #events button.sel{border-color:var(--accent);box-shadow:0 0 0 2px rgba(37,99,235,.25)}
+  #events{min-width:224px;flex:0 1 248px}
+  #events button{display:block;width:100%;text-align:left;margin:0 0 8px;padding:11px 13px;
+    border:1px solid var(--line);border-left:6px solid var(--line2);border-radius:var(--radius);background:var(--surface);color:var(--ink);cursor:pointer;font-size:14.5px;box-shadow:var(--shadow)}
+  #events button.sel{background:var(--navy);color:#eef3fa;border-left-color:var(--amber)}
+  #events button.sel .small{color:#aebfd2}
+  #events .prog{height:6px;background:var(--surface2);border-radius:99px;margin-top:8px;overflow:hidden}
+  #events .prog i{display:block;height:100%;background:var(--amber);border-radius:99px}
+  #events button.done .prog i{background:var(--ok)}
   #detail{flex:1;min-width:320px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 12px}
-  .status{font-weight:700;padding:2px 9px;border-radius:999px;font-size:12px;white-space:nowrap}
-  .SHORT_UNCOVERED{background:#fbe3e0;color:var(--bad)}
-  .INSUFFICIENT_DATA{background:#fdf0d3;color:var(--warn)}
-  .COVERED_BY_PO,.COVERED_BY_TRANSFER,.COVERED_BY_ALTERNATE{background:#e0f2e7;color:var(--ok)}
-  .OK{background:#e6ecf4;color:#3c546e}
-  .btn{padding:10px 18px;border-radius:9px;border:0;font-size:15px;cursor:pointer;margin:8px 8px 0 0}
-  .approve{background:#1f9d57;color:#fff}.reject{background:#c0392b;color:#fff}
-  .ghost{background:#e6ecf4;color:#24405e}
-  .small{color:var(--mut);font-size:13px}
+  .card{background:var(--surface);border:1px solid var(--line);border-left:7px solid var(--line2);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;margin:0 0 12px}
+  .card.s-OK{border-left-color:var(--ok)} .card.s-COVERED_BY_PO{border-left-color:var(--po)}
+  .card.s-COVERED_BY_TRANSFER{border-left-color:var(--transfer)} .card.s-COVERED_BY_ALTERNATE{border-left-color:var(--alt)}
+  .card.s-SHORT_UNCOVERED{border-left-color:var(--short)} .card.s-INSUFFICIENT_DATA{border-left-color:var(--insuff)}
+  .status{font-weight:700;padding:3px 10px;border-radius:999px;font-size:12px;white-space:nowrap;letter-spacing:.02em}
+  .SHORT_UNCOVERED{background:var(--short-bg);color:var(--short)}
+  .INSUFFICIENT_DATA{background:var(--insuff-bg);color:var(--insuff)}
+  .COVERED_BY_PO{background:var(--po-bg);color:var(--po)}
+  .COVERED_BY_TRANSFER{background:var(--transfer-bg);color:var(--transfer)}
+  .COVERED_BY_ALTERNATE{background:var(--alt-bg);color:var(--alt)}
+  .OK{background:var(--ok-bg);color:var(--ok)}
+  .btn{padding:10px 18px;border-radius:10px;border:0;font-size:15px;font-weight:600;cursor:pointer;margin:8px 8px 0 0}
+  .approve{background:var(--ok);color:#fff}.reject{background:var(--short);color:#fff}
+  .ghost{background:var(--surface2);color:var(--navy)}
+  .small{color:var(--muted);font-size:13.5px}
   .decided{font-weight:700;margin-top:8px}
-  #log{background:var(--card);border-top:1px solid var(--line);padding:14px 20px 26px}
-  #log h3{margin:4px 0 8px}
-  footer{padding:0 20px 22px;color:var(--mut);font-size:12.5px}
+  #log{background:var(--surface);border-top:3px solid var(--navy);padding:14px 20px 26px}
+  #log h3{font-family:"Barlow Condensed",sans-serif;font-size:22px;margin:4px 0 8px}
+  footer{padding:0 20px 22px;color:var(--muted);font-size:12.5px}
 </style>
 </head>
 <body>
@@ -50,6 +77,15 @@
 </header>
 
 <div id="stats"></div>
+
+<div id="legend">
+  <span><i style="background:var(--ok)"></i>OK / covered on site</span>
+  <span><i style="background:var(--po)"></i>Covered by purchase order</span>
+  <span><i style="background:var(--transfer)"></i>Covered by transfer</span>
+  <span><i style="background:var(--alt)"></i>Covered by alternate part</span>
+  <span><i style="background:var(--short)"></i>Short, uncovered</span>
+  <span><i style="background:var(--insuff)"></i>Insufficient data</span>
+</div>
 
 <div id="notice">
   Decisions on this page are saved <b>in this browser only</b> (they are not sent anywhere and do not change the project data).
@@ -80,18 +116,19 @@ function renderStats(){
     total++; const d=DEC[e.event_id+"/"+l.part_id];
     if(d){ if(d.decision==="approved") ap++; else rj++; }
   }
-  const tiles=[["Assessed lines",total],["Pending",total-ap-rj],["Approved",ap],["Rejected",rj]];
+  const tiles=[["Assessed lines",total,"t-total"],["Pending",total-ap-rj,"t-pending"],["Approved",ap,"t-approved"],["Rejected",rj,"t-rejected"]];
   document.getElementById("stats").innerHTML =
-    tiles.map(t=>`<div class="tile"><b>${t[1]}</b><span>${t[0]}</span></div>`).join("");
+    tiles.map(t=>`<div class="tile ${t[2]}"><b>${t[1]}</b><span>${t[0]}</span></div>`).join("");
 }
 
 function render(){
   renderStats();
   const ev=document.getElementById("events"); ev.innerHTML="";
   for(const e of DATA.events){
+    const n=assessedCount(e), d=decidedCount(e), pct=n?Math.round(100*d/n):0;
     const b=document.createElement("button");
-    b.className = e.event_id===SEL ? "sel" : "";
-    b.innerHTML = `<b>${e.event_id}</b> — ${e.check_type}<br><span class="small">${e.aircraft} ${e.tail} · ${e.site} · ${e.start} → ${e.end}<br>${decidedCount(e)}/${assessedCount(e)} decided</span>`;
+    b.className = (e.event_id===SEL ? "sel" : "") + (n && d===n ? " done" : "");
+    b.innerHTML = `<b>${e.event_id}</b> — ${e.check_type}<br><span class="small">${e.aircraft} ${e.tail} · ${e.site} · ${e.start} → ${e.end}<br>${d}/${n} decided</span><div class="prog"><i style="width:${pct}%"></i></div>`;
     b.onclick=()=>{ SEL=e.event_id; render(); };
     ev.appendChild(b);
   }
@@ -99,7 +136,7 @@ function render(){
   const evObj = DATA.events.find(e=>e.event_id===SEL);
   for(const l of evObj.lines){
     const key=SEL+"/"+l.part_id, d=DEC[key];
-    const c=document.createElement("div"); c.className="card";
+    const c=document.createElement("div"); c.className="card s-"+l.status;
     let h=`<div><b>${l.part_id} — ${l.part_name}</b> &nbsp;<span class="status ${l.status}">${l.status.replaceAll("_"," ")}</span></div>
            <p class="small">Required: ${l.required}${l.shortage?` · Shortage: <b>${l.shortage}</b>`:""}</p>`;
     if(l.assessed){
