@@ -169,6 +169,12 @@ sentence in S07. Both fixes are recorded as Stage 6 items.
 
 The human approval gate, made visible, in two forms with identical
 behaviour: a web planner screen (built first) and a repo version,
+plus (added 2 Nov 2026) a static GitHub Pages version,
+`docs/planner.html`, live at
+https://arjacobsen1-create.github.io/mro-control-tower/planner.html —
+same data and behaviour, except its decisions are saved in the viewer's
+browser only (GitHub Pages cannot write the repo decision file), with an
+export-to-JSON button. Commits dc62897 (page) and aafa764 (README link),
 `app/planner.py` (Python standard library only — `python3 app/planner.py`,
 then open http://127.0.0.1:8765). Both read `evals/planner_data.json`
 (all 6 events, all 33 demand lines with rule-engine verdicts; the 10
@@ -223,6 +229,53 @@ Account note: the owner's GitHub username is `arjacobsen1-create`
 handle "Anahitarj" belongs to a different person — it is her Hugging Face
 username only.
 
+### V1 gate fix — the decision model was wrong (6 Nov 2026)
+
+A flaw in the Stage 4 planner, caught by Anahita on review, not by any
+test: the planner offered **Approve / Reject on every assessed line**,
+including the SHORT_UNCOVERED ones. A shortage cannot be approved or
+accepted — the three short lines are AOG, AOG and HIGH criticality, and
+the agent's own recommendation on them is to escalate because the event
+cannot proceed as planned. An Approve button on such a line means
+nothing, or worse, reads as accepting the shortage. The same applies to
+INSUFFICIENT_DATA: not knowing cannot be approved either.
+
+The error was in what the decision was *about*. V1 treated the decision
+as a verdict on the agent's status; the decision is in fact on the
+**recommended action**, and the available actions depend on the status:
+
+| Status | Decision offered |
+|---|---|
+| OK | Acknowledge — no action |
+| COVERED_BY_PO | Approve — monitor PO |
+| COVERED_BY_TRANSFER | Approve transfer |
+| COVERED_BY_ALTERNATE | Approve alternate use |
+| SHORT_UNCOVERED | Escalate — expedite / emergency source, **or** Escalate — defer event (no approve/accept option exists) |
+| INSUFFICIENT_DATA | Escalate — investigate / physical count |
+
+Every assessed line also offers **Send back for review**, and undo/change
+works as before. The gate counts are now **decided / escalated /
+pending** (escalated = decisions whose value starts with `escalate`),
+and each recorded decision stores its value, its human label and its
+timestamp. The fix was applied to both planner surfaces
+(`build_planner_page.py` → `docs/planner.html`, and `app/planner.py`,
+which now also rejects a decision server-side if it is not allowed for
+that line's status), to `monitoring/summarize_runs.py` / `summary.md`,
+and to the dashboard's human-gate section. No decisions were recorded in
+the process: the gate still starts clean at 10 pending / 0 decided /
+0 escalated.
+
+This is recorded the same way as the Stage 5 prose findings: the
+evaluation scored the agent's verdicts 10/10, but no evaluation checked
+whether the human's buttons made sense. A person reviewing the screen
+caught what the tests did not.
+
+**Next, on this fixed model:** V2 adds new exception types (competing
+demand across events, PO slippage risk, and an order-by-date-passed
+watchlist), and V3 adds a what-if planner. Both will use this
+status-specific decision model from the start — escalation-only for
+any line where coverage is short or unknown.
+
 ---
 
 ## 4. What remains
@@ -231,8 +284,9 @@ All six stages are built and verified. What remains is use and upkeep,
 not construction:
 
 - **Anahita's planner decisions.** The 10 assessed lines sit pending in
-  the planner screen; approving/rejecting them is the acceptance test of
-  the human gate, done by hand, whenever she chooses.
+  the planner screen; deciding on each line's recommended action (and
+  escalating the short ones) is the acceptance test of the human gate,
+  done by hand, whenever she chooses.
 - **README read-through.** The final README text is hers to read once
   before the Stage 4/6 files are published — the same rule as Stage 5.
 - **Publication of the Stage 4/6 files** to GitHub via the established

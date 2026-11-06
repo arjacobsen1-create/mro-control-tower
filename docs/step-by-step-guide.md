@@ -239,8 +239,8 @@ Anahita herself and confirmed by the live pages and GitHub's own emails.
 *(All three are now done — see Part 10.)*
 
 - **Stage 4 — the planner screen.** A simple page where the human sees
-  the recommendation and clicks Approve or Reject. Every decision is
-  written down.
+  the recommendation and decides on the recommended action. Every
+  decision is written down.
 - **Stage 5 — the full exam.** Run all 10 test questions through the AI,
   count the score, and write down the misses honestly (we already know
   the wording around dates needs checking — the answers themselves have
@@ -252,12 +252,20 @@ Anahita herself and confirmed by the live pages and GitHub's own emails.
 
 1. **The planner screen (Stage 4).** There are two copies of the same
    screen: one on the web, and one that lives with the code, in a file
-   called `app/planner.py`. To open the code copy:
+   called `app/planner.py`. Since 2 Nov 2026 there is also a version that
+   opens straight from GitHub Pages, like the dashboard:
+   https://arjacobsen1-create.github.io/mro-control-tower/planner.html
+   (decisions there are saved in your browser only, with an Export button). To open the code copy:
    - Run `python3 app/planner.py`
    - Open **http://127.0.0.1:8765** in your browser.
    You see the 6 jobs. Click one, and you see every part it needs. The 10
    parts the AI was examined on show its answer and its recommendation,
-   with two big buttons: **Approve** and **Reject**. Your choice is saved
+   with buttons that match the answer: approve the coverage action,
+   acknowledge, or escalate. **Gate fix (6 Nov 2026):** the first version
+   offered Approve/Reject on every line — but a shortage cannot be
+   accepted. Short and insufficient-data lines now offer escalation only
+   (expedite / emergency source, defer the event, or investigate); there
+   is no Accept button on them. Your choice is saved
    in a small file on this computer only (`monitoring/planner_decisions.json`),
    with the time you clicked. You can undo or change any decision. The
    screen cannot change the data — it can only record *your* decisions.
@@ -281,7 +289,7 @@ Anahita herself and confirmed by the live pages and GitHub's own emails.
    It reads the run diary and your decision file and writes
    `monitoring/summary.md`: how many runs, the latest score, what it all
    cost (about 27 cents in total so far), and how many decisions are
-   approved, rejected, or still waiting for you (10 waiting, until you
+   decided, escalated, or still waiting for you (10 waiting, until you
    click).
 
 ---

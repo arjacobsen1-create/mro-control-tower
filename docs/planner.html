@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="description" content="Interactive planner screen for the MRO Control Tower prototype: the agent recommends, the human planner approves or rejects. Decisions are saved in your browser only." />
+<meta name="description" content="Interactive planner screen for the MRO Control Tower prototype: the agent recommends, the human planner decides on the recommended action — covered lines can be approved, a shortage can only be escalated, never accepted. Decisions are saved in your browser only." />
 <title>MRO Control Tower — Planner Screen</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,7 +42,7 @@
   .tile{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:var(--radius);box-shadow:var(--shadow);padding:10px 16px;min-width:128px}
   .tile b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:30px;line-height:1.05}
   .tile span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
-  .tile.t-pending{border-top-color:var(--amber)} .tile.t-approved{border-top-color:var(--ok)} .tile.t-rejected{border-top-color:var(--short)}
+  .tile.t-pending{border-top-color:var(--amber)} .tile.t-decided{border-top-color:var(--ok)} .tile.t-escalated{border-top-color:var(--short)}
   #legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 20px 0;font-size:13px;color:var(--muted)}
   #legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
   #notice{margin:12px 20px 0;background:var(--insuff-bg);border:1px solid #ecd28a;border-left:6px solid var(--amber);border-radius:var(--radius);padding:10px 14px;font-size:14px}
@@ -69,7 +69,7 @@
   .COVERED_BY_ALTERNATE{background:var(--alt-bg);color:var(--alt)}
   .OK{background:var(--ok-bg);color:var(--ok)}
   .btn{padding:10px 18px;border-radius:10px;border:0;font-size:15px;font-weight:600;cursor:pointer;margin:8px 8px 0 0}
-  .approve{background:var(--ok);color:#fff}.reject{background:var(--short);color:#fff}
+  .approve{background:var(--ok);color:#fff}.escalate{background:var(--short);color:#fff}
   .ghost{background:var(--surface2);color:var(--navy)}
   .small{color:var(--muted);font-size:13.5px}
   .decided{font-weight:700;margin-top:8px}
@@ -82,11 +82,11 @@
 <header>
   <div class="header-top">
     <span class="live-dot"><i></i> Control Tower · Planner</span>
-    <span class="gate-badge">Human approval gate · Stage 4</span>
+    <span class="gate-badge">Human decision gate · Stage 4</span>
   </div>
   <h1>MRO Control Tower <span>— Planner</span></h1>
   <p class="byline">Built by Anahita Jacobsen · Weekend project</p>
-  <p>The working screen: the agent recommends, <b style="color:#fff">you decide</b>. Synthetic data only · Reference date 2026-11-02.</p>
+  <p>The working screen: the agent recommends, <b style="color:#fff">you decide on the recommended action</b>. A shortage is never accepted — it is escalated. Synthetic data only · Reference date 2026-11-02.</p>
   <div class="meta-pills">
     <span><b>Interactive</b> — not a snapshot</span>
     <span>6 events · 33 lines · <b>10 assessed</b></span>
@@ -129,14 +129,36 @@ function save(){ localStorage.setItem(LS_KEY, JSON.stringify(DEC)); }
 function assessedCount(e){ return e.lines.filter(l=>l.assessed).length; }
 function decidedCount(e){ return e.lines.filter(l=>l.assessed && DEC[e.event_id+"/"+l.part_id]).length; }
 
+/* Fixed decision model (2026-11-06): the decision is on the recommended
+   ACTION, by status — never on the verdict. A SHORT_UNCOVERED line has no
+   approve/accept option at all: it can only be escalated. INSUFFICIENT_DATA
+   likewise. Every assessed line also offers "sent_back". */
+const ACTIONS = {
+  "OK": [["acknowledged","Acknowledge — no action"]],
+  "COVERED_BY_PO": [["approve_monitor_po","Approve — monitor PO"]],
+  "COVERED_BY_TRANSFER": [["approve_transfer","Approve transfer"]],
+  "COVERED_BY_ALTERNATE": [["approve_alternate","Approve alternate use"]],
+  "SHORT_UNCOVERED": [["escalate_expedite","Escalate — expedite / emergency source"],
+                      ["escalate_defer","Escalate — defer event"]],
+  "INSUFFICIENT_DATA": [["escalate_investigate","Escalate — investigate / physical count"]]
+};
+const SENT_BACK = ["sent_back","Send back for review"];
+const ACTION_LABELS = {};
+for(const list of Object.values(ACTIONS)) for(const [v,l] of list) ACTION_LABELS[v]=l;
+ACTION_LABELS[SENT_BACK[0]] = SENT_BACK[1];
+ACTION_LABELS["approved"] = "Approved (legacy)"; ACTION_LABELS["rejected"] = "Rejected (legacy)";
+function actionsFor(status){ return [...(ACTIONS[status]||[]), SENT_BACK]; }
+function labelFor(d){ return d.label || ACTION_LABELS[d.decision] || d.decision; }
+function isEscalated(d){ return typeof d.decision==="string" && d.decision.startsWith("escalate"); }
+
 function renderStats(){
-  let total=0, ap=0, rj=0;
+  let total=0, dec=0, esc=0;
   for(const e of DATA.events) for(const l of e.lines) if(l.assessed){
     total++; const d=DEC[e.event_id+"/"+l.part_id];
-    if(d){ if(d.decision==="approved") ap++; else rj++; }
+    if(d){ dec++; if(isEscalated(d)) esc++; }
   }
-  const hc=document.getElementById("hdr-count"); if(hc) hc.innerHTML = `<b>${ap+rj} of ${total}</b>&nbsp;decided`;
-  const tiles=[["Assessed lines",total,"t-total"],["Pending",total-ap-rj,"t-pending"],["Approved",ap,"t-approved"],["Rejected",rj,"t-rejected"]];
+  const hc=document.getElementById("hdr-count"); if(hc) hc.innerHTML = `<b>${dec} of ${total}</b>&nbsp;decided`;
+  const tiles=[["Assessed lines",total,"t-total"],["Pending",total-dec,"t-pending"],["Decided",dec,"t-decided"],["Escalated",esc,"t-escalated"]];
   document.getElementById("stats").innerHTML =
     tiles.map(t=>`<div class="tile ${t[2]}"><b>${t[1]}</b><span>${t[0]}</span></div>`).join("");
 }
@@ -163,12 +185,13 @@ function render(){
       h+=`<p>${l.coverage_summary}</p><p><b>Recommendation:</b> ${l.recommendation}</p>
           <p class="small">Policy notes cited: ${l.notes_cited.length?l.notes_cited.join(", "):"—"}</p>`;
       if(d){
-        h+=`<p class="decided">${d.decision==="approved"?"✅ Approved by you":"❌ Rejected by you"} <span class="small">${d.decided_at}</span></p>
-            <button class="btn ghost" onclick="decide('${key}',null)">Undo</button>
-            <button class="btn ${d.decision==="approved"?"reject":"approve"}" onclick="decide('${key}','${d.decision==="approved"?"rejected":"approved"}')">Change to ${d.decision==="approved"?"Reject":"Approve"}</button>`;
+        h+=`<p class="decided">${isEscalated(d)?"⚠":"✅"} ${labelFor(d)} <span class="small">${d.decided_at}</span></p>
+            <button class="btn ghost" onclick="decide('${key}',null)">Undo</button>`;
+        for(const [v,lbl] of actionsFor(l.status)) if(v!==d.decision)
+          h+=`<button class="btn ${v.startsWith("escalate")?"escalate":(v==="sent_back"?"ghost":"approve")}" onclick="decide('${key}','${v}')">Change to ${lbl}</button>`;
       } else {
-        h+=`<button class="btn approve" onclick="decide('${key}','approved')">Approve</button>
-            <button class="btn reject" onclick="decide('${key}','rejected')">Reject</button>`;
+        for(const [v,lbl] of actionsFor(l.status))
+          h+=`<button class="btn ${v.startsWith("escalate")?"escalate":(v==="sent_back"?"ghost":"approve")}" onclick="decide('${key}','${v}')">${lbl}</button>`;
       }
     } else {
       h+=`<p class="small">Rule-engine verdict only (not one of the 10 evaluated agent assessments) — no decision required.</p>`;
@@ -177,14 +200,14 @@ function render(){
   }
   const rows=Object.values(DEC).sort((a,b)=>a.decided_at<b.decided_at?-1:1);
   document.getElementById("logrows").innerHTML = rows.length
-    ? rows.map(d=>`${d.decided_at} — ${d.event_id}/${d.part_id}: <b>${d.decision}</b>`).join("<br>")
+    ? rows.map(d=>`${d.decided_at} — ${d.event_id}/${d.part_id}: <b>${labelFor(d)}</b> (${d.decision})`).join("<br>")
     : "No decisions yet.";
 }
 
 function decide(key, decision){
   const [event_id, part_id]=key.split("/");
   if(decision===null) delete DEC[key];
-  else DEC[key]={event_id, part_id, decision, decided_at:new Date().toISOString()};
+  else DEC[key]={event_id, part_id, decision, label:ACTION_LABELS[decision]||decision, decided_at:new Date().toISOString()};
   save(); render();
 }
 function exportDecisions(){
