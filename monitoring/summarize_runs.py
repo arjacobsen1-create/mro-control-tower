@@ -5,7 +5,7 @@ Stage 6 — monitoring summary.
 Reads the local run log and the planner's decision file and writes a
 one-page Markdown summary: how many agent runs exist, whether the latest
 run of each evaluation scenario still matches ground truth, what the runs
-cost, how grounding behaved, and where the human approval gate stands.
+cost, how grounding behaved, and where the human decision gate stands.
 
     python3 monitoring/summarize_runs.py     # writes monitoring/summary.md
 
@@ -85,9 +85,14 @@ def main():
         with open(PLANNER_DATA) as f:
             pd = json.load(f)
         assessed = sum(1 for e in pd["events"] for l in e["lines"] if l.get("assessed"))
-    n_appr = sum(1 for d in decisions.values() if d["decision"] == "approved")
-    n_rej = sum(1 for d in decisions.values() if d["decision"] == "rejected")
-    n_pend = assessed - len(decisions)
+    # Fixed decision model (2026-11-06): counts are Decided / Escalated /
+    # Pending. Any recorded decision counts as decided — including legacy
+    # 'approved'/'rejected' values from the pre-fix gate. Escalated means
+    # the decision value starts with 'escalate'.
+    n_dec = len(decisions)
+    n_esc = sum(1 for d in decisions.values()
+                if str(d.get("decision", "")).startswith("escalate"))
+    n_pend = assessed - n_dec
 
     lines = [
         "# MRO Control Tower — Monitoring Summary",
@@ -120,8 +125,8 @@ def main():
         "",
         "## Human gate — planner decisions",
         "",
-        f"- Assessed lines awaiting a decision: {assessed}",
-        f"- Approved: {n_appr} · Rejected: {n_rej} · Pending: {n_pend}",
+        f"- Assessed lines: {assessed}",
+        f"- Decided: {n_dec} · Escalated: {n_esc} · Pending: {n_pend}",
         ("- Decision file: `monitoring/planner_decisions.json` (local only)."
          if decisions else
          "- No decisions recorded yet (the planner screen starts clean)."),
@@ -131,7 +136,7 @@ def main():
         f.write("\n".join(lines))
     print(f"Wrote {OUT}: {len(runs)} runs, latest-run score "
           f"{scenario_pass}/{len(truth)}, est. cost US${cost:.2f}, "
-          f"decisions {n_appr} approved / {n_rej} rejected / {n_pend} pending")
+          f"decisions {n_dec} decided / {n_esc} escalated / {n_pend} pending")
 
 
 if __name__ == "__main__":

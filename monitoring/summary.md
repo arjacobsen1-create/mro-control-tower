@@ -34,6 +34,6 @@ Latest-run score: **10/10**
 
 ## Human gate — planner decisions
 
-- Assessed lines awaiting a decision: 10
-- Approved: 0 · Rejected: 0 · Pending: 10
+- Assessed lines: 10
+- Decided: 0 · Escalated: 0 · Pending: 10
 - No decisions recorded yet (the planner screen starts clean).
