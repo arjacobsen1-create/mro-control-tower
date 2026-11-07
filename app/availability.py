@@ -97,7 +97,17 @@ def check_availability(event_id, part_id, db_path=DB_PATH):
                           # positive = delivery lands that many days AFTER the
                           # date; negative = that many days before it.
                           "days_vs_event_start": (exp_d - start_d).days,
-                          "days_vs_event_end": (exp_d - end_d).days})
+                          "days_vs_event_end": (exp_d - end_d).days,
+                          # V2 §4.5 (additive, verdict-neutral): slippage
+                          # fields, all computed in code. slip_days is the
+                          # observed slip (expected - promised); margin_days
+                          # is the buffer between expected arrival and the
+                          # event start; load_bearing is filled in below,
+                          # once the line's totals are known.
+                          "promised_date": po["promised_date"],
+                          "slip_days": (exp_d - date.fromisoformat(po["promised_date"])).days,
+                          "margin_days": (start_d - exp_d).days,
+                          "load_bearing": False})
     network_detail = {s: (_site_available(con, part_id, s) or 0) for s in SITES if s != site}
     network = sum(network_detail.values())
     alt_id = part["alternate_part_id"]
@@ -105,16 +115,16 @@ def check_availability(event_id, part_id, db_path=DB_PATH):
     con.close()
 
     sa = site_avail or 0
-    if sa >= req:
-        status, shortage = "OK", 0
-    elif sa + inbound >= req:
-        status, shortage = "COVERED_BY_PO", 0
-    elif sa + inbound + network >= req:
-        status, shortage = "COVERED_BY_TRANSFER", 0
-    elif sa + inbound + network + alt_avail >= req:
-        status, shortage = "COVERED_BY_ALTERNATE", 0
-    else:
-        status, shortage = "SHORT_UNCOVERED", req - (sa + inbound + network + alt_avail)
+    status, shortage = _classify(sa, inbound, network, alt_avail, req)
+    # §4.1: a counted PO is load-bearing for this line iff removing its
+    # counted balance changes the line's status or shortage. The
+    # classifier is a pure function of the four coverage sums, so this
+    # re-runs it with the PO's outstanding subtracted from inbound.
+    for d in po_detail:
+        if d["counted"]:
+            alt_status, alt_shortage = _classify(sa, inbound - d["outstanding"],
+                                                 network, alt_avail, req)
+            d["load_bearing"] = (alt_status, alt_shortage) != (status, shortage)
 
     return {"event_id": event_id, "part_id": part_id, "part_description": part["description"],
             "criticality": part["criticality"], "site": site, "event_start": start,
@@ -124,6 +134,19 @@ def check_availability(event_id, part_id, db_path=DB_PATH):
                          "network_available": network, "alternate_available": alt_avail},
             "lead_time_check": _lead_time_check(part["lead_time_days"], start, end),
             "alternate_part_id": alt_id, "po_detail": po_detail, "network_detail": network_detail}
+
+
+def _classify(sa, inbound, network, alt_avail, req):
+    """The V1 coverage cascade over the four coverage sums (unchanged rule)."""
+    if sa >= req:
+        return "OK", 0
+    if sa + inbound >= req:
+        return "COVERED_BY_PO", 0
+    if sa + inbound + network >= req:
+        return "COVERED_BY_TRANSFER", 0
+    if sa + inbound + network + alt_avail >= req:
+        return "COVERED_BY_ALTERNATE", 0
+    return "SHORT_UNCOVERED", req - (sa + inbound + network + alt_avail)
 
 
 def _lead_time_check(lead_days, event_start, event_end=None):
