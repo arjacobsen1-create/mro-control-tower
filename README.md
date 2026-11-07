@@ -87,8 +87,7 @@ not compute stock, dates, or lead times.
   one automatic retry), the evaluation was re-run fresh at **10/10**
   (≈ US$0.12), and `monitoring/summarize_runs.py` produces a run/cost/
   decision summary from the local logs.
-- V2 — cross-event & risk (built 6 Nov 2026, **local only, not yet
-  published**): chronological allocation across competing events (4 lines
+- V2 — cross-event & risk (built and published 6 Nov 2026): chronological allocation across competing events (4 lines
   flip from covered to short once earlier events draw on shared pools),
   (line, PO) slippage risk at a 21-day margin (2 HIGH, 1 WATCH), a
   two-tier order-by watchlist (2 act-now, 13 no-ordering-fallback), a
