@@ -89,6 +89,16 @@ HTML = r"""<!doctype html>
   #log{background:var(--surface);border-top:3px solid var(--navy);padding:14px 20px 26px}
   #log h3{font-family:"Barlow Condensed",sans-serif;font-size:22px;margin:4px 0 8px}
   footer{padding:0 20px 22px;color:var(--muted);font-size:12.5px}
+  @media (max-width:820px){
+    body{overflow-x:hidden}
+    header,#stats,#legend,#notice,main,#log,footer{padding-left:12px;padding-right:12px}
+    #notice{margin-left:12px;margin-right:12px}
+    main{flex-direction:column;flex-wrap:nowrap}
+    #events,#detail{width:100%;min-width:0;flex:none}
+    .tile{min-width:0;flex:1 1 40%}
+    .card{overflow-x:auto}
+    table{display:block;overflow-x:auto}
+  }
 </style>
 </head>
 <body>
@@ -105,7 +115,6 @@ HTML = r"""<!doctype html>
     <span>6 events · 33 lines · <b>10 assessed</b></span>
     <span id="hdr-count">0 of 10 decided</span>
     <span><a href="dashboard.html">← Back to the dashboard</a></span>
-    <span><a href="dashboard_v2.html">V2 dashboard →</a></span>
   </div>
 </header>
 
