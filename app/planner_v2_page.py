@@ -56,12 +56,20 @@ PAGE_TEMPLATE = r"""<!DOCTYPE html>
  #log{background:#141b2c;border-top:1px solid #2a3550;padding:14px 20px}
  .err{color:#ff9c9c;font-size:13px;min-height:16px}
  .clock{display:inline-block;padding:1px 7px;border-radius:8px;font-size:11.5px;margin:2px 2px 2px 0;border:1px solid #3a4a6b;background:#141b2c}
+ @media (max-width:820px){
+  body{overflow-x:hidden}
+  header,main,#stats,nav,#log{padding-left:12px;padding-right:12px}
+  nav{display:flex;flex-wrap:wrap;gap:8px} nav button{margin-right:0;flex:1 1 40%}
+  .cols{flex-direction:column;flex-wrap:nowrap}
+  #events,#detail{width:100%;min-width:0;flex:none}
+  .card{overflow-x:auto}
+ }
 </style></head><body>
 <header><h1>MRO Control Tower — Planner Screen V2</h1>
 <p>Cross-event allocation · slippage risk · order-by watchlist · two-clock horizon.
 Synthetic data only · Reference date 2026-11-02 · The agent recommends; you decide.
 V2 evaluation: <b id="evalscore">—</b></p>
-<p style="margin-top:8px"><a href="dashboard_v2.html" style="color:#8fb4ff">← V2 Dashboard</a> &nbsp;·&nbsp; <a href="planner.html" style="color:#8fb4ff">V1 planner</a> &nbsp;·&nbsp; <a href="dashboard.html" style="color:#8fb4ff">V1 dashboard</a></p></header>
+<p style="margin-top:8px"><a href="dashboard_v2.html" style="color:#8fb4ff">← V2 Dashboard</a></p></header>
 <div id="stats">Loading…</div>
 <nav>
  <button data-view="events" class="sel">Event lines</button>
