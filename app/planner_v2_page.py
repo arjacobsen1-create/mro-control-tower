@@ -60,7 +60,8 @@ PAGE_TEMPLATE = r"""<!DOCTYPE html>
 <header><h1>MRO Control Tower — Planner Screen V2</h1>
 <p>Cross-event allocation · slippage risk · order-by watchlist · two-clock horizon.
 Synthetic data only · Reference date 2026-11-02 · The agent recommends; you decide.
-V2 evaluation: <b id="evalscore">—</b></p></header>
+V2 evaluation: <b id="evalscore">—</b></p>
+<p style="margin-top:8px"><a href="dashboard_v2.html" style="color:#8fb4ff">← V2 Dashboard</a> &nbsp;·&nbsp; <a href="planner.html" style="color:#8fb4ff">V1 planner</a> &nbsp;·&nbsp; <a href="dashboard.html" style="color:#8fb4ff">V1 dashboard</a></p></header>
 <div id="stats">Loading…</div>
 <nav>
  <button data-view="events" class="sel">Event lines</button>
