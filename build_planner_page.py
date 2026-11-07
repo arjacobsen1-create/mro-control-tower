@@ -105,6 +105,7 @@ HTML = r"""<!doctype html>
     <span>6 events · 33 lines · <b>10 assessed</b></span>
     <span id="hdr-count">0 of 10 decided</span>
     <span><a href="dashboard.html">← Back to the dashboard</a></span>
+    <span><a href="dashboard_v2.html">V2 dashboard →</a></span>
   </div>
 </header>
 

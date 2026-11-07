@@ -4,8 +4,12 @@
 
 **[Open the dashboard](https://arjacobsen1-create.github.io/mro-control-tower/dashboard.html)** · **[Open the planner](https://arjacobsen1-create.github.io/mro-control-tower/planner.html)**
 
-GitHub shows this project's files as code. The two links above open the
+**[Open the V2 dashboard](https://arjacobsen1-create.github.io/mro-control-tower/dashboard_v2.html)** · **[Open the V2 planner](https://arjacobsen1-create.github.io/mro-control-tower/planner_v2.html)**
+
+GitHub shows this project's files as code. The links above open the
 finished pages in your browser, with the colours, charts and buttons.
+Each version has its own dashboard connected to its own planner: the
+V1 dashboard ↔ the V1 planner, the V2 dashboard ↔ the V2 planner.
 The dashboard is the story; the planner is where a human approves or
 rejects the agent's recommendations.
 
@@ -87,7 +91,8 @@ not compute stock, dates, or lead times.
   one automatic retry), the evaluation was re-run fresh at **10/10**
   (≈ US$0.12), and `monitoring/summarize_runs.py` produces a run/cost/
   decision summary from the local logs.
-- V2 — cross-event & risk (built and published 6 Nov 2026): chronological allocation across competing events (4 lines
+- V2 — cross-event & risk (built and published 6 Nov 2026):
+  chronological allocation across competing events (4 lines
   flip from covered to short once earlier events draw on shared pools),
   (line, PO) slippage risk at a 21-day margin (2 HIGH, 1 WATCH), a
   two-tier order-by watchlist (2 act-now, 13 no-ordering-fallback), a
@@ -99,7 +104,8 @@ not compute stock, dates, or lead times.
   V1 set at **10/10** as regression — the two misses were run failures
   whose root cause was found, fixed and verified (see
   `evals/evaluation_report.md`, V2 addendum). Spec: `docs/v2-spec.md`;
-  V2 planner: `app/planner_v2.py` / `docs/planner_v2.html` (own data and
+  V2 dashboard: `docs/dashboard_v2.html`; V2 planner:
+  `app/planner_v2.py` / `docs/planner_v2.html` (own data and
   decision files; V1's untouched).
 
 Visual dashboard (evaluation scores, verdict mix, runs and cost, human-gate
@@ -113,6 +119,14 @@ assessments, and decide on the recommended action for each assessed line
 review — shortage lines offer escalation only). Decisions on the web
 version are saved in the viewer's own browser only; the local audit copy is
 `app/planner.py` (below), which writes `monitoring/planner_decisions.json`.
+
+V2 visual dashboard (cross-event allocation, slippage, watchlist and
+horizon summary): `docs/dashboard_v2.html`, connected to the V2
+interactive planner screen (GitHub Pages):
+https://arjacobsen1-create.github.io/mro-control-tower/planner_v2.html —
+the §7 decision gate in the browser, on the allocated view. Each
+dashboard links to its own planner, and each planner links back to
+its own dashboard.
 
 Process, decisions, and the step-by-step roadmap: `docs/process-and-roadmap.md`.
 Data definitions and the availability rule: `docs/data_dictionary.md`.
