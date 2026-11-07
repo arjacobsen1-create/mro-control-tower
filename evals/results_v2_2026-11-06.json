@@ -1,0 +1,1333 @@
+{
+  "model": "claude-haiku-4-5",
+  "reference_date": "2026-11-02",
+  "v2_score": "18/20",
+  "v1_regression_score": "10/10",
+  "total_usage": {
+    "input_tokens": 483205,
+    "output_tokens": 39385
+  },
+  "estimated_cost_usd": 0.6801,
+  "results": [
+    {
+      "scenario": "C01",
+      "set": "v2",
+      "event": "E003",
+      "part": "P001",
+      "passed": true,
+      "fields": [
+        {
+          "field": "allocated_status",
+          "got": "SHORT_UNCOVERED",
+          "want": "SHORT_UNCOVERED",
+          "match": true
+        },
+        {
+          "field": "allocated_shortage_qty",
+          "got": 1,
+          "want": 1,
+          "match": true
+        },
+        {
+          "field": "contention",
+          "got": "CONTENDED_SHORT",
+          "want": "CONTENDED_SHORT",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E003",
+        "part_id": "P001",
+        "status": "OK",
+        "shortage_qty": 0,
+        "allocated_status": "SHORT_UNCOVERED",
+        "allocated_shortage_qty": 1,
+        "contention": "CONTENDED_SHORT",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "NONE",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "PREPARE_DRAFT",
+          "checkpoint_date": "2026-11-30",
+          "verifications_outstanding": [
+            "affected event",
+            "material shortfall",
+            "recovery options",
+            "proposed communication"
+          ]
+        },
+        "recovery_path": "defer",
+        "feasible_recovery_exists": false,
+        "recommended_decision": "escalate_defer",
+        "coverage_summary": "Single-line OK (1 unit on site) but allocated view SHORT_UNCOVERED (1-unit shortage after chronological pool allocation); CONTENDED_SHORT with no feasible recovery and AOG criticality mandates escalation.",
+        "recommendation": "Escalate immediately to operations and stakeholder management. Line E003-P001 (Turbine blade set, stage 1, AOG) will be uncovered when competing events exhaust the site stock. No expedite, transfer, or re-sequence is feasible; the order-by date expired 512 days ago. Prepare a customer notification draft for approval and release at 2026-11-30 (event start) addressing the material shortfall, recovery options explored (none viable), and the proposed communication to the customer. Escalation required due to AOG criticality and absence of any recovery lever.",
+        "escalation_required": true,
+        "notes_cited": [
+          "N05"
+        ]
+      },
+      "usage": {
+        "input_tokens": 19333,
+        "output_tokens": 2112
+      }
+    },
+    {
+      "scenario": "C02",
+      "set": "v2",
+      "event": "E006",
+      "part": "P016",
+      "passed": true,
+      "fields": [
+        {
+          "field": "allocated_status",
+          "got": "SHORT_UNCOVERED",
+          "want": "SHORT_UNCOVERED",
+          "match": true
+        },
+        {
+          "field": "allocated_shortage_qty",
+          "got": 3,
+          "want": 3,
+          "match": true
+        },
+        {
+          "field": "contention",
+          "got": "CONTENDED_SHORT",
+          "want": "CONTENDED_SHORT",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E006",
+        "part_id": "P016",
+        "status": "COVERED_BY_TRANSFER",
+        "shortage_qty": 0,
+        "allocated_status": "SHORT_UNCOVERED",
+        "allocated_shortage_qty": 3,
+        "contention": "CONTENDED_SHORT",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "NO_ORDERING_FALLBACK",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "PREPARE_DRAFT",
+          "checkpoint_date": "2026-12-21",
+          "verifications_outstanding": [
+            "affected event",
+            "material shortfall",
+            "recovery options",
+            "proposed communication"
+          ]
+        },
+        "recovery_path": "re-sequence the check",
+        "feasible_recovery_exists": true,
+        "recommended_decision": "escalate_defer",
+        "coverage_summary": "Single-line COVERED_BY_TRANSFER (2 site + 5 network available vs. 4 required), but allocated view reveals SHORT_UNCOVERED by 3 units (only 1 YYC-H3 unit remains after competing events under chronological allocation); no procurement feasible (lead time expired); re-sequence is the only feasible recovery.",
+        "recommendation": "Escalate to planner for decision on re-sequencing the C-check to a later date when network stock becomes available or transfers are no longer contended. Prepare customer notification draft (deferred start pending parts availability), subject to human verification of event impact, shortfall magnitude, re-sequence feasibility window, and communication timing.",
+        "escalation_required": true,
+        "notes_cited": [
+          "N03",
+          "N12"
+        ]
+      },
+      "usage": {
+        "input_tokens": 16992,
+        "output_tokens": 1827
+      }
+    },
+    {
+      "scenario": "C03",
+      "set": "v2",
+      "event": "E006",
+      "part": "P011",
+      "passed": true,
+      "fields": [
+        {
+          "field": "allocated_status",
+          "got": "SHORT_UNCOVERED",
+          "want": "SHORT_UNCOVERED",
+          "match": true
+        },
+        {
+          "field": "allocated_shortage_qty",
+          "got": 3,
+          "want": 3,
+          "match": true
+        },
+        {
+          "field": "contention",
+          "got": "CONTENDED_SHORT",
+          "want": "CONTENDED_SHORT",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E006",
+        "part_id": "P011",
+        "status": "OK",
+        "shortage_qty": 0,
+        "allocated_status": "SHORT_UNCOVERED",
+        "allocated_shortage_qty": 3,
+        "contention": "CONTENDED_SHORT",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "ORDER_BY_CLOSING",
+        "procurement_action": "RAISED",
+        "procurement_need": "Pool for P011 is shared across 3 events (E002, E004, E006): aggregate demand 17 exceeds the total physical pool 14; the stock cannot be replenished inside the horizon once the order-by date passes.",
+        "customer_notification": {
+          "action": "PREPARE_DRAFT",
+          "checkpoint_date": "2026-12-21",
+          "verifications_outstanding": [
+            "affected event",
+            "material shortfall",
+            "recovery options",
+            "proposed communication"
+          ]
+        },
+        "recovery_path": "expedite / chase PO",
+        "feasible_recovery_exists": true,
+        "recommended_decision": "escalate_expedite",
+        "coverage_summary": "Locally OK (6 on-site vs. 6 required), but cross-event allocation reveals 3-unit shortage (allocated pool 3 vs. 6 required) due to contention across E002, E004, E006 with 17 aggregate demand against 14-unit total pool; procurement RAISED with feasible expedite recovery.",
+        "recommendation": "Escalate to expedite procurement or re-sequence the check. The order-by date is 2026-11-21 (in 19 days); if expedite is possible, place the order immediately and chase the supplier for acceleration. Alternatively, evaluate re-sequencing E006 to allow higher-priority events to consume pool inventory first. Prepare customer notification draft for review (checkpoint 2026-12-21) that outlines the material shortfall and proposed recovery actions pending final approval.",
+        "escalation_required": true,
+        "notes_cited": [
+          "N06",
+          "N03",
+          "N05"
+        ]
+      },
+      "usage": {
+        "input_tokens": 48802,
+        "output_tokens": 3258,
+        "citation_retry": 1
+      }
+    },
+    {
+      "scenario": "C04",
+      "set": "v2",
+      "event": "E006",
+      "part": "P006",
+      "passed": true,
+      "fields": [
+        {
+          "field": "allocated_status",
+          "got": "SHORT_UNCOVERED",
+          "want": "SHORT_UNCOVERED",
+          "match": true
+        },
+        {
+          "field": "allocated_shortage_qty",
+          "got": 1,
+          "want": 1,
+          "match": true
+        },
+        {
+          "field": "contention",
+          "got": "CONTENDED_SHORT",
+          "want": "CONTENDED_SHORT",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E006",
+        "part_id": "P006",
+        "status": "OK",
+        "shortage_qty": 0,
+        "allocated_status": "SHORT_UNCOVERED",
+        "allocated_shortage_qty": 1,
+        "contention": "CONTENDED_SHORT",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "NONE",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "PREPARE_DRAFT",
+          "checkpoint_date": "2026-12-21",
+          "verifications_outstanding": [
+            "affected event",
+            "material shortfall",
+            "recovery options",
+            "proposed communication"
+          ]
+        },
+        "recovery_path": "expedite / chase PO",
+        "feasible_recovery_exists": true,
+        "recommended_decision": "escalate_expedite",
+        "coverage_summary": "Single-line status OK (9 site + 2 inbound + 6 network vs 8 required); allocated status SHORT_UNCOVERED by 1 unit (CONTENDED_SHORT with competing earlier events exhausting the network pool), PO-1011 delivering 2 units at 2026-11-20 is load-bearing under allocation with margin of 31 days vs event start, no slippage detected, expedite and re-sequence recovery levers are feasible.",
+        "recommendation": "Escalate for expedite action on PO-1011 (2 units of MRO-74-1006 from SparkLine Aviation, promised 2026-11-15, expected 2026-11-20) to secure the allocated 1-unit shortfall under the CONTENDED_SHORT contention class. Prepare customer notification draft for approval with checkpoint at event start (2026-12-21); notify only upon confirmation that expedite or re-sequence recovery will not close the gap. Recovery levers: PO expedite (lead-bearing in allocation) or re-sequence the C-check from 2026-12-21. Part is HIGH criticality, long-lead (270 days, order-by already passed 2026-03-26), and the shortage is driven by allocation to earlier events, not insufficient total availability. No ordered-part action required under watchlist.",
+        "escalation_required": true,
+        "notes_cited": [
+          "N05"
+        ]
+      },
+      "usage": {
+        "input_tokens": 23810,
+        "output_tokens": 1360
+      }
+    },
+    {
+      "scenario": "C05",
+      "set": "v2",
+      "event": "E005",
+      "part": "P005",
+      "passed": true,
+      "fields": [
+        {
+          "field": "allocated_status",
+          "got": "COVERED_BY_TRANSFER",
+          "want": "COVERED_BY_TRANSFER",
+          "match": true
+        },
+        {
+          "field": "allocated_shortage_qty",
+          "got": 0,
+          "want": 0,
+          "match": true
+        },
+        {
+          "field": "contention",
+          "got": "CONTENDED_COVERED",
+          "want": "CONTENDED_COVERED",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E005",
+        "part_id": "P005",
+        "status": "OK",
+        "shortage_qty": 0,
+        "allocated_status": "COVERED_BY_TRANSFER",
+        "allocated_shortage_qty": 0,
+        "contention": "CONTENDED_COVERED",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "NONE",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "NONE",
+          "checkpoint_date": null,
+          "verifications_outstanding": []
+        },
+        "recovery_path": null,
+        "feasible_recovery_exists": true,
+        "recommended_decision": "approve_transfer",
+        "coverage_summary": "E005 requires 6\u00d7 P005 (Oil filter element, ROUTINE, 45-day lead time); single-line OK with 20 at YUL-H1 + 16 network pool; allocated view shows COVERED_BY_TRANSFER (site stock 4, YYZ-H2 transfer 2) with CONTENDED_COVERED status and no shortage under chronological allocation.",
+        "recommendation": "Approve the inter-site transfer of 2 units from YYZ-H2 to YUL-H1 per the allocated coverage plan. The order-by date (2026-10-30) has passed, but the part is ROUTINE criticality and full coverage is secured by local stock (4 units at event start) plus the documented transfer. Coordinate with YYZ-H2 to release and transport the 2 units prior to event start (2026-12-14); standard inter-site transfer lead time and logistics will allow completion within the 42-day window.",
+        "escalation_required": false,
+        "notes_cited": [
+          "N03"
+        ]
+      },
+      "usage": {
+        "input_tokens": 18608,
+        "output_tokens": 1139
+      }
+    },
+    {
+      "scenario": "C06",
+      "set": "v2",
+      "event": "E002",
+      "part": "P016",
+      "passed": true,
+      "fields": [
+        {
+          "field": "allocated_status",
+          "got": "COVERED_BY_TRANSFER",
+          "want": "COVERED_BY_TRANSFER",
+          "match": true
+        },
+        {
+          "field": "allocated_shortage_qty",
+          "got": 0,
+          "want": 0,
+          "match": true
+        },
+        {
+          "field": "contention",
+          "got": "UNCONTENDED",
+          "want": "UNCONTENDED",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E002",
+        "part_id": "P016",
+        "status": "COVERED_BY_TRANSFER",
+        "shortage_qty": 0,
+        "allocated_status": "COVERED_BY_TRANSFER",
+        "allocated_shortage_qty": 0,
+        "contention": "UNCONTENDED",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "NO_ORDERING_FALLBACK",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "NONE",
+          "checkpoint_date": null,
+          "verifications_outstanding": []
+        },
+        "recovery_path": null,
+        "feasible_recovery_exists": true,
+        "recommended_decision": "approve_transfer",
+        "coverage_summary": "Demand for 6 units covered via inter-site transfer (2 site stock + 5 network units YUL-H1/YYC-H3), zero shortage, uncontended; material risk flagged due to NO_ORDERING_FALLBACK and closed order-by window (189 days past 2026-04-27).",
+        "recommendation": "Approve inter-site transfer execution from YUL-H1 (3 units) and YYC-H3 (2 units) to YYZ-H2. Coordinate logistics to ensure delivery before event start 2026-11-23. Escalate material-risk condition (210-day lead time, no new-order fallback) to supply-chain leadership for strategic hedge-stock or supplier-diversification review to mitigate future supply vulnerability for this HIGH-criticality brake component.",
+        "escalation_required": false,
+        "notes_cited": [
+          "N12",
+          "N03"
+        ]
+      },
+      "usage": {
+        "input_tokens": 13284,
+        "output_tokens": 1583
+      }
+    },
+    {
+      "scenario": "R01",
+      "set": "v2",
+      "event": "E001",
+      "part": "P002",
+      "passed": false,
+      "fields": [],
+      "error": "",
+      "assessment": null,
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      }
+    },
+    {
+      "scenario": "R02",
+      "set": "v2",
+      "event": "E002",
+      "part": "P006",
+      "passed": true,
+      "fields": [
+        {
+          "field": "slippage_tier",
+          "got": "SLIPPAGE_HIGH",
+          "want": "SLIPPAGE_HIGH",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E002",
+        "part_id": "P006",
+        "status": "COVERED_BY_PO",
+        "shortage_qty": 0,
+        "allocated_status": "COVERED_BY_PO",
+        "allocated_shortage_qty": 0,
+        "contention": "UNCONTENDED",
+        "slippage_tier": "SLIPPAGE_HIGH",
+        "watchlist_tier": "NO_ORDERING_FALLBACK",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "PREPARE_DRAFT",
+          "checkpoint_date": "2026-11-20",
+          "verifications_outstanding": [
+            "affected event",
+            "material shortfall",
+            "recovery options",
+            "proposed communication"
+          ]
+        },
+        "recovery_path": "expedite / chase PO",
+        "feasible_recovery_exists": true,
+        "recommended_decision": "escalate_expedite",
+        "coverage_summary": "Nominally covered (9 site + 2 from PO-1011) but SLIPPAGE_HIGH: PO promised 2026-11-15 has 5 slip days vs 3 margin days; expected 2026-11-20 is only 3 days before event start 2026-11-23; repeat slip breaks coverage.",
+        "recommendation": "Immediately chase PO-1011 with SparkLine Aviation to confirm delivery by 2026-11-20. Prepare draft customer notification citing material risk from high-lead-time part and slippage exposure. Escalate to procurement for expedite action. Re-sequencing the check (delay event start) remains a feasible fallback if slippage occurs.",
+        "escalation_required": true,
+        "notes_cited": [
+          "N05"
+        ]
+      },
+      "usage": {
+        "input_tokens": 25594,
+        "output_tokens": 1872
+      }
+    },
+    {
+      "scenario": "R03",
+      "set": "v2",
+      "event": "E002",
+      "part": "P015",
+      "passed": true,
+      "fields": [
+        {
+          "field": "slippage_tier",
+          "got": "SLIPPAGE_WATCH",
+          "want": "SLIPPAGE_WATCH",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E002",
+        "part_id": "P015",
+        "status": "COVERED_BY_PO",
+        "shortage_qty": 0,
+        "allocated_status": "COVERED_BY_PO",
+        "allocated_shortage_qty": 0,
+        "contention": "UNCONTENDED",
+        "slippage_tier": "SLIPPAGE_WATCH",
+        "watchlist_tier": "NO_ORDERING_FALLBACK",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "NONE",
+          "checkpoint_date": null,
+          "verifications_outstanding": []
+        },
+        "recovery_path": null,
+        "feasible_recovery_exists": true,
+        "recommended_decision": "approve_monitor_po",
+        "coverage_summary": "Event E002 requires 4 units of P015 (Landing gear seal kit); single-line status is COVERED_BY_PO with 0 shortage (3 on-site + 6 inbound from PO-1007), allocated status also COVERED_BY_PO uncontended. PO-1007 is load-bearing with 7 slip_days and 11 margin_days; slippage_tier is SLIPPAGE_WATCH; watchlist_tier is NO_ORDERING_FALLBACK (order-by date 2026-07-26 already passed 99 days ago).",
+        "recommendation": "Approve and monitor PO-1007 (promised 2026-11-05, expected 2026-11-12). The part is covered in both views but the inbound delivery carries material risk: the PO has a 7-day slip buffer but margin is tight at 11 days before event start. The order-by window closed in July; no new procurement is possible within lead-time. Establish a monitoring checkpoint around 2026-11-08 (3 days before promised delivery) to verify delivery status and confirm arrival by event start on 2026-11-23. If PO slips further, expedite chase is documented as feasible; re-sequencing the check is also an option. No customer notification is required at this stage.",
+        "escalation_required": false,
+        "notes_cited": [
+          "N06"
+        ]
+      },
+      "usage": {
+        "input_tokens": 23548,
+        "output_tokens": 1286
+      }
+    },
+    {
+      "scenario": "R04",
+      "set": "v2",
+      "event": "E005",
+      "part": "P002",
+      "passed": true,
+      "fields": [
+        {
+          "field": "slippage_tier",
+          "got": "NONE",
+          "want": "NONE",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E005",
+        "part_id": "P002",
+        "status": "COVERED_BY_PO",
+        "shortage_qty": 0,
+        "allocated_status": "COVERED_BY_TRANSFER",
+        "allocated_shortage_qty": 0,
+        "contention": "CONTENDED_COVERED",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "NO_ORDERING_FALLBACK",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "NONE",
+          "checkpoint_date": null,
+          "verifications_outstanding": []
+        },
+        "recovery_path": null,
+        "feasible_recovery_exists": true,
+        "recommended_decision": "approve_transfer",
+        "coverage_summary": "E005 P002 is COVERED_BY_TRANSFER in allocated view (1 unit from network site YYZ-H2) with CONTENDED_COVERED status; single-line view shows COVERED_BY_PO (4 units inbound via PO-1002 arriving 2026-11-12, 32 days before event start); NO_ORDERING_FALLBACK status reflects order-by date passed 408 days ago with 450-day lead time.",
+        "recommendation": "Approve the inter-site transfer from YYZ-H2 to cover the allocated demand for E005. Monitor PO-1002 (4 units outstanding, expected 2026-11-12, margin 32 days) for on-time arrival. The part is HIGH criticality with material risk due to long lead time; slippage margins are adequate but watch delivery closely given the 7-day slip buffer already noted. No new procurement action is feasible (order-by date passed by 408 days). This line is suitable for monitoring once the transfer is approved.",
+        "escalation_required": false,
+        "notes_cited": [
+          "N03"
+        ]
+      },
+      "usage": {
+        "input_tokens": 23916,
+        "output_tokens": 1291
+      }
+    },
+    {
+      "scenario": "R05",
+      "set": "v2",
+      "event": "E004",
+      "part": "P021",
+      "passed": true,
+      "fields": [
+        {
+          "field": "slippage_tier",
+          "got": "NONE",
+          "want": "NONE",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E004",
+        "part_id": "P021",
+        "status": "OK",
+        "shortage_qty": 0,
+        "allocated_status": "OK",
+        "allocated_shortage_qty": 0,
+        "contention": "UNCONTENDED",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "NONE",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "NONE",
+          "checkpoint_date": null,
+          "verifications_outstanding": []
+        },
+        "recovery_path": null,
+        "feasible_recovery_exists": true,
+        "recommended_decision": "acknowledged",
+        "coverage_summary": "E004 P021 (Cargo door actuator, ROUTINE): 1 unit required, fully covered. Single-line status OK with 8 site-available, 2 inbound before need date (PO-1012 arrives 2026-11-18, 19 days before event start), 12 network-available. Allocated status OK, uncontended, no competing demands.",
+        "recommendation": "Acknowledge coverage. No action required. PO-1012 (2 units, promised 2026-11-10, expected 2026-11-18) provides load-free buffer and arrives well ahead of event start 2026-12-07. Part is ROUTINE criticality with adequate site and network inventory. Monitor standard delivery schedule.",
+        "escalation_required": false,
+        "notes_cited": []
+      },
+      "usage": {
+        "input_tokens": 16885,
+        "output_tokens": 984
+      }
+    },
+    {
+      "scenario": "W01",
+      "set": "v2",
+      "event": "E004",
+      "part": "P011",
+      "passed": true,
+      "fields": [
+        {
+          "field": "watchlist_tier",
+          "got": "ORDER_BY_CLOSING",
+          "want": "ORDER_BY_CLOSING",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E004",
+        "part_id": "P011",
+        "status": "COVERED_BY_TRANSFER",
+        "shortage_qty": 0,
+        "allocated_status": "COVERED_BY_TRANSFER",
+        "allocated_shortage_qty": 0,
+        "contention": "UNCONTENDED",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "ORDER_BY_CLOSING",
+        "procurement_action": "RAISED",
+        "procurement_need": "Pool for P011 is shared across 3 events (E002, E004, E006): aggregate demand 17 exceeds the total physical pool 14; the stock cannot be replenished inside the horizon once the order-by date passes.",
+        "customer_notification": {
+          "action": "NONE",
+          "checkpoint_date": null,
+          "verifications_outstanding": []
+        },
+        "recovery_path": null,
+        "feasible_recovery_exists": true,
+        "recommended_decision": "place_order",
+        "coverage_summary": "E004 P011 shows single-line status COVERED_BY_TRANSFER (6 required, 4 site + 2 from YUL-H1 network available, 0 shortage) with no slippage risk; however procurement_action RAISED and watchlist_tier ORDER_BY_CLOSING (order-by 2026-11-07, 5 days remaining) trigger placement decision due to documented pool scarcity across E002, E004, E006 (aggregate demand 17 > total pool 14).",
+        "recommendation": "Place order now for P011 (6 units minimum for E004). The order-by date is 2026-11-07 (5 days from assessment date 2026-11-02); this line is currently covered by transfer from network stock, but the procurement action documents that the shared pool (serving E002, E004, E006 with aggregate demand 17 against supply 14) cannot be replenished after order-by passes. Expedited ordering closes the replenishment window and mitigates multi-event risk. Lead time is 30 days; earliest arrival 2026-12-02 is 5 days before event start 2026-12-07.",
+        "escalation_required": false,
+        "notes_cited": [
+          "N06"
+        ]
+      },
+      "usage": {
+        "input_tokens": 22479,
+        "output_tokens": 1368
+      }
+    },
+    {
+      "scenario": "W02",
+      "set": "v2",
+      "event": "E006",
+      "part": "P011",
+      "passed": true,
+      "fields": [
+        {
+          "field": "watchlist_tier",
+          "got": "ORDER_BY_CLOSING",
+          "want": "ORDER_BY_CLOSING",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E006",
+        "part_id": "P011",
+        "status": "OK",
+        "shortage_qty": 0,
+        "allocated_status": "SHORT_UNCOVERED",
+        "allocated_shortage_qty": 3,
+        "contention": "CONTENDED_SHORT",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "ORDER_BY_CLOSING",
+        "procurement_action": "RAISED",
+        "procurement_need": "Pool for P011 is shared across 3 events (E002, E004, E006): aggregate demand 17 exceeds the total physical pool 14; the stock cannot be replenished inside the horizon once the order-by date passes.",
+        "customer_notification": {
+          "action": "PREPARE_DRAFT",
+          "checkpoint_date": "2026-12-21",
+          "verifications_outstanding": [
+            "affected event",
+            "material shortfall",
+            "recovery options",
+            "proposed communication"
+          ]
+        },
+        "recovery_path": "expedite / chase PO",
+        "feasible_recovery_exists": true,
+        "recommended_decision": "place_order",
+        "coverage_summary": "Single-line status is OK (6 units available: 6 on-site + 0 inbound + 8 network available), but allocated status is SHORT_UNCOVERED (3-unit shortage when cross-event contention is applied across E002, E004, E006 sharing the same pool of 14 total units against aggregate demand of 17); procurement action has been RAISED and watchlist tier is ORDER_BY_CLOSING with order-by date 2026-11-21 (19 days remaining).",
+        "recommendation": "Place order for P011 immediately to close the procurement action before the order-by date (2026-11-21) passes. The pool is contended across three events; expedited delivery or re-sequencing of check may recover part of the shortage if pursued in parallel. Prepare customer notification draft for approval at the event start date (2026-12-21 checkpoint), pending review of recovery options and confirmed availability recount.",
+        "escalation_required": false,
+        "notes_cited": [
+          "N06",
+          "N03",
+          "N05"
+        ]
+      },
+      "usage": {
+        "input_tokens": 60271,
+        "output_tokens": 3253,
+        "citation_retry": 1
+      }
+    },
+    {
+      "scenario": "W03",
+      "set": "v2",
+      "event": "E001",
+      "part": "P005",
+      "passed": true,
+      "fields": [
+        {
+          "field": "watchlist_tier",
+          "got": "NONE",
+          "want": "NONE",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E001",
+        "part_id": "P005",
+        "status": "OK",
+        "shortage_qty": 0,
+        "allocated_status": "OK",
+        "allocated_shortage_qty": 0,
+        "contention": "UNCONTENDED",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "NONE",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "NONE",
+          "checkpoint_date": null,
+          "verifications_outstanding": []
+        },
+        "recovery_path": null,
+        "feasible_recovery_exists": true,
+        "recommended_decision": "acknowledged",
+        "coverage_summary": "P005 (Oil filter element, ROUTINE) is OK: 4 units required, 20 site + 16 network available, no shortage, uncontended cross-event allocation, PO-1006 received early on 2026-10-19.",
+        "recommendation": "Acknowledge coverage. The line is fully covered by existing site and network inventory. No action required; proceed with event planning.",
+        "escalation_required": false,
+        "notes_cited": []
+      },
+      "usage": {
+        "input_tokens": 13084,
+        "output_tokens": 1266
+      }
+    },
+    {
+      "scenario": "W04",
+      "set": "v2",
+      "event": "E001",
+      "part": "P001",
+      "passed": true,
+      "fields": [
+        {
+          "field": "watchlist_tier",
+          "got": "NO_ORDERING_FALLBACK",
+          "want": "NO_ORDERING_FALLBACK",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E001",
+        "part_id": "P001",
+        "status": "SHORT_UNCOVERED",
+        "shortage_qty": 1,
+        "allocated_status": "SHORT_UNCOVERED",
+        "allocated_shortage_qty": 1,
+        "contention": "UNCONTENDED",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "NO_ORDERING_FALLBACK",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "PREPARE_DRAFT",
+          "checkpoint_date": "2026-11-16",
+          "verifications_outstanding": [
+            "affected event",
+            "material shortfall",
+            "recovery options",
+            "proposed communication"
+          ]
+        },
+        "recovery_path": "defer",
+        "feasible_recovery_exists": false,
+        "recommended_decision": "escalate_defer",
+        "coverage_summary": "E001 is short 1 unit of P001 (Turbine blade set, stage 1, AOG criticality); single-line and allocated views both show SHORT_UNCOVERED status; no feasible recovery levers exist; the order-by date (2025-05-25) has already passed and earliest possible arrival if ordered today is 2028-04-25 (526 days after event start).",
+        "recommendation": "Escalate to management: no feasible recovery exists for this AOG short line. The part requires 540 days lead time from a single approved supplier and the order-by window closed 526 days ago. Recommend deferring the engine overhaul event E001 or sourcing via rotable exchange if available at other sites. Prepare a customer notification draft for human approval addressing the 1-unit material shortfall, confirming that no recovery levers are available, and proposing either event deferral or alternative sourcing paths.",
+        "escalation_required": true,
+        "notes_cited": [
+          "N05",
+          "N03"
+        ]
+      },
+      "usage": {
+        "input_tokens": 13626,
+        "output_tokens": 1135
+      }
+    },
+    {
+      "scenario": "W05",
+      "set": "v2",
+      "event": "E003",
+      "part": "P003",
+      "passed": true,
+      "fields": [
+        {
+          "field": "watchlist_tier",
+          "got": "NO_ORDERING_FALLBACK",
+          "want": "NO_ORDERING_FALLBACK",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E003",
+        "part_id": "P003",
+        "status": "COVERED_BY_ALTERNATE",
+        "shortage_qty": 0,
+        "allocated_status": "COVERED_BY_ALTERNATE",
+        "allocated_shortage_qty": 0,
+        "contention": "UNCONTENDED",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "NO_ORDERING_FALLBACK",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "NONE",
+          "checkpoint_date": null,
+          "verifications_outstanding": []
+        },
+        "recovery_path": null,
+        "feasible_recovery_exists": true,
+        "recommended_decision": "approve_alternate",
+        "coverage_summary": "E003 P003 requires 8 units; covered by 3 site stock + 1 network (YYZ-H2) + 4 alternate P023 units, per documented interchangeability N01; no shortage, uncontended, no slippage.",
+        "recommendation": "Approve use of alternate part P023 (fuel nozzle set) for the 4-unit shortfall of primary part P003. The primary part cannot be ordered now (order-by date 2025-06-08 passed; lead time 540 days would result in arrival 512 days after event end). Coverage is achieved through interchangeable substitute per N01 policy. Confirm P023 availability (5 units on hand) and plan exchange of 4 units to YUL-H1 by event start 2026-11-30.",
+        "escalation_required": false,
+        "notes_cited": [
+          "N01"
+        ]
+      },
+      "usage": {
+        "input_tokens": 13459,
+        "output_tokens": 1793
+      }
+    },
+    {
+      "scenario": "P01",
+      "set": "v2",
+      "event": "E006",
+      "part": "P011",
+      "passed": true,
+      "fields": [
+        {
+          "field": "status",
+          "got": "OK",
+          "want": "OK",
+          "match": true
+        },
+        {
+          "field": "watchlist_tier",
+          "got": "ORDER_BY_CLOSING",
+          "want": "ORDER_BY_CLOSING",
+          "match": true
+        },
+        {
+          "field": "procurement_action",
+          "got": "RAISED",
+          "want": "RAISED",
+          "match": true
+        },
+        {
+          "field": "procurement_need_documented",
+          "got": true,
+          "want": true,
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E006",
+        "part_id": "P011",
+        "status": "OK",
+        "shortage_qty": 0,
+        "allocated_status": "SHORT_UNCOVERED",
+        "allocated_shortage_qty": 3,
+        "contention": "CONTENDED_SHORT",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "ORDER_BY_CLOSING",
+        "procurement_action": "RAISED",
+        "procurement_need": "Pool for P011 is shared across 3 events (E002, E004, E006): aggregate demand 17 exceeds the total physical pool 14; the stock cannot be replenished inside the horizon once the order-by date passes.",
+        "customer_notification": {
+          "action": "PREPARE_DRAFT",
+          "checkpoint_date": "2026-12-21",
+          "verifications_outstanding": [
+            "affected event",
+            "material shortfall",
+            "recovery options",
+            "proposed communication"
+          ]
+        },
+        "recovery_path": "expedite / chase PO",
+        "feasible_recovery_exists": true,
+        "recommended_decision": "escalate_expedite",
+        "coverage_summary": "Single-line status OK (6 units on-site), but allocated cross-event view shows SHORT_UNCOVERED (3 units short) due to CONTENDED_SHORT contention across E002, E004, E006; procurement action RAISED with feasible expedite and re-sequence levers.",
+        "recommendation": "Escalate to expedite procurement: place emergency order by 2026-11-21 to secure additional units for E006's portion of the shared pool; simultaneously prepare customer notification draft for approval; evaluate re-sequencing E002/E004 checks to reduce concurrent demand or redirect transfer stock. Recovery is feasible if expedite succeeds within 19-day order-by window.",
+        "escalation_required": true,
+        "notes_cited": [
+          "N03",
+          "N05"
+        ]
+      },
+      "usage": {
+        "input_tokens": 18742,
+        "output_tokens": 1913
+      }
+    },
+    {
+      "scenario": "X01",
+      "set": "v2",
+      "event": "E001",
+      "part": "P001",
+      "passed": true,
+      "fields": [
+        {
+          "field": "feasible_recovery_exists",
+          "got": false,
+          "want": false,
+          "match": true
+        },
+        {
+          "field": "recommended_decision",
+          "got": "escalate_defer",
+          "want": "escalate_defer",
+          "match": true
+        },
+        {
+          "field": "recovery_path",
+          "got": "defer",
+          "want": "defer",
+          "match": true
+        },
+        {
+          "field": "customer_notification.action",
+          "got": "PREPARE_DRAFT",
+          "want": "PREPARE_DRAFT",
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E001",
+        "part_id": "P001",
+        "status": "SHORT_UNCOVERED",
+        "shortage_qty": 1,
+        "allocated_status": "SHORT_UNCOVERED",
+        "allocated_shortage_qty": 1,
+        "contention": "UNCONTENDED",
+        "slippage_tier": "NONE",
+        "watchlist_tier": "NO_ORDERING_FALLBACK",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "PREPARE_DRAFT",
+          "checkpoint_date": "2026-11-16",
+          "verifications_outstanding": [
+            "affected event",
+            "material shortfall",
+            "recovery options",
+            "proposed communication"
+          ]
+        },
+        "recovery_path": "defer",
+        "feasible_recovery_exists": false,
+        "recommended_decision": "escalate_defer",
+        "coverage_summary": "Turbine blade set P001 is SHORT_UNCOVERED by 1 unit (need 2, on-site stock 1, PO-1001 arrives 19 days late); no feasible recovery exists (no transfer pool, no alternates, re-sequence not viable for AOG part at event start in 14 days).",
+        "recommendation": "No feasible recovery exists for this 1-unit AOG shortage. Escalate to operations: the event must be deferred, or alternative procedures must be approved before event start. Prepare a draft customer notification (checkpoint 2026-11-16) for human review covering the shortfall, its impact on the overhaul timeline, and recovery options (defer or aircraft disposition). Monitor PO-1001 for actual slip and confirm whether the additional unit can be staged for a future check.",
+        "escalation_required": true,
+        "notes_cited": [
+          "N05",
+          "N03"
+        ]
+      },
+      "usage": {
+        "input_tokens": 13528,
+        "output_tokens": 1873
+      }
+    },
+    {
+      "scenario": "X02a",
+      "set": "v2",
+      "event": "E001",
+      "part": "P002",
+      "passed": false,
+      "fields": [],
+      "error": "",
+      "assessment": null,
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      }
+    },
+    {
+      "scenario": "X02b",
+      "set": "v2",
+      "event": "E002",
+      "part": "P015",
+      "passed": true,
+      "fields": [
+        {
+          "field": "customer_notification.action",
+          "got": "NONE",
+          "want": "NONE",
+          "match": true
+        },
+        {
+          "field": "recommended_decision_internal",
+          "got": true,
+          "want": true,
+          "match": true
+        }
+      ],
+      "error": null,
+      "assessment": {
+        "event_id": "E002",
+        "part_id": "P015",
+        "status": "COVERED_BY_PO",
+        "shortage_qty": 0,
+        "allocated_status": "COVERED_BY_PO",
+        "allocated_shortage_qty": 0,
+        "contention": "UNCONTENDED",
+        "slippage_tier": "SLIPPAGE_WATCH",
+        "watchlist_tier": "NO_ORDERING_FALLBACK",
+        "procurement_action": "NONE",
+        "procurement_need": null,
+        "customer_notification": {
+          "action": "NONE",
+          "checkpoint_date": null,
+          "verifications_outstanding": []
+        },
+        "recovery_path": null,
+        "feasible_recovery_exists": true,
+        "recommended_decision": "approve_monitor_po",
+        "coverage_summary": "Part P015 (Landing gear seal kit) is COVERED_BY_PO in both single-line and allocated views (qty 4 required, PO-1007 delivers 6 units by 2026-11-12, 11 days before event end); however slippage_tier is SLIPPAGE_WATCH due to 7-day slip risk on the load-bearing PO with 11-day margin, and watchlist_tier is NO_ORDERING_FALLBACK because the 120-day lead time has already passed its order-by date (2026-07-26).",
+        "recommendation": "Approve and actively monitor PO-1007. The delivery of 6 units on 2026-11-12 provides sufficient coverage for the 4 units required by event end (2026-12-04), with 11-day margin. However, the promised delivery date (2026-11-05) has slipped by 7 days to 2026-11-12, leaving 22 days before event end. Given that this PO is load-bearing and no fallback ordering is available (lead time already passed), escalation to expedite is not immediately triggered because current margin is still positive. Planner should: (1) confirm PO-1007 status on or before the checkpoint date to verify no further slippage; (2) if new slippage occurs or delivery risk increases, prepare to activate expedite levers (expedite chase or re-sequence check options are feasible per get_horizon). No customer notification is required at this time; escalate to expedite only if margin erodes further.",
+        "escalation_required": false,
+        "notes_cited": []
+      },
+      "usage": {
+        "input_tokens": 13689,
+        "output_tokens": 1273
+      }
+    }
+  ],
+  "v1_regression": [
+    {
+      "scenario": "S01",
+      "set": "v1-regression",
+      "event": "E001",
+      "part": "P001",
+      "passed": true,
+      "expected_status": "SHORT_UNCOVERED",
+      "agent_status": "SHORT_UNCOVERED",
+      "expected_shortage": 1,
+      "agent_shortage": 1,
+      "error": null,
+      "assessment": {
+        "event_id": "E001",
+        "part_id": "P001",
+        "status": "SHORT_UNCOVERED",
+        "shortage_qty": 1,
+        "coverage_summary": "1 unit on-site, 0 inbound before need, 1-unit shortage; open PO-1001 (2 units) expected 2026-12-05, arriving 19 days after event start.",
+        "recommendation": "Per AOG escalation policy (N05), escalate immediately. Per inter-site transfer procedure (N03), investigate availability at YYZ-H2 and YYC-H3 for redistribution. Verify whether PO-1001 can be expedited or split for early partial delivery before 2026-11-16. No approved alternates exist for this part. Do not proceed with event unless full 2-unit requirement is secured before planned start.",
+        "escalation_required": true,
+        "notes_cited": [
+          "N05",
+          "N03"
+        ]
+      },
+      "usage": {
+        "input_tokens": 11251,
+        "output_tokens": 1261,
+        "citation_retry": 1
+      }
+    },
+    {
+      "scenario": "S02",
+      "set": "v1-regression",
+      "event": "E001",
+      "part": "P002",
+      "passed": true,
+      "expected_status": "COVERED_BY_PO",
+      "agent_status": "COVERED_BY_PO",
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "error": null,
+      "assessment": {
+        "event_id": "E001",
+        "part_id": "P002",
+        "status": "COVERED_BY_PO",
+        "shortage_qty": 0,
+        "coverage_summary": "4 units required; 1 on site + 4 inbound via PO-1002 (expected 2026-11-12, 4 days before event start within margin) = 5 total coverage.",
+        "recommendation": "No action required. PO-1002 is open, counted, and scheduled to arrive 4 days before event start with 4-day margin. Monitor for slips beyond the current 7-day allowance.",
+        "escalation_required": false,
+        "notes_cited": []
+      },
+      "usage": {
+        "input_tokens": 6950,
+        "output_tokens": 839
+      }
+    },
+    {
+      "scenario": "S03",
+      "set": "v1-regression",
+      "event": "E002",
+      "part": "P016",
+      "passed": true,
+      "expected_status": "COVERED_BY_TRANSFER",
+      "agent_status": "COVERED_BY_TRANSFER",
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "error": null,
+      "assessment": {
+        "event_id": "E002",
+        "part_id": "P016",
+        "status": "COVERED_BY_TRANSFER",
+        "shortage_qty": 0,
+        "coverage_summary": "6 units required; 2 available locally at YYZ-H2 and 5 available via network transfer (3 from YUL-H1, 2 from YYC-H3) for total coverage of 7 units.",
+        "recommendation": "Proceed with inter-site transfer per N03: confirm and execute transfer of 3 units from YUL-H1 and 2 units from YYC-H3 to YYZ-H2 to meet the 6-unit requirement by event start 2026-11-23. Brake unit pooling (N12) may apply to logistics coordination.",
+        "escalation_required": false,
+        "notes_cited": [
+          "N03",
+          "N12"
+        ]
+      },
+      "usage": {
+        "input_tokens": 10513,
+        "output_tokens": 1175,
+        "citation_retry": 1
+      }
+    },
+    {
+      "scenario": "S04",
+      "set": "v1-regression",
+      "event": "E003",
+      "part": "P003",
+      "passed": true,
+      "expected_status": "COVERED_BY_ALTERNATE",
+      "agent_status": "COVERED_BY_ALTERNATE",
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "error": null,
+      "assessment": {
+        "event_id": "E003",
+        "part_id": "P003",
+        "status": "COVERED_BY_ALTERNATE",
+        "shortage_qty": 0,
+        "coverage_summary": "Demand of 8 units is fully covered by on-site stock (3) + network transfer (1) + approved alternate P023 (5).",
+        "recommendation": "Release the confirmed on-site stock (3 units) and network transfer (1 unit) for event E003. Initiate procurement and receipt of 4 units of alternate part P023 to supplement remaining demand. Ensure engineering approves the alternate substitution per interchangeability note N01.",
+        "escalation_required": false,
+        "notes_cited": [
+          "N01"
+        ]
+      },
+      "usage": {
+        "input_tokens": 8808,
+        "output_tokens": 706
+      }
+    },
+    {
+      "scenario": "S05",
+      "set": "v1-regression",
+      "event": "E003",
+      "part": "P005",
+      "passed": true,
+      "expected_status": "OK",
+      "agent_status": "OK",
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "error": null,
+      "assessment": {
+        "event_id": "E003",
+        "part_id": "P005",
+        "status": "OK",
+        "shortage_qty": 0,
+        "coverage_summary": "12 units required; 20 units available on-site at YUL-H1 covers full demand with 8 units margin.",
+        "recommendation": "No action required. Part is in stock with sufficient quantity. Proceed with planned event.",
+        "escalation_required": false,
+        "notes_cited": []
+      },
+      "usage": {
+        "input_tokens": 8953,
+        "output_tokens": 497
+      }
+    },
+    {
+      "scenario": "S06",
+      "set": "v1-regression",
+      "event": "E004",
+      "part": "P019",
+      "passed": true,
+      "expected_status": "INSUFFICIENT_DATA",
+      "agent_status": "INSUFFICIENT_DATA",
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "error": null,
+      "assessment": {
+        "event_id": "E004",
+        "part_id": "P019",
+        "status": "INSUFFICIENT_DATA",
+        "shortage_qty": 0,
+        "coverage_summary": "No inventory record exists at YYC-H3 for 2 required Fire detection loops; no inbound purchase orders found; no alternates available.",
+        "recommendation": "Escalate immediately to supply chain leadership for physical inventory count at YYC-H3 and all network locations. Confirm actual stock status and availability from supplier SafeWire Systems. Given 300-day lead time and the order-by date already passed, a delivery-alternative strategy (expedited shipment, emergency procurement, or event reschedule) must be evaluated in parallel.",
+        "escalation_required": true,
+        "notes_cited": [
+          "N11",
+          "N05"
+        ]
+      },
+      "usage": {
+        "input_tokens": 6721,
+        "output_tokens": 764
+      }
+    },
+    {
+      "scenario": "S07",
+      "set": "v1-regression",
+      "event": "E005",
+      "part": "P007",
+      "passed": true,
+      "expected_status": "SHORT_UNCOVERED",
+      "agent_status": "SHORT_UNCOVERED",
+      "expected_shortage": 2,
+      "agent_shortage": 2,
+      "error": null,
+      "assessment": {
+        "event_id": "E005",
+        "part_id": "P007",
+        "status": "SHORT_UNCOVERED",
+        "shortage_qty": 2,
+        "coverage_summary": "Required 3 units; 0 at site, 1 inbound (PO-1010 arriving 6 days after event start), 1 available in network (YYZ-H2). Shortage of 2 units uncovered; normal lead time (365 days) makes emergency procurement infeasible.",
+        "recommendation": "Escalate immediately per AOG policy. Attempt emergency transfer of 1 unit from YYZ-H2. Expedite PO-1010 verification and physical count. Contact supplier for emergency options or expedited service.",
+        "escalation_required": true,
+        "notes_cited": [
+          "N05"
+        ]
+      },
+      "usage": {
+        "input_tokens": 6474,
+        "output_tokens": 979
+      }
+    },
+    {
+      "scenario": "S08",
+      "set": "v1-regression",
+      "event": "E002",
+      "part": "P006",
+      "passed": true,
+      "expected_status": "COVERED_BY_PO",
+      "agent_status": "COVERED_BY_PO",
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "error": null,
+      "assessment": {
+        "event_id": "E002",
+        "part_id": "P006",
+        "status": "COVERED_BY_PO",
+        "shortage_qty": 0,
+        "coverage_summary": "Requirement of 10 units is covered by 9 site units plus 2 inbound from PO-1011 (expected 2026-11-20, 3 days before event start).",
+        "recommendation": "Monitor PO-1011 for on-time delivery; current tracking is within margin with 3-day buffer before event need.",
+        "escalation_required": false,
+        "notes_cited": []
+      },
+      "usage": {
+        "input_tokens": 3855,
+        "output_tokens": 643
+      }
+    },
+    {
+      "scenario": "S09",
+      "set": "v1-regression",
+      "event": "E006",
+      "part": "P011",
+      "passed": true,
+      "expected_status": "OK",
+      "agent_status": "OK",
+      "expected_shortage": 0,
+      "agent_shortage": 0,
+      "error": null,
+      "assessment": {
+        "event_id": "E006",
+        "part_id": "P011",
+        "status": "OK",
+        "shortage_qty": 0,
+        "coverage_summary": "Event demand of 6 units is fully covered by 6 units available at site YYZ-H2.",
+        "recommendation": "No action required. Inventory is sufficient.",
+        "escalation_required": false,
+        "notes_cited": []
+      },
+      "usage": {
+        "input_tokens": 3943,
+        "output_tokens": 529
+      }
+    },
+    {
+      "scenario": "S10",
+      "set": "v1-regression",
+      "event": "E005",
+      "part": "P020",
+      "passed": true,
+      "expected_status": "SHORT_UNCOVERED",
+      "agent_status": "SHORT_UNCOVERED",
+      "expected_shortage": 1,
+      "agent_shortage": 1,
+      "error": null,
+      "assessment": {
+        "event_id": "E005",
+        "part_id": "P020",
+        "status": "SHORT_UNCOVERED",
+        "shortage_qty": 1,
+        "coverage_summary": "1 unit on-site covers demand partially; 1 unit remains uncovered with no inbound POs or transfers available (lead_time_check shows order_by_already_passed=true, earliest_arrival 323 days after event start).",
+        "recommendation": "Escalate to supply chain management. Pursue inter-site transfer from YYZ-H2 or YYC-H3 per N03 (Inter-site transfer procedure) and N12 (Brake unit pooling). If network transfer fails, evaluate approved alternate part P024 per N02 (Interchangeability: P020 / P024 anti-skid units) or assess operational risk of proceeding with single unit.",
+        "escalation_required": true,
+        "notes_cited": [
+          "N03",
+          "N12",
+          "N02"
+        ]
+      },
+      "usage": {
+        "input_tokens": 16087,
+        "output_tokens": 1406,
+        "citation_retry": 1
+      }
+    }
+  ]
+}

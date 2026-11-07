@@ -1,0 +1,4203 @@
+{
+  "reference_date": "2026-11-02",
+  "allocation_policy": "chronological",
+  "generated_from": "rule engines + evals/results_v2_2026-11-06.json; see evals/build_planner_data_v2.py",
+  "v2_evaluation": {
+    "score": "18/20",
+    "v1_regression": "10/10"
+  },
+  "events": [
+    {
+      "event_id": "E001",
+      "event_name": "Engine overhaul",
+      "tail": "FIN-701",
+      "start": "2026-11-16",
+      "end": "2026-11-27",
+      "lines": [
+        {
+          "part_id": "P001",
+          "part_name": "Turbine blade set, stage 1",
+          "criticality": "AOG",
+          "needed": 2,
+          "status": "SHORT_UNCOVERED",
+          "shortage_qty": 1,
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 1,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E001",
+            "part_id": "P001",
+            "v1_status": "SHORT_UNCOVERED",
+            "allocated_status": "SHORT_UNCOVERED",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": "shortage_or_insufficient_takes_precedence",
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2025-05-25",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2025-05-25",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 540,
+            "review_points": {
+              "6-month": "2026-05-16",
+              "3-month": "2026-08-16"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "allocated_SHORT_UNCOVERED",
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": true,
+            "checkpoint_date": "2026-11-16",
+            "basis": "SHORT_UNCOVERED"
+          },
+          "recovery": {
+            "feasible": false,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": false
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E001",
+            "part_id": "P001",
+            "status": "SHORT_UNCOVERED",
+            "shortage_qty": 1,
+            "allocated_status": "SHORT_UNCOVERED",
+            "allocated_shortage_qty": 1,
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watchlist_tier": "NO_ORDERING_FALLBACK",
+            "procurement_action": "NONE",
+            "procurement_need": null,
+            "customer_notification": {
+              "action": "PREPARE_DRAFT",
+              "checkpoint_date": "2026-11-16",
+              "verifications_outstanding": [
+                "affected event",
+                "material shortfall",
+                "recovery options",
+                "proposed communication"
+              ]
+            },
+            "recovery_path": "defer",
+            "feasible_recovery_exists": false,
+            "recommended_decision": "escalate_defer",
+            "coverage_summary": "Turbine blade set P001 is SHORT_UNCOVERED by 1 unit (need 2, on-site stock 1, PO-1001 arrives 19 days late); no feasible recovery exists (no transfer pool, no alternates, re-sequence not viable for AOG part at event start in 14 days).",
+            "recommendation": "No feasible recovery exists for this 1-unit AOG shortage. Escalate to operations: the event must be deferred, or alternative procedures must be approved before event start. Prepare a draft customer notification (checkpoint 2026-11-16) for human review covering the shortfall, its impact on the overhaul timeline, and recovery options (defer or aircraft disposition). Monitor PO-1001 for actual slip and confirm whether the additional unit can be staged for a future check.",
+            "escalation_required": true,
+            "notes_cited": [
+              "N05",
+              "N03"
+            ]
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        },
+        {
+          "part_id": "P002",
+          "part_name": "HPT seal kit",
+          "criticality": "HIGH",
+          "needed": 4,
+          "status": "COVERED_BY_PO",
+          "shortage_qty": 0,
+          "allocated_status": "COVERED_BY_PO",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "SLIPPAGE_HIGH",
+          "slippage_detail": {
+            "event_id": "E001",
+            "part_id": "P002",
+            "v1_status": "COVERED_BY_PO",
+            "allocated_status": "COVERED_BY_PO",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "SLIPPAGE_HIGH",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": "2026-11-12",
+            "pairs": [
+              {
+                "po_id": "PO-1002",
+                "outstanding": 4,
+                "promised_date": "2026-11-05",
+                "expected_date": "2026-11-12",
+                "slip_days": 7,
+                "margin_days": 4,
+                "load_bearing": true,
+                "load_bearing_allocated": true,
+                "repeat_slip_breaks": true
+              }
+            ]
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2025-08-23",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2025-08-23",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 450,
+            "review_points": {
+              "6-month": "2026-05-16",
+              "3-month": "2026-08-16"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "SLIPPAGE_HIGH",
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": true,
+            "checkpoint_date": "2026-11-12",
+            "basis": "SLIPPAGE_HIGH"
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E001",
+            "part_id": "P002",
+            "status": "COVERED_BY_PO",
+            "shortage_qty": 0,
+            "allocated_status": "COVERED_BY_PO",
+            "allocated_shortage_qty": 0,
+            "contention": "UNCONTENDED",
+            "slippage_tier": "SLIPPAGE_HIGH",
+            "watchlist_tier": "NO_ORDERING_FALLBACK",
+            "procurement_action": "NONE",
+            "procurement_need": null,
+            "customer_notification": {
+              "action": "PREPARE_DRAFT",
+              "checkpoint_date": "2026-11-12",
+              "verifications_outstanding": [
+                "affected event",
+                "material shortfall",
+                "recovery options",
+                "proposed communication"
+              ]
+            },
+            "recovery_path": "expedite / chase PO",
+            "feasible_recovery_exists": true,
+            "recommended_decision": "escalate_expedite",
+            "coverage_summary": "Line is covered by PO-1002 (4 units expected 2026-11-12), but SLIPPAGE_HIGH risk: 7-day slip with 4-day margin means delivery is 4 days before event start, and repeat slip breaks coverage; no reorder fallback available (lead time 450 days, order-by window closed 436 days ago).",
+            "recommendation": "This line requires escalated expedite action on PO-1002. The supplier (AeroForge Ltd) must confirm the promised 2026-11-05 delivery and reduce slip risk; chase the PO immediately and establish checkpoint review at 2026-11-12. Recovery via expedite is feasible; re-sequencing the check is also an option if expedite fails. Prepare customer notification draft alerting to material-at-risk status for FIN-701 engine overhaul, with checkpoint decision at 2026-11-12 when PO delivery status is confirmed. If PO slips beyond 2026-11-12, escalate to defer or re-sequence decision (no new-order recovery exists within event window). Note: no documented policy in the knowledge base explicitly covers SLIPPAGE_HIGH escalation or at-risk material notification procedures; this recommendation is based on tool-returned risk tiers and recovery feasibility.",
+            "escalation_required": true,
+            "notes_cited": []
+          },
+          "assessment_source": "planner-build run (evaluation runs failed; see report)"
+        },
+        {
+          "part_id": "P004",
+          "part_name": "Main shaft bearing set",
+          "criticality": "AOG",
+          "needed": 2,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E001",
+            "part_id": "P004",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2025-05-25",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2025-05-25",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 540,
+            "review_points": {
+              "6-month": "2026-05-16",
+              "3-month": "2026-08-16"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": false
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P005",
+          "part_name": "Oil filter element",
+          "criticality": "ROUTINE",
+          "needed": 4,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E001",
+            "part_id": "P005",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-10-02",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-10-02",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": false,
+            "lead_time_days": 45
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E001",
+            "part_id": "P005",
+            "status": "OK",
+            "shortage_qty": 0,
+            "allocated_status": "OK",
+            "allocated_shortage_qty": 0,
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watchlist_tier": "NONE",
+            "procurement_action": "NONE",
+            "procurement_need": null,
+            "customer_notification": {
+              "action": "NONE",
+              "checkpoint_date": null,
+              "verifications_outstanding": []
+            },
+            "recovery_path": null,
+            "feasible_recovery_exists": true,
+            "recommended_decision": "acknowledged",
+            "coverage_summary": "P005 (Oil filter element, ROUTINE) is OK: 4 units required, 20 site + 16 network available, no shortage, uncontended cross-event allocation, PO-1006 received early on 2026-10-19.",
+            "recommendation": "Acknowledge coverage. The line is fully covered by existing site and network inventory. No action required; proceed with event planning.",
+            "escalation_required": false,
+            "notes_cited": []
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        },
+        {
+          "part_id": "P008",
+          "part_name": "EGT temperature sensor",
+          "criticality": "HIGH",
+          "needed": 3,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E001",
+            "part_id": "P008",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-03-21",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-03-21",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 240,
+            "review_points": {
+              "6-month": "2026-05-16",
+              "3-month": "2026-08-16"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P009",
+          "part_name": "Compressor gasket kit",
+          "criticality": "ROUTINE",
+          "needed": 2,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E001",
+            "part_id": "P009",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-05-20",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-05-20",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 180,
+            "review_points": {
+              "6-month": "2026-05-16",
+              "3-month": "2026-08-16"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        }
+      ]
+    },
+    {
+      "event_id": "E002",
+      "event_name": "C-check",
+      "tail": "FIN-812",
+      "start": "2026-11-23",
+      "end": "2026-12-04",
+      "lines": [
+        {
+          "part_id": "P006",
+          "part_name": "Igniter plug",
+          "criticality": "HIGH",
+          "needed": 10,
+          "status": "COVERED_BY_PO",
+          "shortage_qty": 0,
+          "allocated_status": "COVERED_BY_PO",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "SLIPPAGE_HIGH",
+          "slippage_detail": {
+            "event_id": "E002",
+            "part_id": "P006",
+            "v1_status": "COVERED_BY_PO",
+            "allocated_status": "COVERED_BY_PO",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "SLIPPAGE_HIGH",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": "2026-11-20",
+            "pairs": [
+              {
+                "po_id": "PO-1011",
+                "outstanding": 2,
+                "promised_date": "2026-11-15",
+                "expected_date": "2026-11-20",
+                "slip_days": 5,
+                "margin_days": 3,
+                "load_bearing": true,
+                "load_bearing_allocated": true,
+                "repeat_slip_breaks": true
+              }
+            ]
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2026-02-26",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-02-26",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 270,
+            "review_points": {
+              "6-month": "2026-05-23",
+              "3-month": "2026-08-23"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "SLIPPAGE_HIGH",
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": true,
+            "checkpoint_date": "2026-11-20",
+            "basis": "SLIPPAGE_HIGH"
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E002",
+            "part_id": "P006",
+            "status": "COVERED_BY_PO",
+            "shortage_qty": 0,
+            "allocated_status": "COVERED_BY_PO",
+            "allocated_shortage_qty": 0,
+            "contention": "UNCONTENDED",
+            "slippage_tier": "SLIPPAGE_HIGH",
+            "watchlist_tier": "NO_ORDERING_FALLBACK",
+            "procurement_action": "NONE",
+            "procurement_need": null,
+            "customer_notification": {
+              "action": "PREPARE_DRAFT",
+              "checkpoint_date": "2026-11-20",
+              "verifications_outstanding": [
+                "affected event",
+                "material shortfall",
+                "recovery options",
+                "proposed communication"
+              ]
+            },
+            "recovery_path": "expedite / chase PO",
+            "feasible_recovery_exists": true,
+            "recommended_decision": "escalate_expedite",
+            "coverage_summary": "Nominally covered (9 site + 2 from PO-1011) but SLIPPAGE_HIGH: PO promised 2026-11-15 has 5 slip days vs 3 margin days; expected 2026-11-20 is only 3 days before event start 2026-11-23; repeat slip breaks coverage.",
+            "recommendation": "Immediately chase PO-1011 with SparkLine Aviation to confirm delivery by 2026-11-20. Prepare draft customer notification citing material risk from high-lead-time part and slippage exposure. Escalate to procurement for expedite action. Re-sequencing the check (delay event start) remains a feasible fallback if slippage occurs.",
+            "escalation_required": true,
+            "notes_cited": [
+              "N05"
+            ]
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        },
+        {
+          "part_id": "P011",
+          "part_name": "Hydraulic filter element",
+          "criticality": "ROUTINE",
+          "needed": 5,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E002",
+            "part_id": "P011",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-10-24",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-10-24",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": false,
+            "lead_time_days": 30
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P015",
+          "part_name": "Landing gear seal kit",
+          "criticality": "ROUTINE",
+          "needed": 4,
+          "status": "COVERED_BY_PO",
+          "shortage_qty": 0,
+          "allocated_status": "COVERED_BY_PO",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "SLIPPAGE_WATCH",
+          "slippage_detail": {
+            "event_id": "E002",
+            "part_id": "P015",
+            "v1_status": "COVERED_BY_PO",
+            "allocated_status": "COVERED_BY_PO",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "SLIPPAGE_WATCH",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": [
+              {
+                "po_id": "PO-1007",
+                "outstanding": 6,
+                "promised_date": "2026-11-05",
+                "expected_date": "2026-11-12",
+                "slip_days": 7,
+                "margin_days": 11,
+                "load_bearing": true,
+                "load_bearing_allocated": true,
+                "repeat_slip_breaks": false
+              }
+            ]
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2026-07-26",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-07-26",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": false,
+            "lead_time_days": 120
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E002",
+            "part_id": "P015",
+            "status": "COVERED_BY_PO",
+            "shortage_qty": 0,
+            "allocated_status": "COVERED_BY_PO",
+            "allocated_shortage_qty": 0,
+            "contention": "UNCONTENDED",
+            "slippage_tier": "SLIPPAGE_WATCH",
+            "watchlist_tier": "NO_ORDERING_FALLBACK",
+            "procurement_action": "NONE",
+            "procurement_need": null,
+            "customer_notification": {
+              "action": "NONE",
+              "checkpoint_date": null,
+              "verifications_outstanding": []
+            },
+            "recovery_path": null,
+            "feasible_recovery_exists": true,
+            "recommended_decision": "approve_monitor_po",
+            "coverage_summary": "Part P015 (Landing gear seal kit) is COVERED_BY_PO in both single-line and allocated views (qty 4 required, PO-1007 delivers 6 units by 2026-11-12, 11 days before event end); however slippage_tier is SLIPPAGE_WATCH due to 7-day slip risk on the load-bearing PO with 11-day margin, and watchlist_tier is NO_ORDERING_FALLBACK because the 120-day lead time has already passed its order-by date (2026-07-26).",
+            "recommendation": "Approve and actively monitor PO-1007. The delivery of 6 units on 2026-11-12 provides sufficient coverage for the 4 units required by event end (2026-12-04), with 11-day margin. However, the promised delivery date (2026-11-05) has slipped by 7 days to 2026-11-12, leaving 22 days before event end. Given that this PO is load-bearing and no fallback ordering is available (lead time already passed), escalation to expedite is not immediately triggered because current margin is still positive. Planner should: (1) confirm PO-1007 status on or before the checkpoint date to verify no further slippage; (2) if new slippage occurs or delivery risk increases, prepare to activate expedite levers (expedite chase or re-sequence check options are feasible per get_horizon). No customer notification is required at this time; escalate to expedite only if margin erodes further.",
+            "escalation_required": false,
+            "notes_cited": []
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        },
+        {
+          "part_id": "P016",
+          "part_name": "Steel brake unit",
+          "criticality": "HIGH",
+          "needed": 6,
+          "status": "COVERED_BY_TRANSFER",
+          "shortage_qty": 0,
+          "allocated_status": "COVERED_BY_TRANSFER",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E002",
+            "part_id": "P016",
+            "v1_status": "COVERED_BY_TRANSFER",
+            "allocated_status": "COVERED_BY_TRANSFER",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2026-04-27",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-04-27",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 210,
+            "review_points": {
+              "6-month": "2026-05-23",
+              "3-month": "2026-08-23"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E002",
+            "part_id": "P016",
+            "status": "COVERED_BY_TRANSFER",
+            "shortage_qty": 0,
+            "allocated_status": "COVERED_BY_TRANSFER",
+            "allocated_shortage_qty": 0,
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watchlist_tier": "NO_ORDERING_FALLBACK",
+            "procurement_action": "NONE",
+            "procurement_need": null,
+            "customer_notification": {
+              "action": "NONE",
+              "checkpoint_date": null,
+              "verifications_outstanding": []
+            },
+            "recovery_path": null,
+            "feasible_recovery_exists": true,
+            "recommended_decision": "approve_transfer",
+            "coverage_summary": "Demand for 6 units covered via inter-site transfer (2 site stock + 5 network units YUL-H1/YYC-H3), zero shortage, uncontended; material risk flagged due to NO_ORDERING_FALLBACK and closed order-by window (189 days past 2026-04-27).",
+            "recommendation": "Approve inter-site transfer execution from YUL-H1 (3 units) and YYC-H3 (2 units) to YYZ-H2. Coordinate logistics to ensure delivery before event start 2026-11-23. Escalate material-risk condition (210-day lead time, no new-order fallback) to supply-chain leadership for strategic hedge-stock or supplier-diversification review to mitigate future supply vulnerability for this HIGH-criticality brake component.",
+            "escalation_required": false,
+            "notes_cited": [
+              "N12",
+              "N03"
+            ]
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        },
+        {
+          "part_id": "P017",
+          "part_name": "Cabin pressure sensor",
+          "criticality": "ROUTINE",
+          "needed": 2,
+          "status": "COVERED_BY_TRANSFER",
+          "shortage_qty": 0,
+          "allocated_status": "COVERED_BY_TRANSFER",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E002",
+            "part_id": "P017",
+            "v1_status": "COVERED_BY_TRANSFER",
+            "allocated_status": "COVERED_BY_TRANSFER",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2026-07-26",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-07-26",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": false,
+            "lead_time_days": 120
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P018",
+          "part_name": "De-ice boot valve",
+          "criticality": null,
+          "needed": 3,
+          "status": "INSUFFICIENT_DATA",
+          "shortage_qty": 0,
+          "allocated_status": "INSUFFICIENT_DATA",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E002",
+            "part_id": "P018",
+            "v1_status": "INSUFFICIENT_DATA",
+            "allocated_status": "INSUFFICIENT_DATA",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": "shortage_or_insufficient_takes_precedence",
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2026-05-27",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-05-27",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 180,
+            "review_points": {
+              "6-month": "2026-05-23",
+              "3-month": "2026-08-23"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "allocated_INSUFFICIENT_DATA",
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        }
+      ]
+    },
+    {
+      "event_id": "E003",
+      "event_name": "Engine overhaul",
+      "tail": "FIN-903",
+      "start": "2026-11-30",
+      "end": "2026-12-11",
+      "lines": [
+        {
+          "part_id": "P001",
+          "part_name": "Turbine blade set, stage 1",
+          "criticality": "AOG",
+          "needed": 1,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 1,
+          "contention": "CONTENDED_SHORT",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E003",
+            "part_id": "P001",
+            "v1_status": "OK",
+            "allocated_status": "SHORT_UNCOVERED",
+            "contention": "CONTENDED_SHORT",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": "shortage_or_insufficient_takes_precedence",
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2025-06-08",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2025-06-08",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 540,
+            "review_points": {
+              "6-month": "2026-05-30",
+              "3-month": "2026-08-30"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "allocated_SHORT_UNCOVERED",
+            "CONTENDED_SHORT"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": true,
+            "checkpoint_date": "2026-11-30",
+            "basis": "SHORT_UNCOVERED"
+          },
+          "recovery": {
+            "feasible": false,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": false
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E003",
+            "part_id": "P001",
+            "status": "OK",
+            "shortage_qty": 0,
+            "allocated_status": "SHORT_UNCOVERED",
+            "allocated_shortage_qty": 1,
+            "contention": "CONTENDED_SHORT",
+            "slippage_tier": "NONE",
+            "watchlist_tier": "NONE",
+            "procurement_action": "NONE",
+            "procurement_need": null,
+            "customer_notification": {
+              "action": "PREPARE_DRAFT",
+              "checkpoint_date": "2026-11-30",
+              "verifications_outstanding": [
+                "affected event",
+                "material shortfall",
+                "recovery options",
+                "proposed communication"
+              ]
+            },
+            "recovery_path": "defer",
+            "feasible_recovery_exists": false,
+            "recommended_decision": "escalate_defer",
+            "coverage_summary": "Single-line OK (1 unit on site) but allocated view SHORT_UNCOVERED (1-unit shortage after chronological pool allocation); CONTENDED_SHORT with no feasible recovery and AOG criticality mandates escalation.",
+            "recommendation": "Escalate immediately to operations and stakeholder management. Line E003-P001 (Turbine blade set, stage 1, AOG) will be uncovered when competing events exhaust the site stock. No expedite, transfer, or re-sequence is feasible; the order-by date expired 512 days ago. Prepare a customer notification draft for approval and release at 2026-11-30 (event start) addressing the material shortfall, recovery options explored (none viable), and the proposed communication to the customer. Escalation required due to AOG criticality and absence of any recovery lever.",
+            "escalation_required": true,
+            "notes_cited": [
+              "N05"
+            ]
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        },
+        {
+          "part_id": "P003",
+          "part_name": "Fuel nozzle set",
+          "criticality": "HIGH",
+          "needed": 8,
+          "status": "COVERED_BY_ALTERNATE",
+          "shortage_qty": 0,
+          "allocated_status": "COVERED_BY_ALTERNATE",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E003",
+            "part_id": "P003",
+            "v1_status": "COVERED_BY_ALTERNATE",
+            "allocated_status": "COVERED_BY_ALTERNATE",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2025-06-08",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2025-06-08",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 540,
+            "review_points": {
+              "6-month": "2026-05-30",
+              "3-month": "2026-08-30"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": true,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E003",
+            "part_id": "P003",
+            "status": "COVERED_BY_ALTERNATE",
+            "shortage_qty": 0,
+            "allocated_status": "COVERED_BY_ALTERNATE",
+            "allocated_shortage_qty": 0,
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watchlist_tier": "NO_ORDERING_FALLBACK",
+            "procurement_action": "NONE",
+            "procurement_need": null,
+            "customer_notification": {
+              "action": "NONE",
+              "checkpoint_date": null,
+              "verifications_outstanding": []
+            },
+            "recovery_path": null,
+            "feasible_recovery_exists": true,
+            "recommended_decision": "approve_alternate",
+            "coverage_summary": "E003 P003 requires 8 units; covered by 3 site stock + 1 network (YYZ-H2) + 4 alternate P023 units, per documented interchangeability N01; no shortage, uncontended, no slippage.",
+            "recommendation": "Approve use of alternate part P023 (fuel nozzle set) for the 4-unit shortfall of primary part P003. The primary part cannot be ordered now (order-by date 2025-06-08 passed; lead time 540 days would result in arrival 512 days after event end). Coverage is achieved through interchangeable substitute per N01 policy. Confirm P023 availability (5 units on hand) and plan exchange of 4 units to YUL-H1 by event start 2026-11-30.",
+            "escalation_required": false,
+            "notes_cited": [
+              "N01"
+            ]
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        },
+        {
+          "part_id": "P005",
+          "part_name": "Oil filter element",
+          "criticality": "ROUTINE",
+          "needed": 12,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E003",
+            "part_id": "P005",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-10-16",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-10-16",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": false,
+            "lead_time_days": 45
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P009",
+          "part_name": "Compressor gasket kit",
+          "criticality": "ROUTINE",
+          "needed": 3,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E003",
+            "part_id": "P009",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-06-03",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-06-03",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 180,
+            "review_points": {
+              "6-month": "2026-05-30",
+              "3-month": "2026-08-30"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P010",
+          "part_name": "Bleed valve actuator",
+          "criticality": "HIGH",
+          "needed": 2,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E003",
+            "part_id": "P010",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-03-05",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-03-05",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 270,
+            "review_points": {
+              "6-month": "2026-05-30",
+              "3-month": "2026-08-30"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P012",
+          "part_name": "Starter motor",
+          "criticality": "HIGH",
+          "needed": 1,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E003",
+            "part_id": "P012",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-02-03",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-02-03",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 300,
+            "review_points": {
+              "6-month": "2026-05-30",
+              "3-month": "2026-08-30"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        }
+      ]
+    },
+    {
+      "event_id": "E004",
+      "event_name": "Heavy maintenance visit",
+      "tail": "FIN-715",
+      "start": "2026-12-07",
+      "end": "2026-12-16",
+      "lines": [
+        {
+          "part_id": "P011",
+          "part_name": "Hydraulic filter element",
+          "criticality": "ROUTINE",
+          "needed": 6,
+          "status": "COVERED_BY_TRANSFER",
+          "shortage_qty": 0,
+          "allocated_status": "COVERED_BY_TRANSFER",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E004",
+            "part_id": "P011",
+            "v1_status": "COVERED_BY_TRANSFER",
+            "allocated_status": "COVERED_BY_TRANSFER",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "ORDER_BY_CLOSING",
+          "order_by_date": "2026-11-07",
+          "clock1": {
+            "band": "act-now",
+            "order_by_date": "2026-11-07",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": false,
+            "lead_time_days": 30
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "RAISED",
+          "procurement_need": "Pool for P011 is shared across 3 events (E002, E004, E006): aggregate demand 17 exceeds the total physical pool 14; the stock cannot be replenished inside the horizon once the order-by date passes.",
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E004",
+            "part_id": "P011",
+            "status": "COVERED_BY_TRANSFER",
+            "shortage_qty": 0,
+            "allocated_status": "COVERED_BY_TRANSFER",
+            "allocated_shortage_qty": 0,
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watchlist_tier": "ORDER_BY_CLOSING",
+            "procurement_action": "RAISED",
+            "procurement_need": "Pool for P011 is shared across 3 events (E002, E004, E006): aggregate demand 17 exceeds the total physical pool 14; the stock cannot be replenished inside the horizon once the order-by date passes.",
+            "customer_notification": {
+              "action": "NONE",
+              "checkpoint_date": null,
+              "verifications_outstanding": []
+            },
+            "recovery_path": null,
+            "feasible_recovery_exists": true,
+            "recommended_decision": "place_order",
+            "coverage_summary": "E004 P011 shows single-line status COVERED_BY_TRANSFER (6 required, 4 site + 2 from YUL-H1 network available, 0 shortage) with no slippage risk; however procurement_action RAISED and watchlist_tier ORDER_BY_CLOSING (order-by 2026-11-07, 5 days remaining) trigger placement decision due to documented pool scarcity across E002, E004, E006 (aggregate demand 17 > total pool 14).",
+            "recommendation": "Place order now for P011 (6 units minimum for E004). The order-by date is 2026-11-07 (5 days from assessment date 2026-11-02); this line is currently covered by transfer from network stock, but the procurement action documents that the shared pool (serving E002, E004, E006 with aggregate demand 17 against supply 14) cannot be replenished after order-by passes. Expedited ordering closes the replenishment window and mitigates multi-event risk. Lead time is 30 days; earliest arrival 2026-12-02 is 5 days before event start 2026-12-07.",
+            "escalation_required": false,
+            "notes_cited": [
+              "N06"
+            ]
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        },
+        {
+          "part_id": "P013",
+          "part_name": "Generator drive seal",
+          "criticality": "ROUTINE",
+          "needed": 4,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E004",
+            "part_id": "P013",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-09-08",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-09-08",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": false,
+            "lead_time_days": 90
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P015",
+          "part_name": "Landing gear seal kit",
+          "criticality": "ROUTINE",
+          "needed": 2,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E004",
+            "part_id": "P015",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-08-09",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-08-09",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": false,
+            "lead_time_days": 120
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P019",
+          "part_name": "Fire detection loop",
+          "criticality": null,
+          "needed": 2,
+          "status": "INSUFFICIENT_DATA",
+          "shortage_qty": 0,
+          "allocated_status": "INSUFFICIENT_DATA",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E004",
+            "part_id": "P019",
+            "v1_status": "INSUFFICIENT_DATA",
+            "allocated_status": "INSUFFICIENT_DATA",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": "shortage_or_insufficient_takes_precedence",
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2026-02-10",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-02-10",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 300,
+            "review_points": {
+              "6-month": "2026-06-07",
+              "3-month": "2026-09-07"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "allocated_INSUFFICIENT_DATA",
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": false
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P021",
+          "part_name": "Cargo door actuator",
+          "criticality": "ROUTINE",
+          "needed": 1,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E004",
+            "part_id": "P021",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": [
+              {
+                "po_id": "PO-1012",
+                "outstanding": 2,
+                "promised_date": "2026-11-10",
+                "expected_date": "2026-11-18",
+                "slip_days": 8,
+                "margin_days": 19,
+                "load_bearing": false,
+                "load_bearing_allocated": false,
+                "repeat_slip_breaks": false
+              }
+            ]
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-04-11",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-04-11",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 240,
+            "review_points": {
+              "6-month": "2026-06-07",
+              "3-month": "2026-09-07"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E004",
+            "part_id": "P021",
+            "status": "OK",
+            "shortage_qty": 0,
+            "allocated_status": "OK",
+            "allocated_shortage_qty": 0,
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watchlist_tier": "NONE",
+            "procurement_action": "NONE",
+            "procurement_need": null,
+            "customer_notification": {
+              "action": "NONE",
+              "checkpoint_date": null,
+              "verifications_outstanding": []
+            },
+            "recovery_path": null,
+            "feasible_recovery_exists": true,
+            "recommended_decision": "acknowledged",
+            "coverage_summary": "E004 P021 (Cargo door actuator, ROUTINE): 1 unit required, fully covered. Single-line status OK with 8 site-available, 2 inbound before need date (PO-1012 arrives 2026-11-18, 19 days before event start), 12 network-available. Allocated status OK, uncontended, no competing demands.",
+            "recommendation": "Acknowledge coverage. No action required. PO-1012 (2 units, promised 2026-11-10, expected 2026-11-18) provides load-free buffer and arrives well ahead of event start 2026-12-07. Part is ROUTINE criticality with adequate site and network inventory. Monitor standard delivery schedule.",
+            "escalation_required": false,
+            "notes_cited": []
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        }
+      ]
+    },
+    {
+      "event_id": "E005",
+      "event_name": "Engine shop visit",
+      "tail": "FIN-820",
+      "start": "2026-12-14",
+      "end": "2026-12-22",
+      "lines": [
+        {
+          "part_id": "P002",
+          "part_name": "HPT seal kit",
+          "criticality": "HIGH",
+          "needed": 2,
+          "status": "COVERED_BY_PO",
+          "shortage_qty": 0,
+          "allocated_status": "COVERED_BY_TRANSFER",
+          "allocated_shortage_qty": 0,
+          "contention": "CONTENDED_COVERED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E005",
+            "part_id": "P002",
+            "v1_status": "COVERED_BY_PO",
+            "allocated_status": "COVERED_BY_TRANSFER",
+            "contention": "CONTENDED_COVERED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": [
+              {
+                "po_id": "PO-1002",
+                "outstanding": 4,
+                "promised_date": "2026-11-05",
+                "expected_date": "2026-11-12",
+                "slip_days": 7,
+                "margin_days": 32,
+                "load_bearing": true,
+                "load_bearing_allocated": true,
+                "repeat_slip_breaks": false
+              }
+            ]
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2025-09-20",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2025-09-20",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 450,
+            "review_points": {
+              "6-month": "2026-06-14",
+              "3-month": "2026-09-14"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E005",
+            "part_id": "P002",
+            "status": "COVERED_BY_PO",
+            "shortage_qty": 0,
+            "allocated_status": "COVERED_BY_TRANSFER",
+            "allocated_shortage_qty": 0,
+            "contention": "CONTENDED_COVERED",
+            "slippage_tier": "NONE",
+            "watchlist_tier": "NO_ORDERING_FALLBACK",
+            "procurement_action": "NONE",
+            "procurement_need": null,
+            "customer_notification": {
+              "action": "NONE",
+              "checkpoint_date": null,
+              "verifications_outstanding": []
+            },
+            "recovery_path": null,
+            "feasible_recovery_exists": true,
+            "recommended_decision": "approve_transfer",
+            "coverage_summary": "E005 P002 is COVERED_BY_TRANSFER in allocated view (1 unit from network site YYZ-H2) with CONTENDED_COVERED status; single-line view shows COVERED_BY_PO (4 units inbound via PO-1002 arriving 2026-11-12, 32 days before event start); NO_ORDERING_FALLBACK status reflects order-by date passed 408 days ago with 450-day lead time.",
+            "recommendation": "Approve the inter-site transfer from YYZ-H2 to cover the allocated demand for E005. Monitor PO-1002 (4 units outstanding, expected 2026-11-12, margin 32 days) for on-time arrival. The part is HIGH criticality with material risk due to long lead time; slippage margins are adequate but watch delivery closely given the 7-day slip buffer already noted. No new procurement action is feasible (order-by date passed by 408 days). This line is suitable for monitoring once the transfer is approved.",
+            "escalation_required": false,
+            "notes_cited": [
+              "N03"
+            ]
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        },
+        {
+          "part_id": "P005",
+          "part_name": "Oil filter element",
+          "criticality": "ROUTINE",
+          "needed": 6,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "COVERED_BY_TRANSFER",
+          "allocated_shortage_qty": 0,
+          "contention": "CONTENDED_COVERED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E005",
+            "part_id": "P005",
+            "v1_status": "OK",
+            "allocated_status": "COVERED_BY_TRANSFER",
+            "contention": "CONTENDED_COVERED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-10-30",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-10-30",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": false,
+            "lead_time_days": 45
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E005",
+            "part_id": "P005",
+            "status": "OK",
+            "shortage_qty": 0,
+            "allocated_status": "COVERED_BY_TRANSFER",
+            "allocated_shortage_qty": 0,
+            "contention": "CONTENDED_COVERED",
+            "slippage_tier": "NONE",
+            "watchlist_tier": "NONE",
+            "procurement_action": "NONE",
+            "procurement_need": null,
+            "customer_notification": {
+              "action": "NONE",
+              "checkpoint_date": null,
+              "verifications_outstanding": []
+            },
+            "recovery_path": null,
+            "feasible_recovery_exists": true,
+            "recommended_decision": "approve_transfer",
+            "coverage_summary": "E005 requires 6\u00d7 P005 (Oil filter element, ROUTINE, 45-day lead time); single-line OK with 20 at YUL-H1 + 16 network pool; allocated view shows COVERED_BY_TRANSFER (site stock 4, YYZ-H2 transfer 2) with CONTENDED_COVERED status and no shortage under chronological allocation.",
+            "recommendation": "Approve the inter-site transfer of 2 units from YYZ-H2 to YUL-H1 per the allocated coverage plan. The order-by date (2026-10-30) has passed, but the part is ROUTINE criticality and full coverage is secured by local stock (4 units at event start) plus the documented transfer. Coordinate with YYZ-H2 to release and transport the 2 units prior to event start (2026-12-14); standard inter-site transfer lead time and logistics will allow completion within the 42-day window.",
+            "escalation_required": false,
+            "notes_cited": [
+              "N03"
+            ]
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        },
+        {
+          "part_id": "P007",
+          "part_name": "Engine fuel pump",
+          "criticality": "AOG",
+          "needed": 3,
+          "status": "SHORT_UNCOVERED",
+          "shortage_qty": 2,
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 2,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E005",
+            "part_id": "P007",
+            "v1_status": "SHORT_UNCOVERED",
+            "allocated_status": "SHORT_UNCOVERED",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": "shortage_or_insufficient_takes_precedence",
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2025-12-14",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2025-12-14",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 365,
+            "review_points": {
+              "6-month": "2026-06-14",
+              "3-month": "2026-09-14"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "allocated_SHORT_UNCOVERED",
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": true,
+            "checkpoint_date": "2026-12-14",
+            "basis": "SHORT_UNCOVERED"
+          },
+          "recovery": {
+            "feasible": false,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": false
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P008",
+          "part_name": "EGT temperature sensor",
+          "criticality": "HIGH",
+          "needed": 2,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E005",
+            "part_id": "P008",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-04-18",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-04-18",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 240,
+            "review_points": {
+              "6-month": "2026-06-14",
+              "3-month": "2026-09-14"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P020",
+          "part_name": "Anti-skid control unit",
+          "criticality": "HIGH",
+          "needed": 2,
+          "status": "SHORT_UNCOVERED",
+          "shortage_qty": 1,
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 1,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E005",
+            "part_id": "P020",
+            "v1_status": "SHORT_UNCOVERED",
+            "allocated_status": "SHORT_UNCOVERED",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": "shortage_or_insufficient_takes_precedence",
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2025-12-14",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2025-12-14",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 365,
+            "review_points": {
+              "6-month": "2026-06-14",
+              "3-month": "2026-09-14"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "allocated_SHORT_UNCOVERED",
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": true,
+            "checkpoint_date": "2026-12-14",
+            "basis": "SHORT_UNCOVERED"
+          },
+          "recovery": {
+            "feasible": true,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        }
+      ]
+    },
+    {
+      "event_id": "E006",
+      "event_name": "C-check",
+      "tail": "FIN-730",
+      "start": "2026-12-21",
+      "end": "2026-12-30",
+      "lines": [
+        {
+          "part_id": "P006",
+          "part_name": "Igniter plug",
+          "criticality": "HIGH",
+          "needed": 8,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 1,
+          "contention": "CONTENDED_SHORT",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E006",
+            "part_id": "P006",
+            "v1_status": "OK",
+            "allocated_status": "SHORT_UNCOVERED",
+            "contention": "CONTENDED_SHORT",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": "shortage_or_insufficient_takes_precedence",
+            "checkpoint_date": null,
+            "pairs": [
+              {
+                "po_id": "PO-1011",
+                "outstanding": 2,
+                "promised_date": "2026-11-15",
+                "expected_date": "2026-11-20",
+                "slip_days": 5,
+                "margin_days": 31,
+                "load_bearing": false,
+                "load_bearing_allocated": true,
+                "repeat_slip_breaks": false
+              }
+            ]
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-03-26",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-03-26",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 270,
+            "review_points": {
+              "6-month": "2026-06-21",
+              "3-month": "2026-09-21"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "allocated_SHORT_UNCOVERED",
+            "CONTENDED_SHORT"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": true,
+            "checkpoint_date": "2026-12-21",
+            "basis": "SHORT_UNCOVERED"
+          },
+          "recovery": {
+            "feasible": true,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E006",
+            "part_id": "P006",
+            "status": "OK",
+            "shortage_qty": 0,
+            "allocated_status": "SHORT_UNCOVERED",
+            "allocated_shortage_qty": 1,
+            "contention": "CONTENDED_SHORT",
+            "slippage_tier": "NONE",
+            "watchlist_tier": "NONE",
+            "procurement_action": "NONE",
+            "procurement_need": null,
+            "customer_notification": {
+              "action": "PREPARE_DRAFT",
+              "checkpoint_date": "2026-12-21",
+              "verifications_outstanding": [
+                "affected event",
+                "material shortfall",
+                "recovery options",
+                "proposed communication"
+              ]
+            },
+            "recovery_path": "expedite / chase PO",
+            "feasible_recovery_exists": true,
+            "recommended_decision": "escalate_expedite",
+            "coverage_summary": "Single-line status OK (9 site + 2 inbound + 6 network vs 8 required); allocated status SHORT_UNCOVERED by 1 unit (CONTENDED_SHORT with competing earlier events exhausting the network pool), PO-1011 delivering 2 units at 2026-11-20 is load-bearing under allocation with margin of 31 days vs event start, no slippage detected, expedite and re-sequence recovery levers are feasible.",
+            "recommendation": "Escalate for expedite action on PO-1011 (2 units of MRO-74-1006 from SparkLine Aviation, promised 2026-11-15, expected 2026-11-20) to secure the allocated 1-unit shortfall under the CONTENDED_SHORT contention class. Prepare customer notification draft for approval with checkpoint at event start (2026-12-21); notify only upon confirmation that expedite or re-sequence recovery will not close the gap. Recovery levers: PO expedite (lead-bearing in allocation) or re-sequence the C-check from 2026-12-21. Part is HIGH criticality, long-lead (270 days, order-by already passed 2026-03-26), and the shortage is driven by allocation to earlier events, not insufficient total availability. No ordered-part action required under watchlist.",
+            "escalation_required": true,
+            "notes_cited": [
+              "N05"
+            ]
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        },
+        {
+          "part_id": "P011",
+          "part_name": "Hydraulic filter element",
+          "criticality": "ROUTINE",
+          "needed": 6,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 3,
+          "contention": "CONTENDED_SHORT",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E006",
+            "part_id": "P011",
+            "v1_status": "OK",
+            "allocated_status": "SHORT_UNCOVERED",
+            "contention": "CONTENDED_SHORT",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": "shortage_or_insufficient_takes_precedence",
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "ORDER_BY_CLOSING",
+          "order_by_date": "2026-11-21",
+          "clock1": {
+            "band": "act-now",
+            "order_by_date": "2026-11-21",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": false,
+            "lead_time_days": 30
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "allocated_SHORT_UNCOVERED",
+            "CONTENDED_SHORT"
+          ],
+          "procurement_action": "RAISED",
+          "procurement_need": "Pool for P011 is shared across 3 events (E002, E004, E006): aggregate demand 17 exceeds the total physical pool 14; the stock cannot be replenished inside the horizon once the order-by date passes.",
+          "notification": {
+            "eligible": true,
+            "checkpoint_date": "2026-12-21",
+            "basis": "SHORT_UNCOVERED"
+          },
+          "recovery": {
+            "feasible": true,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E006",
+            "part_id": "P011",
+            "status": "OK",
+            "shortage_qty": 0,
+            "allocated_status": "SHORT_UNCOVERED",
+            "allocated_shortage_qty": 3,
+            "contention": "CONTENDED_SHORT",
+            "slippage_tier": "NONE",
+            "watchlist_tier": "ORDER_BY_CLOSING",
+            "procurement_action": "RAISED",
+            "procurement_need": "Pool for P011 is shared across 3 events (E002, E004, E006): aggregate demand 17 exceeds the total physical pool 14; the stock cannot be replenished inside the horizon once the order-by date passes.",
+            "customer_notification": {
+              "action": "PREPARE_DRAFT",
+              "checkpoint_date": "2026-12-21",
+              "verifications_outstanding": [
+                "affected event",
+                "material shortfall",
+                "recovery options",
+                "proposed communication"
+              ]
+            },
+            "recovery_path": "expedite / chase PO",
+            "feasible_recovery_exists": true,
+            "recommended_decision": "escalate_expedite",
+            "coverage_summary": "Single-line status OK (6 units on-site), but allocated cross-event view shows SHORT_UNCOVERED (3 units short) due to CONTENDED_SHORT contention across E002, E004, E006; procurement action RAISED with feasible expedite and re-sequence levers.",
+            "recommendation": "Escalate to expedite procurement: place emergency order by 2026-11-21 to secure additional units for E006's portion of the shared pool; simultaneously prepare customer notification draft for approval; evaluate re-sequencing E002/E004 checks to reduce concurrent demand or redirect transfer stock. Recovery is feasible if expedite succeeds within 19-day order-by window.",
+            "escalation_required": true,
+            "notes_cited": [
+              "N03",
+              "N05"
+            ]
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        },
+        {
+          "part_id": "P013",
+          "part_name": "Generator drive seal",
+          "criticality": "ROUTINE",
+          "needed": 3,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E006",
+            "part_id": "P013",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-09-22",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-09-22",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": false,
+            "lead_time_days": 90
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P016",
+          "part_name": "Steel brake unit",
+          "criticality": "HIGH",
+          "needed": 4,
+          "status": "COVERED_BY_TRANSFER",
+          "shortage_qty": 0,
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 3,
+          "contention": "CONTENDED_SHORT",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E006",
+            "part_id": "P016",
+            "v1_status": "COVERED_BY_TRANSFER",
+            "allocated_status": "SHORT_UNCOVERED",
+            "contention": "CONTENDED_SHORT",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": "shortage_or_insufficient_takes_precedence",
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2026-05-25",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-05-25",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 210,
+            "review_points": {
+              "6-month": "2026-06-21",
+              "3-month": "2026-09-21"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "allocated_SHORT_UNCOVERED",
+            "CONTENDED_SHORT",
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": true,
+            "checkpoint_date": "2026-12-21",
+            "basis": "SHORT_UNCOVERED"
+          },
+          "recovery": {
+            "feasible": true,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": true,
+          "assessment": {
+            "event_id": "E006",
+            "part_id": "P016",
+            "status": "COVERED_BY_TRANSFER",
+            "shortage_qty": 0,
+            "allocated_status": "SHORT_UNCOVERED",
+            "allocated_shortage_qty": 3,
+            "contention": "CONTENDED_SHORT",
+            "slippage_tier": "NONE",
+            "watchlist_tier": "NO_ORDERING_FALLBACK",
+            "procurement_action": "NONE",
+            "procurement_need": null,
+            "customer_notification": {
+              "action": "PREPARE_DRAFT",
+              "checkpoint_date": "2026-12-21",
+              "verifications_outstanding": [
+                "affected event",
+                "material shortfall",
+                "recovery options",
+                "proposed communication"
+              ]
+            },
+            "recovery_path": "re-sequence the check",
+            "feasible_recovery_exists": true,
+            "recommended_decision": "escalate_defer",
+            "coverage_summary": "Single-line COVERED_BY_TRANSFER (2 site + 5 network available vs. 4 required), but allocated view reveals SHORT_UNCOVERED by 3 units (only 1 YYC-H3 unit remains after competing events under chronological allocation); no procurement feasible (lead time expired); re-sequence is the only feasible recovery.",
+            "recommendation": "Escalate to planner for decision on re-sequencing the C-check to a later date when network stock becomes available or transfers are no longer contended. Prepare customer notification draft (deferred start pending parts availability), subject to human verification of event impact, shortfall magnitude, re-sequence feasibility window, and communication timing.",
+            "escalation_required": true,
+            "notes_cited": [
+              "N03",
+              "N12"
+            ]
+          },
+          "assessment_source": "V2 evaluation 2026-11-06"
+        },
+        {
+          "part_id": "P022",
+          "part_name": "Nose gear steering actuator",
+          "criticality": "HIGH",
+          "needed": 1,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E006",
+            "part_id": "P022",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2025-12-21",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2025-12-21",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "<=3mo",
+            "lead_time_days": 365,
+            "review_points": {
+              "6-month": "2026-06-21",
+              "3-month": "2026-09-21"
+            },
+            "reviews_due": [
+              "6-month",
+              "3-month"
+            ]
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        }
+      ]
+    }
+  ],
+  "forward_events": [
+    {
+      "event_id": "E007",
+      "event_name": "C-check",
+      "tail": "FIN-717",
+      "start": "2027-04-05",
+      "end": "2027-04-14",
+      "lines": [
+        {
+          "part_id": "P004",
+          "part_name": "Main shaft bearing set",
+          "criticality": "AOG",
+          "needed": 2,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E007",
+            "part_id": "P004",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2025-10-12",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2025-10-12",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "3-6mo",
+            "lead_time_days": 540,
+            "review_points": {
+              "6-month": "2026-10-05",
+              "3-month": "2027-01-05"
+            },
+            "reviews_due": [
+              "6-month"
+            ]
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": false,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": false
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P005",
+          "part_name": "Oil filter element",
+          "criticality": "ROUTINE",
+          "needed": 6,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E007",
+            "part_id": "P005",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2027-02-19",
+          "clock1": {
+            "band": "advisory",
+            "order_by_date": "2027-02-19",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": false,
+            "lead_time_days": 45
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P007",
+          "part_name": "Engine fuel pump",
+          "criticality": "AOG",
+          "needed": 1,
+          "status": "COVERED_BY_TRANSFER",
+          "shortage_qty": 0,
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 1,
+          "contention": "CONTENDED_SHORT",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E007",
+            "part_id": "P007",
+            "v1_status": "COVERED_BY_TRANSFER",
+            "allocated_status": "SHORT_UNCOVERED",
+            "contention": "CONTENDED_SHORT",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": "shortage_or_insufficient_takes_precedence",
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NO_ORDERING_FALLBACK",
+          "order_by_date": "2026-04-05",
+          "clock1": {
+            "band": "passed",
+            "order_by_date": "2026-04-05",
+            "escalated": true
+          },
+          "clock2": {
+            "applicable": true,
+            "band": "3-6mo",
+            "lead_time_days": 365,
+            "review_points": {
+              "6-month": "2026-10-05",
+              "3-month": "2027-01-05"
+            },
+            "reviews_due": [
+              "6-month"
+            ]
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "allocated_SHORT_UNCOVERED",
+            "CONTENDED_SHORT",
+            "NO_ORDERING_FALLBACK"
+          ],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": true,
+            "checkpoint_date": "2027-04-05",
+            "basis": "SHORT_UNCOVERED"
+          },
+          "recovery": {
+            "feasible": true,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": false
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        }
+      ]
+    },
+    {
+      "event_id": "E008",
+      "event_name": "Heavy maintenance visit",
+      "tail": "FIN-905",
+      "start": "2027-10-04",
+      "end": "2027-10-13",
+      "lines": [
+        {
+          "part_id": "P010",
+          "part_name": "Bleed valve actuator",
+          "criticality": "HIGH",
+          "needed": 2,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E008",
+            "part_id": "P010",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2027-01-07",
+          "clock1": {
+            "band": "act-now",
+            "order_by_date": "2027-01-07",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": true,
+            "band": ">6mo",
+            "lead_time_days": 270,
+            "review_points": {
+              "6-month": "2027-04-04",
+              "3-month": "2027-07-04"
+            },
+            "reviews_due": []
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P013",
+          "part_name": "Generator drive seal",
+          "criticality": "ROUTINE",
+          "needed": 3,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "COVERED_BY_TRANSFER",
+          "allocated_shortage_qty": 0,
+          "contention": "CONTENDED_COVERED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E008",
+            "part_id": "P013",
+            "v1_status": "OK",
+            "allocated_status": "COVERED_BY_TRANSFER",
+            "contention": "CONTENDED_COVERED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2027-07-06",
+          "clock1": {
+            "band": "far",
+            "order_by_date": "2027-07-06",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": false,
+            "lead_time_days": 90
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P019",
+          "part_name": "Fire detection loop",
+          "criticality": "AOG",
+          "needed": 1,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E008",
+            "part_id": "P019",
+            "v1_status": "OK",
+            "allocated_status": "OK",
+            "contention": "UNCONTENDED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2026-12-08",
+          "clock1": {
+            "band": "act-now",
+            "order_by_date": "2026-12-08",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": true,
+            "band": ">6mo",
+            "lead_time_days": 300,
+            "review_points": {
+              "6-month": "2027-04-04",
+              "3-month": "2027-07-04"
+            },
+            "reviews_due": []
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": false
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        }
+      ]
+    },
+    {
+      "event_id": "E009",
+      "event_name": "Engine overhaul",
+      "tail": "FIN-822",
+      "start": "2028-07-03",
+      "end": "2028-07-12",
+      "lines": [
+        {
+          "part_id": "P001",
+          "part_name": "Turbine blade set, stage 1",
+          "criticality": "AOG",
+          "needed": 1,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "COVERED_BY_PO",
+          "allocated_shortage_qty": 0,
+          "contention": "CONTENDED_COVERED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E009",
+            "part_id": "P001",
+            "v1_status": "OK",
+            "allocated_status": "COVERED_BY_PO",
+            "contention": "CONTENDED_COVERED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": [
+              {
+                "po_id": "PO-1001",
+                "outstanding": 2,
+                "promised_date": "2026-11-28",
+                "expected_date": "2026-12-05",
+                "slip_days": 7,
+                "margin_days": 576,
+                "load_bearing": false,
+                "load_bearing_allocated": true,
+                "repeat_slip_breaks": false
+              }
+            ]
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2027-01-10",
+          "clock1": {
+            "band": "act-now",
+            "order_by_date": "2027-01-10",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": true,
+            "band": ">6mo",
+            "lead_time_days": 540,
+            "review_points": {
+              "6-month": "2028-01-03",
+              "3-month": "2028-04-03"
+            },
+            "reviews_due": []
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "RAISED",
+          "procurement_need": "Pool for P001 is shared across 3 events (E001, E003, E009): aggregate demand 4 exceeds the total physical pool 1; the stock cannot be replenished inside the horizon once the order-by date passes.",
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": false
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P002",
+          "part_name": "HPT seal kit",
+          "criticality": "HIGH",
+          "needed": 1,
+          "status": "OK",
+          "shortage_qty": 0,
+          "allocated_status": "COVERED_BY_TRANSFER",
+          "allocated_shortage_qty": 0,
+          "contention": "CONTENDED_COVERED",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E009",
+            "part_id": "P002",
+            "v1_status": "OK",
+            "allocated_status": "COVERED_BY_TRANSFER",
+            "contention": "CONTENDED_COVERED",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": null,
+            "checkpoint_date": null,
+            "pairs": [
+              {
+                "po_id": "PO-1002",
+                "outstanding": 4,
+                "promised_date": "2026-11-05",
+                "expected_date": "2026-11-12",
+                "slip_days": 7,
+                "margin_days": 599,
+                "load_bearing": false,
+                "load_bearing_allocated": true,
+                "repeat_slip_breaks": false
+              }
+            ]
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2027-04-10",
+          "clock1": {
+            "band": "advisory",
+            "order_by_date": "2027-04-10",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": true,
+            "band": ">6mo",
+            "lead_time_days": 450,
+            "review_points": {
+              "6-month": "2028-01-03",
+              "3-month": "2028-04-03"
+            },
+            "reviews_due": []
+          },
+          "material_risk": false,
+          "risk_conditions": [],
+          "procurement_action": "NONE",
+          "procurement_need": null,
+          "notification": {
+            "eligible": false,
+            "checkpoint_date": null,
+            "basis": null
+          },
+          "recovery": {
+            "feasible": null,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": false,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        },
+        {
+          "part_id": "P003",
+          "part_name": "Fuel nozzle set",
+          "criticality": "HIGH",
+          "needed": 4,
+          "status": "COVERED_BY_TRANSFER",
+          "shortage_qty": 0,
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 3,
+          "contention": "CONTENDED_SHORT",
+          "slippage_tier": "NONE",
+          "slippage_detail": {
+            "event_id": "E009",
+            "part_id": "P003",
+            "v1_status": "COVERED_BY_TRANSFER",
+            "allocated_status": "SHORT_UNCOVERED",
+            "contention": "CONTENDED_SHORT",
+            "slippage_tier": "NONE",
+            "watch_margin_days": 21,
+            "precedence": "shortage_or_insufficient_takes_precedence",
+            "checkpoint_date": null,
+            "pairs": []
+          },
+          "watchlist_tier": "NONE",
+          "order_by_date": "2027-01-10",
+          "clock1": {
+            "band": "act-now",
+            "order_by_date": "2027-01-10",
+            "escalated": false
+          },
+          "clock2": {
+            "applicable": true,
+            "band": ">6mo",
+            "lead_time_days": 540,
+            "review_points": {
+              "6-month": "2028-01-03",
+              "3-month": "2028-04-03"
+            },
+            "reviews_due": []
+          },
+          "material_risk": true,
+          "risk_conditions": [
+            "allocated_SHORT_UNCOVERED",
+            "CONTENDED_SHORT"
+          ],
+          "procurement_action": "RAISED",
+          "procurement_need": "Pool for P003 is shared across 2 events (E003, E009): aggregate demand 12 exceeds the total physical pool 4; the stock cannot be replenished inside the horizon once the order-by date passes.",
+          "notification": {
+            "eligible": true,
+            "checkpoint_date": "2028-07-03",
+            "basis": "SHORT_UNCOVERED"
+          },
+          "recovery": {
+            "feasible": true,
+            "levers": {
+              "expedite": true,
+              "exchange_rotable": true,
+              "transfer": false,
+              "re_sequence": true
+            }
+          },
+          "assessed": false,
+          "assessment": null,
+          "assessment_source": null
+        }
+      ]
+    }
+  ],
+  "allocation_ledgers": {
+    "P001": {
+      "part_name": "Turbine blade set, stage 1",
+      "rows": [
+        {
+          "event_id": "E001",
+          "event_start": "2026-11-16",
+          "v1_status": "SHORT_UNCOVERED",
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 1,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 1,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E003",
+          "event_start": "2026-11-30",
+          "v1_status": "OK",
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 1,
+          "contention": "CONTENDED_SHORT",
+          "ledger": {
+            "site_stock": 0,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E009",
+          "event_start": "2028-07-03",
+          "v1_status": "OK",
+          "allocated_status": "COVERED_BY_PO",
+          "allocated_shortage_qty": 0,
+          "contention": "CONTENDED_COVERED",
+          "ledger": {
+            "site_stock": 0,
+            "po": {
+              "PO-1001": 1
+            },
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 1,
+          "YYZ-H2": 0,
+          "YYC-H3": 0
+        },
+        "po": {
+          "PO-1001": 2
+        }
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 0,
+          "YYZ-H2": 0,
+          "YYC-H3": 0
+        },
+        "po": {
+          "PO-1001": 1
+        }
+      }
+    },
+    "P002": {
+      "part_name": "HPT seal kit",
+      "rows": [
+        {
+          "event_id": "E001",
+          "event_start": "2026-11-16",
+          "v1_status": "COVERED_BY_PO",
+          "allocated_status": "COVERED_BY_PO",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 1,
+            "po": {
+              "PO-1002": 3
+            },
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E005",
+          "event_start": "2026-12-14",
+          "v1_status": "COVERED_BY_PO",
+          "allocated_status": "COVERED_BY_TRANSFER",
+          "allocated_shortage_qty": 0,
+          "contention": "CONTENDED_COVERED",
+          "ledger": {
+            "site_stock": 0,
+            "po": {
+              "PO-1002": 1
+            },
+            "network": {
+              "YYZ-H2": 1
+            },
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E009",
+          "event_start": "2028-07-03",
+          "v1_status": "OK",
+          "allocated_status": "COVERED_BY_TRANSFER",
+          "allocated_shortage_qty": 0,
+          "contention": "CONTENDED_COVERED",
+          "ledger": {
+            "site_stock": 0,
+            "po": {},
+            "network": {
+              "YYZ-H2": 1
+            },
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 1,
+          "YYZ-H2": 2,
+          "YYC-H3": 0
+        },
+        "po": {
+          "PO-1002": 4
+        }
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 0,
+          "YYZ-H2": 0,
+          "YYC-H3": 0
+        },
+        "po": {
+          "PO-1002": 0
+        }
+      }
+    },
+    "P003": {
+      "part_name": "Fuel nozzle set",
+      "rows": [
+        {
+          "event_id": "E003",
+          "event_start": "2026-11-30",
+          "v1_status": "COVERED_BY_ALTERNATE",
+          "allocated_status": "COVERED_BY_ALTERNATE",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 3,
+            "po": {},
+            "network": {
+              "YYZ-H2": 1
+            },
+            "alternate": 4,
+            "alternate_part_id": "P023"
+          }
+        },
+        {
+          "event_id": "E009",
+          "event_start": "2028-07-03",
+          "v1_status": "COVERED_BY_TRANSFER",
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 3,
+          "contention": "CONTENDED_SHORT",
+          "ledger": {
+            "site_stock": 0,
+            "po": {},
+            "network": {},
+            "alternate": 1,
+            "alternate_part_id": "P023"
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 3,
+          "YYZ-H2": 1,
+          "YYC-H3": 0
+        },
+        "po": {}
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 0,
+          "YYZ-H2": 0,
+          "YYC-H3": 0
+        },
+        "po": {}
+      }
+    },
+    "P004": {
+      "part_name": "Main shaft bearing set",
+      "rows": [
+        {
+          "event_id": "E001",
+          "event_start": "2026-11-16",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 2,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E007",
+          "event_start": "2027-04-05",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 2,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 8,
+          "YYZ-H2": 1,
+          "YYC-H3": 2
+        },
+        "po": {
+          "PO-1003": 0
+        }
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 6,
+          "YYZ-H2": 1,
+          "YYC-H3": 0
+        },
+        "po": {
+          "PO-1003": 0
+        }
+      }
+    },
+    "P005": {
+      "part_name": "Oil filter element",
+      "rows": [
+        {
+          "event_id": "E001",
+          "event_start": "2026-11-16",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 4,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E003",
+          "event_start": "2026-11-30",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 12,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E005",
+          "event_start": "2026-12-14",
+          "v1_status": "OK",
+          "allocated_status": "COVERED_BY_TRANSFER",
+          "allocated_shortage_qty": 0,
+          "contention": "CONTENDED_COVERED",
+          "ledger": {
+            "site_stock": 4,
+            "po": {},
+            "network": {
+              "YYZ-H2": 2
+            },
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E007",
+          "event_start": "2027-04-05",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 6,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 20,
+          "YYZ-H2": 8,
+          "YYC-H3": 8
+        },
+        "po": {
+          "PO-1006": 0
+        }
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 0,
+          "YYZ-H2": 6,
+          "YYC-H3": 2
+        },
+        "po": {
+          "PO-1006": 0
+        }
+      }
+    },
+    "P006": {
+      "part_name": "Igniter plug",
+      "rows": [
+        {
+          "event_id": "E002",
+          "event_start": "2026-11-23",
+          "v1_status": "COVERED_BY_PO",
+          "allocated_status": "COVERED_BY_PO",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 9,
+            "po": {
+              "PO-1011": 1
+            },
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E006",
+          "event_start": "2026-12-21",
+          "v1_status": "OK",
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 1,
+          "contention": "CONTENDED_SHORT",
+          "ledger": {
+            "site_stock": 0,
+            "po": {
+              "PO-1011": 1
+            },
+            "network": {
+              "YUL-H1": 4,
+              "YYC-H3": 2
+            },
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 4,
+          "YYZ-H2": 9,
+          "YYC-H3": 2
+        },
+        "po": {
+          "PO-1011": 2
+        }
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 0,
+          "YYZ-H2": 0,
+          "YYC-H3": 0
+        },
+        "po": {
+          "PO-1011": 0
+        }
+      }
+    },
+    "P007": {
+      "part_name": "Engine fuel pump",
+      "rows": [
+        {
+          "event_id": "E005",
+          "event_start": "2026-12-14",
+          "v1_status": "SHORT_UNCOVERED",
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 2,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 0,
+            "po": {},
+            "network": {
+              "YYZ-H2": 1
+            },
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E007",
+          "event_start": "2027-04-05",
+          "v1_status": "COVERED_BY_TRANSFER",
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 1,
+          "contention": "CONTENDED_SHORT",
+          "ledger": {
+            "site_stock": 0,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 0,
+          "YYZ-H2": 1,
+          "YYC-H3": 0
+        },
+        "po": {
+          "PO-1010": 1
+        }
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 0,
+          "YYZ-H2": 0,
+          "YYC-H3": 0
+        },
+        "po": {
+          "PO-1010": 1
+        }
+      }
+    },
+    "P008": {
+      "part_name": "EGT temperature sensor",
+      "rows": [
+        {
+          "event_id": "E001",
+          "event_start": "2026-11-16",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 3,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E005",
+          "event_start": "2026-12-14",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 2,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 5,
+          "YYZ-H2": 3,
+          "YYC-H3": 4
+        },
+        "po": {
+          "PO-1004": 10
+        }
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 0,
+          "YYZ-H2": 3,
+          "YYC-H3": 4
+        },
+        "po": {
+          "PO-1004": 10
+        }
+      }
+    },
+    "P009": {
+      "part_name": "Compressor gasket kit",
+      "rows": [
+        {
+          "event_id": "E001",
+          "event_start": "2026-11-16",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 2,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E003",
+          "event_start": "2026-11-30",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 3,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 10,
+          "YYZ-H2": 14,
+          "YYC-H3": 0
+        },
+        "po": {
+          "PO-1013": 0
+        }
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 5,
+          "YYZ-H2": 14,
+          "YYC-H3": 0
+        },
+        "po": {
+          "PO-1013": 0
+        }
+      }
+    },
+    "P010": {
+      "part_name": "Bleed valve actuator",
+      "rows": [
+        {
+          "event_id": "E003",
+          "event_start": "2026-11-30",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 2,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E008",
+          "event_start": "2027-10-04",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 2,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 5,
+          "YYZ-H2": 9,
+          "YYC-H3": 9
+        },
+        "po": {
+          "PO-1008": 3
+        }
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 3,
+          "YYZ-H2": 7,
+          "YYC-H3": 9
+        },
+        "po": {
+          "PO-1008": 3
+        }
+      }
+    },
+    "P011": {
+      "part_name": "Hydraulic filter element",
+      "rows": [
+        {
+          "event_id": "E002",
+          "event_start": "2026-11-23",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 5,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E004",
+          "event_start": "2026-12-07",
+          "v1_status": "COVERED_BY_TRANSFER",
+          "allocated_status": "COVERED_BY_TRANSFER",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 4,
+            "po": {},
+            "network": {
+              "YUL-H1": 2
+            },
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E006",
+          "event_start": "2026-12-21",
+          "v1_status": "OK",
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 3,
+          "contention": "CONTENDED_SHORT",
+          "ledger": {
+            "site_stock": 1,
+            "po": {},
+            "network": {
+              "YUL-H1": 2
+            },
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 4,
+          "YYZ-H2": 6,
+          "YYC-H3": 4
+        },
+        "po": {}
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 0,
+          "YYZ-H2": 0,
+          "YYC-H3": 0
+        },
+        "po": {}
+      }
+    },
+    "P013": {
+      "part_name": "Generator drive seal",
+      "rows": [
+        {
+          "event_id": "E004",
+          "event_start": "2026-12-07",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 4,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E006",
+          "event_start": "2026-12-21",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 3,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E008",
+          "event_start": "2027-10-04",
+          "v1_status": "OK",
+          "allocated_status": "COVERED_BY_TRANSFER",
+          "allocated_shortage_qty": 0,
+          "contention": "CONTENDED_COVERED",
+          "ledger": {
+            "site_stock": 2,
+            "po": {},
+            "network": {
+              "YUL-H1": 1
+            },
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 5,
+          "YYZ-H2": 5,
+          "YYC-H3": 5
+        },
+        "po": {}
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 4,
+          "YYZ-H2": 0,
+          "YYC-H3": 1
+        },
+        "po": {}
+      }
+    },
+    "P015": {
+      "part_name": "Landing gear seal kit",
+      "rows": [
+        {
+          "event_id": "E002",
+          "event_start": "2026-11-23",
+          "v1_status": "COVERED_BY_PO",
+          "allocated_status": "COVERED_BY_PO",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 3,
+            "po": {
+              "PO-1007": 1
+            },
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E004",
+          "event_start": "2026-12-07",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 2,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 6,
+          "YYZ-H2": 3,
+          "YYC-H3": 2
+        },
+        "po": {
+          "PO-1007": 6
+        }
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 6,
+          "YYZ-H2": 0,
+          "YYC-H3": 0
+        },
+        "po": {
+          "PO-1007": 5
+        }
+      }
+    },
+    "P016": {
+      "part_name": "Steel brake unit",
+      "rows": [
+        {
+          "event_id": "E002",
+          "event_start": "2026-11-23",
+          "v1_status": "COVERED_BY_TRANSFER",
+          "allocated_status": "COVERED_BY_TRANSFER",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 2,
+            "po": {},
+            "network": {
+              "YUL-H1": 3,
+              "YYC-H3": 1
+            },
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E006",
+          "event_start": "2026-12-21",
+          "v1_status": "COVERED_BY_TRANSFER",
+          "allocated_status": "SHORT_UNCOVERED",
+          "allocated_shortage_qty": 3,
+          "contention": "CONTENDED_SHORT",
+          "ledger": {
+            "site_stock": 0,
+            "po": {},
+            "network": {
+              "YYC-H3": 1
+            },
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 3,
+          "YYZ-H2": 2,
+          "YYC-H3": 2
+        },
+        "po": {}
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 0,
+          "YYZ-H2": 0,
+          "YYC-H3": 0
+        },
+        "po": {}
+      }
+    },
+    "P019": {
+      "part_name": "Fire detection loop",
+      "rows": [
+        {
+          "event_id": "E004",
+          "event_start": "2026-12-07",
+          "v1_status": "INSUFFICIENT_DATA",
+          "allocated_status": "INSUFFICIENT_DATA",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 0,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        },
+        {
+          "event_id": "E008",
+          "event_start": "2027-10-04",
+          "v1_status": "OK",
+          "allocated_status": "OK",
+          "allocated_shortage_qty": 0,
+          "contention": "UNCONTENDED",
+          "ledger": {
+            "site_stock": 1,
+            "po": {},
+            "network": {},
+            "alternate": 0,
+            "alternate_part_id": null
+          }
+        }
+      ],
+      "pool_initial": {
+        "stock": {
+          "YUL-H1": 2,
+          "YYZ-H2": 1,
+          "YYC-H3": 0
+        },
+        "po": {}
+      },
+      "pool_remaining": {
+        "stock": {
+          "YUL-H1": 2,
+          "YYZ-H2": 0,
+          "YYC-H3": 0
+        },
+        "po": {}
+      }
+    }
+  },
+  "counts": {
+    "lines": 33,
+    "contended_parts": 10,
+    "contended_parts_incl_forward": 15,
+    "lines_changed_under_allocation": 6,
+    "flips_to_short": 4,
+    "slippage_high": 2,
+    "slippage_watch": 1,
+    "watchlist_act_now": 2,
+    "watchlist_no_fallback": 13,
+    "assessed_lines": 15
+  }
+}
