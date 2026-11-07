@@ -355,16 +355,19 @@ as the Tier A order decision in one of its three evaluation runs and
 the shortage escalation in the other two; §7 precedence favours the
 shortage row, and a future prompt revision should pin that harder.
 
-**Surfaces.** A separate V2 planner (`app/planner_v2.py`,
-`docs/planner_v2.html`, its own data and decisions files — V1's are
-untouched) with the §7 gate enforced server-side (11-case validation
+**Surfaces.** The four web surfaces form two connected pairs, one
+per version: the V1 dashboard (`docs/dashboard.html`) links to the
+V1 planner (`docs/planner.html`) and back; the V2 dashboard
+(`docs/dashboard_v2.html`) links to the V2 planner
+(`docs/planner_v2.html`) and back; each pair also carries a small
+cross-version link to the other. The V2 planner
+(`app/planner_v2.py`, its own data and decisions files — V1's are
+untouched) enforces the §7 gate server-side (11-case validation
 matrix exercised live, including: no approve value on a short line,
 no HIGH decision without a recovery path, no released notification
 without the four verifications, no passive monitoring of a HIGH
-slippage line). The dashboard gained a "Cross-event & risk (V2)"
-section; the monitoring summary gained V2 sections. Everything is
-local: **nothing from V2 has been published**, and the V2 gate starts
-clean at 15 pending / 0 decided / 0 escalated.
+slippage line). The monitoring summary gained V2 sections. The V2
+gate starts clean at 15 pending / 0 decided / 0 escalated.
 
 ---
 
@@ -440,6 +443,7 @@ Project root: `~/workspace/mro-control-tower/`
 | `evals/build_planner_data_v2.py` / `evals/planner_data_v2.json` | V2 planner data (own file; V1's untouched) |
 | `app/planner_v2.py` / `app/planner_v2_page.py` | V2 planner screen (local server, §7 validation) + shared page template |
 | `build_planner_page_v2.py` / `docs/planner_v2.html` | Static V2 planner page |
+| `docs/dashboard_v2.html` | Static V2 dashboard page — the V2 planner's companion dashboard |
 | `monitoring/planner_decisions_v2.json` | V2 planner decision record (local only, not published) |
 | `build/build_log.md` | V2 build log — stage gates, test counts, measured API spend |
 

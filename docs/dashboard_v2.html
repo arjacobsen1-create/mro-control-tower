@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="author" content="Anahita Jacobsen" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="MRO Supply Chain Control Tower: Dashboard V2" />
+<meta property="og:description" content="V2 of the MRO Control Tower: cross-event allocation, PO slippage risk, an order-by watchlist and a two-clock horizon — evaluated at 18/20 on 20 new scenarios, with the V1 set at 10/10 as regression and a human planner deciding every line." />
+<meta property="og:url" content="https://arjacobsen1-create.github.io/mro-control-tower/dashboard_v2.html" />
+<meta property="og:image" content="https://arjacobsen1-create.github.io/mro-control-tower/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://arjacobsen1-create.github.io/mro-control-tower/og-image.png" />
+
+<link rel="icon" href="data:," />
+<title>MRO Control Tower — Dashboard V2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3f4f2; --surface:#ffffff; --surface2:#eef0ec; --ink:#131a1e; --muted:#5c686f; --faint:#8a959c;
+    --line:#dde1dc; --line2:#cbd2cc;
+    --navy:#1e3a5f; --navy2:#2a5480;
+    --ok:#177245; --ok-bg:#e2f2e7;
+    --po:#1d5fd1; --po-bg:#e2ebfb;
+    --transfer:#0e7a8a; --transfer-bg:#dcf2f4;
+    --alt:#6d4fc2; --alt-bg:#ebe6fb;
+    --short:#c62828; --short-bg:#fde7e5;
+    --insuff:#b45309; --insuff-bg:#fef0d3;
+    --amber:#e8a317;
+    --shadow:0 1px 2px rgba(18,36,46,.06),0 8px 24px rgba(18,36,46,.06);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0d1417; --surface:#162026; --surface2:#1c2a31; --ink:#e9eef0; --muted:#a3b0b7; --faint:#74848c;
+      --line:#2a3a41; --line2:#35474f;
+      --navy:#17334d; --navy2:#21455f;
+      --ok:#4ade80; --ok-bg:#143526;
+      --po:#7aaef5; --po-bg:#1a2f52;
+      --transfer:#4cc3d4; --transfer-bg:#123a41;
+      --alt:#b39df0; --alt-bg:#2d2350;
+      --short:#f87171; --short-bg:#4a1f1f;
+      --insuff:#fbbf24; --insuff-bg:#453311;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Barlow",system-ui,-apple-system,Segoe UI,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--po)}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 20px 56px}
+
+  /* ---------- Header ---------- */
+  header{background:var(--navy);color:#eef4f6;margin:0 calc(50% - 50vw);padding:28px max(20px,calc(50vw - 570px)) 26px;position:relative;overflow:hidden}
+  header::after{content:"";position:absolute;inset:auto -40px -70px auto;width:340px;height:180px;background:repeating-linear-gradient(90deg,transparent 0 34px,rgba(255,255,255,.045) 34px 35px);pointer-events:none}
+  .header-top{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between;position:relative;z-index:1}
+  .live-dot{display:inline-flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#b8ccd4}
+  .live-dot i{width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block;box-shadow:0 0 0 4px rgba(232,163,23,.18)}
+  .header-meta{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;color:#8fa8b3;text-transform:uppercase}
+  h1{font-family:"Barlow Condensed","Barlow",sans-serif;font-size:clamp(40px,6.5vw,64px);line-height:.95;letter-spacing:.01em;text-transform:uppercase;font-weight:700;margin:16px 0 10px;position:relative;z-index:1}
+  h1 span{color:var(--amber)}
+  .subtitle{max-width:720px;color:#c3d2d9;font-size:17px;line-height:1.55;margin:0;position:relative;z-index:1}
+  .subtitle strong{color:#fff;font-weight:600}
+  .meta-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;position:relative;z-index:1}
+  .meta-pills span{border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:13px;color:#dbe7eb;background:rgba(255,255,255,.06)}
+  .meta-pills b{color:#fff;font-weight:700}
+  .meta-pills code{font-family:"JetBrains Mono",monospace;font-size:12px;color:#ffd970}
+
+  /* ---------- KPI cards ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:-0;padding-top:22px}
+  .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 20px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--navy2)}
+  .kpi.green::before{background:var(--ok)} .kpi.amber::before{background:var(--amber)} .kpi.red::before{background:var(--short)}
+  .kpi-label{font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:700;line-height:1.35}
+  .kpi-value{font-size:52px;line-height:1;font-weight:800;letter-spacing:-.02em;margin:10px 0 6px;font-variant-numeric:tabular-nums}
+  .kpi-value small{font-size:24px;color:var(--muted);font-weight:600}
+  .kpi-sub{font-size:14px;color:var(--muted);line-height:1.45}
+  .kpi-sub strong{color:var(--ink)}
+
+  /* ---------- Sections ---------- */
+  section{margin-top:34px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .sec-num{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:700;color:var(--amber);background:var(--navy);border-radius:6px;padding:3px 8px;letter-spacing:.06em}
+  @media (prefers-color-scheme: dark){.sec-num{background:var(--amber);color:#1a1405}}
+  h2{font-family:"Barlow Condensed","Barlow",sans-serif;font-size:30px;line-height:1.05;text-transform:uppercase;letter-spacing:.02em;margin:0;font-weight:700}
+  .sec-lede{color:var(--muted);font-size:15.5px;max-width:780px;margin:4px 0 16px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid-donut{display:grid;grid-template-columns:300px 1fr;gap:8px;align-items:center}
+
+  /* Eval cards */
+  .eval-card{padding:20px}
+  .eval-card h3{margin:0 0 2px;font-size:17px;font-weight:700}
+  .eval-card .when{font-size:13px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+  .eval-score{display:flex;align-items:baseline;gap:10px;margin:14px 0 4px}
+  .eval-score .big{font-size:46px;font-weight:800;line-height:1}
+  .pass-badge{background:var(--ok-bg);color:var(--ok);font-weight:800;font-size:12px;letter-spacing:.08em;padding:4px 10px;border-radius:999px;text-transform:uppercase}
+  .token-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  .token-row div b{display:block;font-size:19px;font-variant-numeric:tabular-nums}
+  .token-row div span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+
+  /* Table */
+  .table-wrap{overflow:hidden;border-radius:var(--radius)}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  thead th{text-align:left;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:13px 16px;background:var(--surface2);border-bottom:1px solid var(--line)}
+  tbody td{padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--surface2)}
+  .mono{font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:700}
+  .shortage{text-align:center;font-variant-numeric:tabular-nums;font-weight:700}
+  .pass-cell{font-weight:800;color:var(--ok);font-size:13px;letter-spacing:.05em;white-space:nowrap}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.02em;padding:4px 9px;border-radius:999px;white-space:nowrap}
+  .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+  .pill.ok{background:var(--ok-bg);color:var(--ok)}
+  .pill.po{background:var(--po-bg);color:var(--po)}
+  .pill.transfer{background:var(--transfer-bg);color:var(--transfer)}
+  .pill.alt{background:var(--alt-bg);color:var(--alt)}
+  .pill.short{background:var(--short-bg);color:var(--short)}
+  .pill.insuff{background:var(--insuff-bg);color:var(--insuff)}
+  .pill.plain{background:var(--surface2);color:var(--muted)}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+  .filters button{appearance:none;border:1px solid var(--line2);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+  .filters button[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+  @media (prefers-color-scheme: dark){.filters button[aria-pressed="true"]{background:var(--amber);color:#1a1405;border-color:var(--amber)}}
+  .filters button:focus-visible, a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+
+  /* Donut + bars */
+  .donut-box{padding:22px 10px 22px 22px;display:flex;flex-direction:column;align-items:center;gap:14px}
+  .donut{width:210px;height:210px;border-radius:50%;background:conic-gradient(var(--ok) 0 57.58%, var(--po) 57.58% 69.70%, var(--transfer) 69.70% 81.82%, var(--alt) 81.82% 84.85%, var(--short) 84.85% 93.94%, var(--insuff) 93.94% 100%);display:grid;place-items:center;flex:none}
+  .donut-hole{width:132px;height:132px;border-radius:50%;background:var(--surface);display:grid;place-items:center;text-align:center;padding:10px}
+  .donut-hole b{font-size:34px;line-height:1;display:block}
+  .donut-hole span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+  .exception-callout{background:var(--short-bg);border:1px solid var(--line);border-radius:10px;padding:10px 16px;text-align:center;font-size:14.5px;width:100%}
+  .exception-callout strong{color:var(--short);font-size:18px}
+  .bars{padding:22px 22px 22px 8px;display:flex;flex-direction:column;gap:13px}
+  .bar-row{display:grid;grid-template-columns:172px 1fr 64px;gap:12px;align-items:center}
+  .bar-row .blabel{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:7px;min-width:0}
+  .swatch{width:10px;height:10px;border-radius:3px;flex:none}
+  .track{height:16px;background:var(--surface2);border-radius:5px;overflow:hidden}
+  .fill{height:100%;border-radius:5px;width:0;transition:width .9s cubic-bezier(.2,.7,.2,1)}
+  .bar-row .bval{font-variant-numeric:tabular-nums;font-weight:700;text-align:right;font-size:15px}
+  .bar-row .bval small{color:var(--muted);font-weight:500;font-size:12.5px;display:block;line-height:1.1}
+
+  /* Runs / tokens */
+  .stat-list{padding:20px;display:flex;flex-direction:column;gap:16px}
+  .stat-line{display:flex;justify-content:space-between;gap:16px;align-items:baseline;border-bottom:1px dashed var(--line);padding-bottom:12px}
+  .stat-line:last-child{border-bottom:none;padding-bottom:0}
+  .stat-line .k{color:var(--muted);font-size:14.5px}
+  .stat-line .v{font-weight:800;font-size:21px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .stat-line .v small{font-size:13px;color:var(--muted);font-weight:600}
+  .token-split{display:flex;height:22px;border-radius:6px;overflow:hidden;margin-top:4px}
+  .token-split .in{background:var(--po)} .token-split .out{background:var(--amber)}
+  .token-legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13.5px;color:var(--muted);margin-top:8px}
+  .token-legend b{color:var(--ink)}
+
+  /* Grounding */
+  .ground-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .ground-card{padding:20px;text-align:left}
+  .ground-card .big{font-size:44px;font-weight:800;line-height:1}
+  .ground-card .big small{font-size:22px;color:var(--muted)}
+  .ground-card p{margin:8px 0 0;color:var(--muted);font-size:14.5px;line-height:1.5}
+  .ground-card p strong{color:var(--ink)}
+  .meter{height:10px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-top:14px}
+  .meter i{display:block;height:100%;background:var(--ok);border-radius:99px}
+
+  /* Human gate */
+  .gate{padding:22px}
+  .gate-counts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;text-align:center}
+  .gate-counts div{background:var(--surface2);border-radius:10px;padding:16px 8px}
+  .gate-counts b{display:block;font-size:36px;line-height:1;font-variant-numeric:tabular-nums}
+  .gate-counts span{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .dots{display:flex;gap:8px;justify-content:center;margin:20px 0 6px;flex-wrap:wrap}
+  .dots i{width:22px;height:22px;border-radius:50%;border:2.5px dashed var(--line2);background:transparent}
+  .gate-note{text-align:center;color:var(--muted);font-size:15px;max-width:640px;margin:10px auto 0}
+  .gate-note strong{color:var(--ink)}
+
+  /* Fixes */
+  .fix-card{padding:22px}
+  .fix-card h3{margin:0 0 8px;font-size:18px;display:flex;gap:10px;align-items:center}
+  .fix-num{width:28px;height:28px;border-radius:50%;background:var(--ok);color:#fff;display:inline-grid;place-items:center;font-size:15px;font-weight:800;flex:none}
+  .fix-card p{margin:0;color:var(--muted);font-size:15.5px;line-height:1.6}
+  .fix-card p strong{color:var(--ink)}
+  .before-after{display:flex;gap:10px;align-items:stretch;margin-top:14px;flex-wrap:wrap}
+  .ba{flex:1;min-width:180px;border-radius:10px;padding:12px 14px;font-size:14px}
+  .ba small{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:800;margin-bottom:4px}
+  .ba.before{background:var(--short-bg)} .ba.before small{color:var(--short)}
+  .ba.after{background:var(--ok-bg)} .ba.after small{color:var(--ok)}
+  .ba b{font-size:16px}
+  .arrow{align-self:center;font-size:20px;color:var(--faint);font-weight:700}
+
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:13.5px;line-height:1.6;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  footer .mono{font-size:12px}
+
+  @media (max-width:900px){
+    .kpis{grid-template-columns:1fr 1fr}
+    .grid-donut{grid-template-columns:1fr}
+    .donut-box{padding:22px}
+    .bars{padding:6px 22px 22px}
+    .ground-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:640px){
+    .grid-2{grid-template-columns:1fr}
+    .gate-counts{grid-template-columns:1fr 1fr}
+    /* Table -> stacked rows */
+    table,thead,tbody,tr,td{display:block;width:100%}
+    thead{position:absolute;left:-9999px}
+    tbody tr{padding:12px 4px;border-bottom:1px solid var(--line)}
+    tbody tr:last-child{border-bottom:none}
+    tbody td{border:none;padding:3px 16px}
+    tbody td:first-child{padding-top:2px}
+    .bar-row{grid-template-columns:118px 1fr 52px;gap:8px}
+    .bar-row .blabel{font-size:12px}
+    .kpi-value{font-size:44px}
+    .token-row{grid-template-columns:1fr 1fr 1fr;gap:6px}
+    .token-row div b{font-size:16px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .fill{transition:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="header-top">
+      <span class="live-dot"><i></i> Control Tower · Snapshot</span>
+      <span class="header-meta">V2 Evaluation · 6 Nov 2026</span>
+    </div>
+    <h1>MRO Control Tower <span>— Dashboard V2</span></h1>
+    <p style="font-size:16px;font-weight:600;letter-spacing:.05em;color:var(--amber);margin:0 0 14px;position:relative;z-index:1">Built by Anahita Jacobsen &middot; Weekend project</p>
+    <p class="subtitle">V2 looks <strong>across</strong> events, not just within one: parts are allocated between competing checks in start-date order, open POs are risk-rated per line, order-by dates are watched on two clocks, and forward events extend the horizon — with a human planner deciding every assessed line.</p>
+    <div class="meta-pills">
+      <span><b>Synthetic-data</b> prototype</span>
+      <span>Reference date pinned: <b>2 Nov 2026</b></span>
+      <span>Model: <code>claude-haiku-4-5</code></span>
+      <span><b>Read-only</b> — figures fixed at build</span>
+      <span><a href="planner_v2.html" style="color:var(--amber);font-weight:700;text-decoration:none">Open the V2 planner →</a></span>
+      <span><a href="dashboard.html" style="color:var(--amber);font-weight:700;text-decoration:none">← V1 dashboard</a></span>
+    </div>
+  </header>
+
+  <!-- Headline cards -->
+  <div class="kpis" role="region" aria-label="Headline figures">
+    <div class="kpi green">
+      <div class="kpi-label">V2 evaluation — new scenarios</div>
+      <div class="kpi-value">18<small>/20</small></div>
+      <div class="kpi-sub">Exact match on the fields each scenario tests — the two misses were <strong>run failures</strong>, not wrong verdicts (section 01)</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">Lines flipped to short</div>
+      <div class="kpi-value">4</div>
+      <div class="kpi-sub">Covered one event at a time; <strong>short once earlier events take their share</strong> of a shared pool</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">Slippage HIGH</div>
+      <div class="kpi-value">2</div>
+      <div class="kpi-sub">Plus <strong>1 on watch</strong> at the 21-day margin — risk attaches to the (line, PO) pair, not the PO alone</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">Human decisions pending</div>
+      <div class="kpi-value">15<small> of 15</small></div>
+      <div class="kpi-sub">V2 assessed lines waiting in the V2 planner — <strong>none decided yet</strong></div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <section aria-labelledby="s1">
+    <div class="sec-head"><span class="sec-num">01</span><h2 id="s1">Evaluation scorecard — V2</h2></div>
+    <p class="sec-lede">Ground truth for the 20 new scenarios was written first and reproduced <strong>20/20 by an independent pure-code recomputation before any agent run</strong>. Scoring is exact match per scenario on the fields that scenario tests. The 10 V1 scenarios were then re-run unchanged through the untouched V1 path as a regression set.</p>
+
+    <div class="grid-2">
+      <div class="card eval-card">
+        <h3>V2 evaluation — cross-event &amp; risk</h3>
+        <div class="when">2026-11-06 · 20 NEW SCENARIOS</div>
+        <div class="eval-score"><span class="big">18/20</span></div>
+        <div class="token-row">
+          <div><b>483,205</b><span>Input tokens</span></div>
+          <div><b>39,385</b><span>Output tokens</span></div>
+          <div><b>≈ $0.68</b><span>30-run pass cost</span></div>
+        </div>
+        <p style="color:var(--muted);font-size:13.5px;margin:12px 0 0">Token and cost figures are for the full 30-run pass (20 new + 10 regression). A V2 run costs roughly 3× a V1 run — nine tools return richer payloads across a longer tool loop.</p>
+      </div>
+      <div class="card eval-card">
+        <h3>V1 regression — unchanged</h3>
+        <div class="when">2026-11-06 · RE-RUN, V1 PATH UNTOUCHED</div>
+        <div class="eval-score"><span class="big">10/10</span><span class="pass-badge">✓ Regression pass</span></div>
+        <p style="color:var(--muted);font-size:14.5px;line-height:1.55;margin:10px 0 0">The V1 verdicts are undisturbed by the V2 layer, as designed. This is a regression check on V1, not a V2 result — V1 keeps its own <a href="dashboard.html">dashboard</a> and planner.</p>
+      </div>
+    </div>
+
+    <div style="height:14px"></div>
+    <div class="card eval-card">
+      <h3>The two misses — run failures, recorded as run</h3>
+      <p style="color:var(--muted);font-size:15px;line-height:1.6;margin:8px 0 0">R01 and X02a — both on E001 / P002 — <strong style="color:var(--ink)">failed as run errors and logged nothing</strong>; neither produced a wrong verdict. Root cause, found with the traceback intact: on a line with no shortage in either view, the horizon tool returns <span class="mono">recovery.feasible: null</span>, while the output format requires a boolean — the model intermittently copied the null instead of synthesising <span class="mono">true</span>, and validation rejected the run. The fix is in the agent layer only (the prompt rule stated plainly, validator asserts carrying messages, and one validation retry with the failure named — the project's Stage 6 pattern), verified with five consecutive clean runs on the affected line. <strong style="color:var(--ink)">The score of record stays 18/20</strong> — it is the honest record of the pass as run, not re-run until the number improved. Full analysis: <span class="mono">evals/evaluation_report.md</span>, V2 addendum.</p>
+    </div>
+
+    <div style="height:14px"></div>
+    <div class="card table-wrap">
+      <table aria-label="V2 evaluation scenarios">
+        <thead><tr><th scope="col">Scenario</th><th scope="col">Event / Part</th><th scope="col">Fields tested</th><th scope="col">Result</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">C01</td><td class="mono">E003 / P001</td><td>Allocated SHORT / 1 · CONTENDED_SHORT</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">C02</td><td class="mono">E006 / P016</td><td>Allocated SHORT / 3 · CONTENDED_SHORT</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">C03</td><td class="mono">E006 / P011</td><td>Allocated SHORT / 3 · CONTENDED_SHORT</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">C04</td><td class="mono">E006 / P006</td><td>Allocated SHORT / 1 · CONTENDED_SHORT</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">C05</td><td class="mono">E005 / P005</td><td>Allocated COVERED_BY_TRANSFER · CONTENDED_COVERED</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">C06</td><td class="mono">E002 / P016</td><td>Allocated = V1 · UNCONTENDED</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">R01</td><td class="mono">E001 / P002</td><td>Slippage tier SLIPPAGE_HIGH</td><td style="font-weight:800;color:var(--short);font-size:13px;letter-spacing:.05em;white-space:nowrap">✗ RUN ERROR</td></tr>
+          <tr><td class="mono">R02</td><td class="mono">E002 / P006</td><td>Slippage tier SLIPPAGE_HIGH</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">R03</td><td class="mono">E002 / P015</td><td>Slippage tier SLIPPAGE_WATCH</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">R04</td><td class="mono">E005 / P002</td><td>Slippage tier NONE (same PO as R01)</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">R05</td><td class="mono">E004 / P021</td><td>Slippage tier NONE (not load-bearing)</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">W01</td><td class="mono">E004 / P011</td><td>Watchlist ORDER_BY_CLOSING</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">W02</td><td class="mono">E006 / P011</td><td>Watchlist ORDER_BY_CLOSING</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">W03</td><td class="mono">E001 / P005</td><td>Watchlist NONE (the noise trap)</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">W04</td><td class="mono">E001 / P001</td><td>Watchlist NO_ORDERING_FALLBACK</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">W05</td><td class="mono">E003 / P003</td><td>Watchlist NO_ORDERING_FALLBACK</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">P01</td><td class="mono">E006 / P011</td><td>OK + ORDER_BY_CLOSING + procurement RAISED with documented need</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">X01</td><td class="mono">E001 / P001</td><td>No feasible recovery → defer + prepared draft</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr><td class="mono">X02a</td><td class="mono">E001 / P002</td><td>Draft prepared, checkpoint 2026-11-12, verifications outstanding</td><td style="font-weight:800;color:var(--short);font-size:13px;letter-spacing:.05em;white-space:nowrap">✗ RUN ERROR</td></tr>
+          <tr><td class="mono">X02b</td><td class="mono">E002 / P015</td><td>No customer escalation (paired control)</td><td class="pass-cell">✓ PASS</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section aria-labelledby="s2">
+    <div class="sec-head"><span class="sec-num">02</span><h2 id="s2">Cross-event allocation</h2></div>
+    <p class="sec-lede">V1 assessed each event on its own. V2 allocates shared stock and inbound quantities to events <strong>chronologically, in start-date order</strong> — so a part can only be promised once. 22 of the 33 demand lines draw on a part another event also needs; allocated, 6 lines change verdict.</p>
+    <div class="card gate">
+      <div class="gate-counts">
+        <div><b>10</b><span>Contended parts</span></div>
+        <div><b>6</b><span>Lines changed verdict</span></div>
+        <div><b style="color:var(--short)">4</b><span>Flipped to short</span></div>
+        <div><b>22</b><span>Lines on shared parts</span></div>
+      </div>
+      <p class="gate-note">The four lines that flip were covered in the single-event view and are <strong>short in the allocated view</strong> — the single-line view cannot see any of that.</p>
+    </div>
+    <div style="height:14px"></div>
+    <div class="card table-wrap">
+      <table aria-label="Lines flipped to short under allocation">
+        <thead><tr><th scope="col">Event / Part</th><th scope="col">Part</th><th scope="col">V1 view</th><th scope="col">Allocated view</th><th scope="col">Shortage</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">E003 / P001</td><td>Turbine blade set, stage 1</td><td><span class="pill ok">OK</span></td><td><span class="pill short">SHORT_UNCOVERED</span></td><td class="shortage">1</td></tr>
+          <tr><td class="mono">E006 / P006</td><td>Igniter plug</td><td><span class="pill ok">OK</span></td><td><span class="pill short">SHORT_UNCOVERED</span></td><td class="shortage">1</td></tr>
+          <tr><td class="mono">E006 / P011</td><td>Hydraulic filter element</td><td><span class="pill ok">OK</span></td><td><span class="pill short">SHORT_UNCOVERED</span></td><td class="shortage">3</td></tr>
+          <tr><td class="mono">E006 / P016</td><td>Steel brake unit</td><td><span class="pill transfer">COVERED_BY_TRANSFER</span></td><td><span class="pill short">SHORT_UNCOVERED</span></td><td class="shortage">3</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0">The other two changed lines stayed covered: E005 / P002 moved from COVERED_BY_PO to COVERED_BY_TRANSFER, and E005 / P005 from OK to COVERED_BY_TRANSFER. Pool conservation holds for every contended part — nothing is promised twice.</p>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section aria-labelledby="s3">
+    <div class="sec-head"><span class="sec-num">03</span><h2 id="s3">Slippage risk — per (line, PO)</h2></div>
+    <p class="sec-lede">Slippage attaches to the line, not the PO. Of the 6 (line, PO) pairs where a PO actually carries a line's coverage, 2 are HIGH risk and 1 is on watch at a 21-day margin (<span class="mono">WATCH_MARGIN_DAYS = 21</span> — three weeks being the minimum realistic window to react to a slipping PO). A pair only flags if the PO is <strong>load-bearing</strong> for that line and a repeat of its observed slip would break the margin.</p>
+    <div class="card table-wrap">
+      <table aria-label="Slippage-flagged (line, PO) pairs">
+        <thead><tr><th scope="col">Event / Part</th><th scope="col">Part</th><th scope="col">PO</th><th scope="col">Slip (days)</th><th scope="col">Margin (days)</th><th scope="col">Tier</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">E001 / P002</td><td>HPT seal kit</td><td class="mono">PO-1002</td><td class="shortage">7</td><td class="shortage">4</td><td><span class="pill short">SLIPPAGE_HIGH</span></td></tr>
+          <tr><td class="mono">E002 / P006</td><td>Igniter plug</td><td class="mono">PO-1011</td><td class="shortage">5</td><td class="shortage">3</td><td><span class="pill short">SLIPPAGE_HIGH</span></td></tr>
+          <tr><td class="mono">E002 / P015</td><td>Landing gear seal kit</td><td class="mono">PO-1007</td><td class="shortage">7</td><td class="shortage">11</td><td><span class="pill insuff">SLIPPAGE_WATCH</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0">The same PO-1002 is harmless on E005 / P002: its margin there is 32 days, a repeat slip does not break it, and the tier is NONE. And E004 / P021's PO slipped 8 days against a 19-day margin but is <strong>not load-bearing</strong> — the site's own stock covers that line with or without the PO — so it correctly never flags. Margin alone never raises a flag.</p>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section aria-labelledby="s4">
+    <div class="sec-head"><span class="sec-num">04</span><h2 id="s4">Order-by watchlist</h2></div>
+    <p class="sec-lede">The watchlist stays an exception surface. 31 of the 33 order-by dates have already passed, but only 15 lines are listed — the 18 lines covered with stock physically in place are correctly not listed, because a passed order-by date changes nothing for them.</p>
+    <div class="card gate">
+      <div class="gate-counts">
+        <div><b style="color:var(--insuff)">2</b><span>Tier A — act now</span></div>
+        <div><b>13</b><span>Tier B — no ordering fallback</span></div>
+        <div><b>15</b><span>Watchlist lines</span></div>
+        <div><b>18</b><span>Covered lines excluded</span></div>
+      </div>
+      <p class="gate-note"><strong>Tier A</strong> is where ordering soon is still a real, losable option. <strong>Tier B</strong> is where coverage rests on a plan — a PO that must arrive, a transfer that must be executed, an alternate that must be approved — and the passed order-by date means that if the plan fails there is <strong>no ordering fallback inside the event window</strong>. Tier B creates no decision of its own; the line is decided once, in the V2 planner.</p>
+    </div>
+    <div style="height:14px"></div>
+    <div class="card table-wrap">
+      <table aria-label="Tier A watchlist lines">
+        <thead><tr><th scope="col">Event / Part</th><th scope="col">Part</th><th scope="col">Order-by date</th><th scope="col">Standing</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">E004 / P011</td><td>Hydraulic filter element</td><td class="mono">2026-11-07</td><td>Covered by transfer; the window to order instead is closing</td></tr>
+          <tr><td class="mono">E006 / P011</td><td>Hydraulic filter element</td><td class="mono">2026-11-21</td><td>Fully OK on coverage, with a documented procurement need (scenario P01)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section aria-labelledby="s5">
+    <div class="sec-head"><span class="sec-num">05</span><h2 id="s5">Horizon — two clocks, forward events</h2></div>
+    <p class="sec-lede">With lead times of 450–540 days on the long-lead parts, a flag raised weeks before an event is a last-minute alarm, not an early warning. The horizon model therefore runs on two clocks — and it is also why forward events had to exist: on the original six events every line sits inside three months, so neither clock has anything to discriminate.</p>
+    <div class="grid-2">
+      <div class="card fix-card">
+        <h3>Clock 1 — order-by (procurement warning)</h3>
+        <p>Driven by each line's order-by date. <strong>Advisory</strong> when the order-by date is within 6 months, <strong>act-now</strong> inside 3 months, <strong>escalate</strong> when it has passed with no counting PO in place. This clock is what separates the 2 lines where an order decision is still losable from the 31 where that door has closed.</p>
+      </div>
+      <div class="card fix-card">
+        <h3>Clock 2 — event (coverage &amp; customer warning)</h3>
+        <p>Every long-lead line (lead time ≥ 180 days — 22 of the 33) gets a <strong>scheduled coverage review at 6 and 3 months</strong> before its event, covered or not, because a covered position can deteriorate. An exception or a customer advisory is raised <strong>only on an identified material risk condition</strong> — a post-allocation shortage, a contended shortage, a HIGH slippage pair, or counted-PO coverage with no ordering fallback.</p>
+      </div>
+    </div>
+    <div style="height:14px"></div>
+    <div class="card table-wrap">
+      <table aria-label="Forward events (V2 annex)">
+        <thead><tr><th scope="col">Event</th><th scope="col">Check</th><th scope="col">Tail</th><th scope="col">Window</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">E007</td><td>C-check</td><td class="mono">FIN-717</td><td class="mono">2027-04-05 → 2027-04-14</td></tr>
+          <tr><td class="mono">E008</td><td>Heavy maintenance visit</td><td class="mono">FIN-905</td><td class="mono">2027-10-04 → 2027-10-13</td></tr>
+          <tr><td class="mono">E009</td><td>Engine overhaul</td><td class="mono">FIN-822</td><td class="mono">2028-07-03 → 2028-07-12</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0">The three forward events are a purely additive annex — the original 33 lines and the V1 ground truth are untouched. Their lines populate every band of both clocks, including the two interaction cases: a line in a Clock 1 advisory / act-now band while covered on Clock 2, and a covered-now line carrying a Clock 1 act-now procurement action.</p>
+  </section>
+
+  <!-- SECTION 6 -->
+  <section aria-labelledby="s6">
+    <div class="sec-head"><span class="sec-num">06</span><h2 id="s6">The human gate — V2</h2></div>
+    <p class="sec-lede">The agent recommends. A person decides. These are the 15 assessed lines of the V2 evaluation, waiting in the V2 planner screen.</p>
+    <div class="card gate">
+      <div class="gate-counts">
+        <div><b>15</b><span>Assessed lines</span></div>
+        <div><b style="color:var(--ok)">0</b><span>Decided</span></div>
+        <div><b style="color:var(--short)">0</b><span>Escalated</span></div>
+        <div><b style="color:var(--insuff)">15</b><span>Pending</span></div>
+      </div>
+      <div class="dots" aria-label="15 decisions pending, shown as 15 empty circles">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <p class="gate-note"><strong>Decisions are made by the planner in the V2 planner screen</strong> — and the decision is on the recommended action, never on the shortage itself. A short or insufficient-data line offers escalation only; a SLIPPAGE_HIGH line cannot be passively monitored, and every HIGH decision records its recovery path. Customer notification is a <strong>prepared draft, never sent</strong>: release requires the planner to verify the affected event, the material shortfall, the recovery options and the proposed communication. And an OK verdict does not suppress a documented procurement need — a covered line can still carry its own order decision.</p>
+      <p class="gate-note" style="margin-top:18px"><a href="planner_v2.html" style="font-size:18px;font-weight:800">Open the V2 planner →</a></p>
+    </div>
+  </section>
+
+  <footer>
+    <div>MRO Control Tower — synthetic-data prototype. All V2 figures from the project's own records: <span class="mono">evals/evaluation_report.md</span> (V2 addendum) · <span class="mono">evals/results_v2_2026-11-06.json</span> · <span class="mono">evals/planner_data_v2.json</span> · <span class="mono">monitoring/summary.md</span> (V2 sections)</div>
+    <div class="mono">SNAPSHOT · 2026-11-06 · REF 2026-11-02</div>
+  </footer>
+
+</div>
+<footer style="max-width:1100px;margin:28px auto 10px;padding:16px 20px 22px;border-top:1px solid rgba(140,150,170,.35);font-size:13px;line-height:1.55;color:#8a94a6;text-align:center;">Built by Anahita Jacobsen. A weekend project: a governed AI prototype for maintenance supply chain planning. All data is synthetic and hypothetical; no real operational data is used.</footer>
+</body>
+</html>
