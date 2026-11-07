@@ -276,21 +276,119 @@ watchlist), and V3 adds a what-if planner. Both will use this
 status-specific decision model from the start — escalation-only for
 any line where coverage is short or unknown.
 
+### V2 — cross-event & risk (built 6 Nov 2026, local only, not yet published)
+
+Spec: `docs/v2-spec.md` — fully decided before the build (five
+decisions, D1–D5, each made individually), then built stage by stage
+(V2-0 to V2-7) with a verification gate per stage. Build log:
+`build/build_log.md`.
+
+**What V2 adds.** Three exception types the single-event view cannot
+produce, plus the horizon model that frames them:
+
+- **Competing demand (allocation).** Each part's pool is allocated to
+  events in start-date order (D1 — chronological; criticality cannot
+  order competing lines, it is a property of the part). 10 of the 21
+  parts are contended. Allocation changes 6 verdicts and flips 4
+  lines from covered to short — shortages that are invisible until
+  earlier events take their share.
+- **PO slippage risk.** Risk attaches to a (line, PO) pair, never to
+  a PO alone: a counted PO flags only if it is load-bearing for that
+  line in the allocated view, judged at a 21-day margin (D2 — three
+  weeks is the minimum realistic window to react to a slipping PO).
+  Result on current data: 2 HIGH, 1 WATCH, and both planted traps
+  correctly unflagged.
+- **Order-by watchlist.** Two tiers (D4): Tier A — act now (2 lines,
+  P011 at two events); Tier B — order-by passed with no ordering
+  fallback (13 lines). 31 of 33 order-by dates have passed, but the
+  watchlist holds 15 lines, not 31: covered-with-stock lines are not
+  listed. An exception surface, not a dump.
+- **Two clocks, never merged.** Clock 1 (order-by) warns procurement;
+  Clock 2 (event) warns on coverage/customer risk for long-lead lines,
+  with scheduled reviews at 6 and 3 months. On the original data
+  Clock 2 cannot discriminate (every event starts within 7 weeks;
+  lead times run to 540 days), so three forward events (Apr 2027,
+  Oct 2027, Jul 2028 — D5, a purely additive annex; V1 data
+  byte-identical apart from appended rows) exercise every band of
+  both clocks and their interactions.
+- **Governance carried through.** A SLIPPAGE_HIGH or contended-short
+  line gains a *Notify customer — at risk* decision with a
+  code-computed checkpoint date; the system prepares a draft and
+  never sends, and recording the notification as released requires
+  four named verifications in the decision record, enforced
+  server-side. Every HIGH-line decision records a recovery path. And
+  an OK verdict no longer suppresses a documented procurement need:
+  E006/P011 is green in the single-line view and carries a real
+  order decision, recorded as a procurement decision with its need
+  named — never as a shortage (§5.6; eval scenario P01).
+
+**Evaluation.** Ground truth for 20 new scenarios was written and
+reproduced 20/20 by an independent pure-code validator *before* any
+agent run (Stage V2-0 — the Stage 5 rule, held). The live evaluation
+scored **18/20** on the new scenarios and **10/10** on the V1 set
+re-run unchanged as regression. The two misses (R01, X02a) were run
+failures, not wrong answers: the agent produced no assessment at
+all. The cause was found during V2-6 — for a line that is not short,
+the horizon tool returns `recovery.feasible: null` (no shortage to
+recover from), and the model intermittently copied that null into a
+field the format requires to be a boolean. Fixed in the agent layer
+only (the prompt now states the rule plainly; the validator's checks
+all carry messages; a validation failure retries once with the
+failure named — the Stage 6 citation-retry pattern), and verified
+with five clean runs on the affected line. The recorded score stays
+18/20: it is the honest record of the pass as run, and the fix is
+verified by targeted runs rather than by re-running the evaluation
+until the number improves. Full analysis: `evals/evaluation_report.md`
+(V2 addendum).
+
+**What else went wrong, recorded the same way.** (1) The spec's cost
+estimate for the evaluation pass (US$0.33) was extrapolated from V1
+actuals and understated V2's richer tool payloads by ~2×; the pass
+measured US$0.68 and the build's total API spend was ≈US$0.85,
+reported as measured. (2) The first cut of the planner data counted
+"contended parts" by the per-line contention flag and got 9; the
+spec's definition is a demand fact (a part demanded by 2+ events),
+which gives 10 — P008/P009/P015 are contended parts whose lines are
+all uncontended because allocation changed nothing for them.
+(3) One unscored variance: E006/P011's recommended decision came out
+as the Tier A order decision in one of its three evaluation runs and
+the shortage escalation in the other two; §7 precedence favours the
+shortage row, and a future prompt revision should pin that harder.
+
+**Surfaces.** A separate V2 planner (`app/planner_v2.py`,
+`docs/planner_v2.html`, its own data and decisions files — V1's are
+untouched) with the §7 gate enforced server-side (11-case validation
+matrix exercised live, including: no approve value on a short line,
+no HIGH decision without a recovery path, no released notification
+without the four verifications, no passive monitoring of a HIGH
+slippage line). The dashboard gained a "Cross-event & risk (V2)"
+section; the monitoring summary gained V2 sections. Everything is
+local: **nothing from V2 has been published**, and the V2 gate starts
+clean at 15 pending / 0 decided / 0 escalated.
+
 ---
 
 ## 4. What remains
 
-All six stages are built and verified. What remains is use and upkeep,
-not construction:
+All six V1 stages and the seven V2 stages are built and verified.
+What remains is use and upkeep, not construction:
 
-- **Anahita's planner decisions.** The 10 assessed lines sit pending in
-  the planner screen; deciding on each line's recommended action (and
-  escalating the short ones) is the acceptance test of the human gate,
-  done by hand, whenever she chooses.
+- **Anahita's planner decisions.** The 10 V1 assessed lines and the
+  15 V2 assessed lines sit pending in their planner screens; deciding
+  on each line's recommended action (and escalating the short ones)
+  is the acceptance test of the human gate, done by hand, whenever
+  she chooses.
 - **README read-through.** The final README text is hers to read once
-  before the Stage 4/6 files are published — the same rule as Stage 5.
-- **Publication of the Stage 4/6 files** to GitHub via the established
-  route (code and docs only; no data, no logs, no decision file).
+  before new files are published — the same rule as Stage 5.
+- **Publication of the V2 files** to GitHub via the established route
+  (code and docs only; no data, no logs, no decision files) — when
+  she says so. Nothing from V2 is published yet.
+- **V3 — the what-if planner** (agreed direction, separate later
+  build): simulate a decision (expedite this PO, defer that event)
+  and recompute the allocated view, so a planner sees the
+  cross-event consequence before committing. It must build on V2's
+  allocated state, which is why it follows V2 rather than preceding
+  it.
 - **API key renewal.** The current Anthropic key expires ~1 Dec 2026;
   a fresh key is created the same way when runs start returning 401.
 
@@ -328,6 +426,22 @@ Project root: `~/workspace/mro-control-tower/`
 | `docs/step-by-step-guide.md` | Plain-language rebuild guide: every step, accounts to publication |
 | `README.md` | Dataset card (also the Hugging Face dataset page text) |
 | `repo_README.md` | Source of the GitHub repository's README.md |
+| `docs/v2-spec.md` | V2 spec — fully decided 2026-11-06 (D1–D5, Amendments A/B) |
+| `data/eval_scenarios_v2.csv` | V2 ground truth: 20 scenarios, written before any agent run |
+| `evals/validate_v2.py` | Independent pure-code recomputation of the V2 ground truth (20/20) |
+| `evals/check_horizon.py` | D5 gate: both clocks' bands + interaction cases on the forward annex |
+| `app/allocation.py` | Chronological allocation engine (pools, per-line allocated verdicts) |
+| `app/slippage.py` | (Line, PO) slippage risk — WATCH_MARGIN_DAYS = 21 |
+| `app/watchlist.py` | Two-tier order-by watchlist |
+| `app/horizon.py` | Two-clock horizon view, §5.6 procurement need, §4.6 notification, recovery feasibility |
+| `app/test_allocation.py` / `app/test_slippage.py` / `app/test_watchlist.py` / `app/test_tools_v2.py` | V2 engine + tool tests |
+| `evals/run_evaluation_v2.py` | V2 evaluation runner (20 new + 10 V1 regression) |
+| `evals/results_v2_2026-11-06.json` | Raw output of the V2 evaluation pass (18/20, regression 10/10) |
+| `evals/build_planner_data_v2.py` / `evals/planner_data_v2.json` | V2 planner data (own file; V1's untouched) |
+| `app/planner_v2.py` / `app/planner_v2_page.py` | V2 planner screen (local server, §7 validation) + shared page template |
+| `build_planner_page_v2.py` / `docs/planner_v2.html` | Static V2 planner page |
+| `monitoring/planner_decisions_v2.json` | V2 planner decision record (local only, not published) |
+| `build/build_log.md` | V2 build log — stage gates, test counts, measured API spend |
 
 Outside the project root:
 

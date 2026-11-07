@@ -442,9 +442,27 @@
     </div>
   </section>
 
+  <!-- SECTION 7 -->
+  <section aria-labelledby="s7">
+    <div class="sec-head"><span class="sec-num">07</span><h2 id="s7">Cross-event &amp; risk (V2)</h2></div>
+    <p class="sec-lede">V2 looks across events, not just within one: parts are allocated between competing checks in start-date order, open POs are risk-rated per line, and order-by dates are watched on two clocks. Every figure below is computed by the rule engines, not the model.</p>
+    <div class="card gate">
+      <div class="gate-counts">
+        <div><b>10</b><span>Contended parts</span></div>
+        <div><b style="color:var(--short)">4</b><span>Lines flipped to short</span></div>
+        <div><b style="color:var(--short)">2</b><span>Slippage HIGH</span></div>
+        <div><b style="color:var(--insuff)">15</b><span>Watchlist lines</span></div>
+      </div>
+      <p class="gate-note"><strong>Allocation changes the picture.</strong> 22 of the 33 demand lines draw on a part another event also needs. Allocated chronologically, 6 lines change verdict — and 4 that looked covered one event at a time are short once earlier events take their share (a turbine blade set, a fuel control unit, hydraulic filters, brake units). The single-line view cannot see any of that.</p>
+      <p class="gate-note"><strong>Slippage attaches to the line, not the PO.</strong> Of 6 (line, PO) pairs where a PO actually carries a line's coverage, 2 are HIGH risk and 1 is on watch at a 21-day margin — the same PO is load-bearing for one line and irrelevant to another, and only the load-bearing reading counts.</p>
+      <p class="gate-note"><strong>The watchlist stays an exception surface.</strong> 31 of 33 order-by dates have already passed, but only 15 lines are listed: 2 Tier A (act now — order-by closing, line covered) and 13 Tier B (passed with no ordering fallback). The 18 lines that are covered with stock in place are correctly not listed. Three forward events (Apr 2027, Oct 2027, Jul 2028) extend the horizon so both clocks — order-by and event — have something to discriminate.</p>
+      <p class="gate-note"><strong>Evaluation:</strong> the V2 agent scored <strong>18/20</strong> on the new scenarios, with the V1 set re-run unchanged at <strong>10/10</strong>. The two misses were run failures, not wrong verdicts — a schema field the model intermittently returned as null instead of a boolean; the root cause was found, fixed with a validation retry in the project's own Stage 6 pattern, and verified on the affected line. The score of record stays 18/20. The V2 planner screen starts clean: 15 assessed lines, 0 decided.</p>
+    </div>
+  </section>
+
   <footer>
-    <div>MRO Control Tower — synthetic-data prototype. All figures from the project's own records: <span class="mono">monitoring/summary.md</span> · <span class="mono">evals/results_2026-11-01.json</span> · <span class="mono">evals/results_stage6_2026-11-01.json</span> · <span class="mono">evals/planner_data.json</span></div>
-    <div class="mono">SNAPSHOT · 2026-11-01 · REF 2026-11-02</div>
+    <div>MRO Control Tower — synthetic-data prototype. All figures from the project's own records: <span class="mono">monitoring/summary.md</span> · <span class="mono">evals/results_2026-11-01.json</span> · <span class="mono">evals/results_stage6_2026-11-01.json</span> · <span class="mono">evals/planner_data.json</span> · <span class="mono">evals/results_v2_2026-11-06.json</span> · <span class="mono">evals/planner_data_v2.json</span></div>
+    <div class="mono">SNAPSHOT · 2026-11-01 · V2 SECTION 2026-11-06 · REF 2026-11-02</div>
   </footer>
 
 </div>
