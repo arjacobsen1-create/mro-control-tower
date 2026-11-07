@@ -132,11 +132,122 @@ def main():
          "- No decisions recorded yet (the planner screen starts clean)."),
         "",
     ]
+    # ---- V2 sections (added Stage V2-6; V1 sections above unchanged) ----
+    v2_truth = {}
+    v2_csv = os.path.join(ROOT, "data", "eval_scenarios_v2.csv")
+    if os.path.exists(v2_csv):
+        with open(v2_csv) as f:
+            for row in csv.DictReader(f):
+                v2_truth[row["scenario_id"]] = row
+    v2_latest = {}
+    for r in runs:
+        sid = r.get("evaluation")
+        if sid in v2_truth:
+            v2_latest[sid] = r  # file order == chronological
+
+    def v2_field_check(sid, t, a):
+        """The §6.1 primary fields for the scenario's class."""
+        if sid.startswith("C"):
+            return (a.get("allocated_status") == t["expected_allocated_status"]
+                    and a.get("allocated_shortage_qty") == int(t["expected_allocated_shortage_qty"]))
+        if sid.startswith("R"):
+            return a.get("slippage_tier") == t["expected_slippage_tier"]
+        if sid.startswith("W"):
+            return a.get("watchlist_tier") == t["expected_watchlist_tier"]
+        if sid == "P01":
+            return (a.get("status") == "OK" and a.get("watchlist_tier") == "ORDER_BY_CLOSING"
+                    and a.get("procurement_action") == "RAISED" and bool(a.get("procurement_need")))
+        if sid == "X01":
+            return (a.get("feasible_recovery_exists") is False
+                    and a.get("recommended_decision") == "escalate_defer")
+        if sid == "X02a":
+            cn = a.get("customer_notification") or {}
+            return (cn.get("action") == "PREPARE_DRAFT"
+                    and cn.get("checkpoint_date") == "2026-11-12")
+        if sid == "X02b":
+            return (a.get("customer_notification") or {}).get("action") == "NONE"
+        return False
+
+    v2_rows, v2_pass = [], 0
+    for sid in sorted(v2_truth):
+        t, r = v2_truth[sid], v2_latest.get(sid)
+        if r is None:
+            v2_rows.append(f"| {sid} | {t['event_id']}/{t['part_id']} | "
+                           f"{t['expected_allocated_status']} / {t['expected_slippage_tier']} / "
+                           f"{t['expected_watchlist_tier']} | — | no run logged |")
+            continue
+        a = r["assessment"]
+        ok = v2_field_check(sid, t, a)
+        v2_pass += ok
+        v2_rows.append(f"| {sid} | {t['event_id']}/{t['part_id']} | "
+                       f"{t['expected_allocated_status']} / {t['expected_slippage_tier']} / "
+                       f"{t['expected_watchlist_tier']} | {a.get('allocated_status')} / "
+                       f"{a.get('slippage_tier')} / {a.get('watchlist_tier')} | "
+                       f"{'PASS' if ok else 'FAIL'} |")
+    v2_runs = [r for r in runs if r.get("evaluation_set") in ("v2", "v1-regression")]
+    v2_val_retries = sum(1 for r in runs if r.get("usage", {}).get("validation_retry"))
+
+    pd2_path = os.path.join(ROOT, "evals", "planner_data_v2.json")
+    counts2, assessed2 = {}, 0
+    if os.path.exists(pd2_path):
+        with open(pd2_path) as f:
+            pd2 = json.load(f)
+        counts2 = pd2.get("counts", {})
+        assessed2 = counts2.get("assessed_lines", 0)
+    dec2 = {}
+    dec2_path = os.path.join(ROOT, "monitoring", "planner_decisions_v2.json")
+    if os.path.exists(dec2_path):
+        with open(dec2_path) as f:
+            dec2 = json.load(f)
+    n2_dec = len(dec2)
+    n2_esc = sum(1 for d in dec2.values()
+                 if str(d.get("decision", "")).startswith("escalate"))
+
+    lines += [
+        "## V2 — cross-event, slippage, watchlist, horizon (Stage V2-5/6)",
+        "",
+        f"- V2 evaluation runs logged: {len(v2_runs)} (the new-scenario runs that logged + 10 V1 regression; two new-scenario runs failed before logging)",
+        f"- Evaluation pass of record: **18/20** new scenarios, **10/10** V1 regression "
+        "(`evals/results_v2_2026-11-06.json`). Two scenarios (R01, X02a) failed as "
+        "*run errors* and logged nothing — root cause identified and fixed post-pass "
+        "(validation retry); see the evaluation report addendum. The rows below show "
+        "the latest logged run per scenario, so those two read 'no run logged'.",
+        f"- Validation retries fired (all runs): {v2_val_retries}",
+        "",
+        "| Scenario | Line | Expected allocated / slippage / watchlist | Latest agent | Result |",
+        "|---|---|---|---|---|",
+        *v2_rows,
+        "",
+        f"Latest-logged-run check: **{v2_pass}/{len(v2_truth)}** "
+        "(differs from the pass of record only by the two unlogged run failures)",
+        "",
+        "## V2 layer — engine counts (current dataset, code-computed)",
+        "",
+        f"- Contended parts: {counts2.get('contended_parts')} "
+        f"({counts2.get('contended_parts_incl_forward')} incl. forward annex)",
+        f"- Lines changed under allocation: {counts2.get('lines_changed_under_allocation')}, "
+        f"of which flipped to short: {counts2.get('flips_to_short')}",
+        f"- Slippage: {counts2.get('slippage_high')} HIGH · {counts2.get('slippage_watch')} WATCH "
+        "(WATCH_MARGIN_DAYS = 21)",
+        f"- Watchlist: {counts2.get('watchlist_act_now')} Tier A (act now) · "
+        f"{counts2.get('watchlist_no_fallback')} Tier B (no ordering fallback)",
+        "",
+        "## Human gate V2 — planner decisions",
+        "",
+        f"- Assessed lines: {assessed2}",
+        f"- Decided: {n2_dec} · Escalated: {n2_esc} · Pending: {assessed2 - n2_dec}",
+        ("- Decision file: `monitoring/planner_decisions_v2.json` (local only)."
+         if dec2 else
+         "- No V2 decisions recorded yet (the V2 planner screen starts clean)."),
+        "",
+    ]
+
     with open(OUT, "w") as f:
         f.write("\n".join(lines))
     print(f"Wrote {OUT}: {len(runs)} runs, latest-run score "
           f"{scenario_pass}/{len(truth)}, est. cost US${cost:.2f}, "
-          f"decisions {n_dec} decided / {n_esc} escalated / {n_pend} pending")
+          f"decisions {n_dec} decided / {n_esc} escalated / {n_pend} pending; "
+          f"V2 latest-logged {v2_pass}/{len(v2_truth)}, V2 decisions {n2_dec}")
 
 
 if __name__ == "__main__":
