@@ -87,6 +87,21 @@ not compute stock, dates, or lead times.
   one automatic retry), the evaluation was re-run fresh at **10/10**
   (≈ US$0.12), and `monitoring/summarize_runs.py` produces a run/cost/
   decision summary from the local logs.
+- V2 — cross-event & risk (built 6 Nov 2026, **local only, not yet
+  published**): chronological allocation across competing events (4 lines
+  flip from covered to short once earlier events draw on shared pools),
+  (line, PO) slippage risk at a 21-day margin (2 HIGH, 1 WATCH), a
+  two-tier order-by watchlist (2 act-now, 13 no-ordering-fallback), a
+  two-clock horizon model with three forward events, customer at-risk
+  notification as a governed, never-sent draft decision, and a
+  procurement decision that a green verdict cannot suppress when a need
+  is documented. Ground truth for 20 new scenarios was code-validated
+  before any agent run; the live evaluation scored **18/20** with the
+  V1 set at **10/10** as regression — the two misses were run failures
+  whose root cause was found, fixed and verified (see
+  `evals/evaluation_report.md`, V2 addendum). Spec: `docs/v2-spec.md`;
+  V2 planner: `app/planner_v2.py` / `docs/planner_v2.html` (own data and
+  decision files; V1's untouched).
 
 Visual dashboard (evaluation scores, verdict mix, runs and cost, human-gate
 status): `docs/dashboard.html` — open it in any browser.
@@ -116,6 +131,8 @@ python3 ingest/test_retrieval.py   # retrieval tests
 python3 app/test_tools.py          # rule-engine tests (no API key needed)
 python3 app/agent.py E001 P001     # one live assessment (needs an Anthropic API key)
 python3 app/planner.py             # planner screen at http://127.0.0.1:8765 (human decision gate)
+python3 app/planner_v2.py          # V2 planner at http://127.0.0.1:8766 (cross-event gate, §7 model)
+python3 evals/run_evaluation_v2.py # V2 evaluation: 20 new scenarios + 10 V1 regression (API key)
 python3 monitoring/summarize_runs.py  # run/cost/decision summary -> monitoring/summary.md
 ```
 
