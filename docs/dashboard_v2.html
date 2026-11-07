@@ -300,33 +300,43 @@
     </div>
 
     <div style="height:14px"></div>
+    <div class="filters" role="group" aria-label="Filter scenarios by class">
+      <button type="button" data-filter="all" aria-pressed="true">All 20 scenarios</button>
+      <button type="button" data-filter="contention" aria-pressed="false">Contention (6)</button>
+      <button type="button" data-filter="slippage" aria-pressed="false">Slippage (5)</button>
+      <button type="button" data-filter="watchlist" aria-pressed="false">Watchlist (5)</button>
+      <button type="button" data-filter="principle" aria-pressed="false">Principle (1)</button>
+      <button type="button" data-filter="escalation" aria-pressed="false">Escalation (3)</button>
+    </div>
+
     <div class="card table-wrap">
       <table aria-label="V2 evaluation scenarios">
         <thead><tr><th scope="col">Scenario</th><th scope="col">Event / Part</th><th scope="col">Fields tested</th><th scope="col">Result</th></tr></thead>
-        <tbody>
-          <tr><td class="mono">C01</td><td class="mono">E003 / P001</td><td>Allocated SHORT / 1 · CONTENDED_SHORT</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">C02</td><td class="mono">E006 / P016</td><td>Allocated SHORT / 3 · CONTENDED_SHORT</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">C03</td><td class="mono">E006 / P011</td><td>Allocated SHORT / 3 · CONTENDED_SHORT</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">C04</td><td class="mono">E006 / P006</td><td>Allocated SHORT / 1 · CONTENDED_SHORT</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">C05</td><td class="mono">E005 / P005</td><td>Allocated COVERED_BY_TRANSFER · CONTENDED_COVERED</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">C06</td><td class="mono">E002 / P016</td><td>Allocated = V1 · UNCONTENDED</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">R01</td><td class="mono">E001 / P002</td><td>Slippage tier SLIPPAGE_HIGH</td><td style="font-weight:800;color:var(--short);font-size:13px;letter-spacing:.05em;white-space:nowrap">✗ RUN ERROR</td></tr>
-          <tr><td class="mono">R02</td><td class="mono">E002 / P006</td><td>Slippage tier SLIPPAGE_HIGH</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">R03</td><td class="mono">E002 / P015</td><td>Slippage tier SLIPPAGE_WATCH</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">R04</td><td class="mono">E005 / P002</td><td>Slippage tier NONE (same PO as R01)</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">R05</td><td class="mono">E004 / P021</td><td>Slippage tier NONE (not load-bearing)</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">W01</td><td class="mono">E004 / P011</td><td>Watchlist ORDER_BY_CLOSING</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">W02</td><td class="mono">E006 / P011</td><td>Watchlist ORDER_BY_CLOSING</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">W03</td><td class="mono">E001 / P005</td><td>Watchlist NONE (the noise trap)</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">W04</td><td class="mono">E001 / P001</td><td>Watchlist NO_ORDERING_FALLBACK</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">W05</td><td class="mono">E003 / P003</td><td>Watchlist NO_ORDERING_FALLBACK</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">P01</td><td class="mono">E006 / P011</td><td>OK + ORDER_BY_CLOSING + procurement RAISED with documented need</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">X01</td><td class="mono">E001 / P001</td><td>No feasible recovery → defer + prepared draft</td><td class="pass-cell">✓ PASS</td></tr>
-          <tr><td class="mono">X02a</td><td class="mono">E001 / P002</td><td>Draft prepared, checkpoint 2026-11-12, verifications outstanding</td><td style="font-weight:800;color:var(--short);font-size:13px;letter-spacing:.05em;white-space:nowrap">✗ RUN ERROR</td></tr>
-          <tr><td class="mono">X02b</td><td class="mono">E002 / P015</td><td>No customer escalation (paired control)</td><td class="pass-cell">✓ PASS</td></tr>
+        <tbody id="scenarioBody">
+          <tr data-group="contention"><td class="mono">C01</td><td class="mono">E003 / P001</td><td>Allocated SHORT / 1 · CONTENDED_SHORT</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="contention"><td class="mono">C02</td><td class="mono">E006 / P016</td><td>Allocated SHORT / 3 · CONTENDED_SHORT</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="contention"><td class="mono">C03</td><td class="mono">E006 / P011</td><td>Allocated SHORT / 3 · CONTENDED_SHORT</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="contention"><td class="mono">C04</td><td class="mono">E006 / P006</td><td>Allocated SHORT / 1 · CONTENDED_SHORT</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="contention"><td class="mono">C05</td><td class="mono">E005 / P005</td><td>Allocated COVERED_BY_TRANSFER · CONTENDED_COVERED</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="contention"><td class="mono">C06</td><td class="mono">E002 / P016</td><td>Allocated = V1 · UNCONTENDED</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="slippage"><td class="mono">R01</td><td class="mono">E001 / P002</td><td>Slippage tier SLIPPAGE_HIGH</td><td style="font-weight:800;color:var(--short);font-size:13px;letter-spacing:.05em;white-space:nowrap">✗ RUN ERROR</td></tr>
+          <tr data-group="slippage"><td class="mono">R02</td><td class="mono">E002 / P006</td><td>Slippage tier SLIPPAGE_HIGH</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="slippage"><td class="mono">R03</td><td class="mono">E002 / P015</td><td>Slippage tier SLIPPAGE_WATCH</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="slippage"><td class="mono">R04</td><td class="mono">E005 / P002</td><td>Slippage tier NONE (same PO as R01)</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="slippage"><td class="mono">R05</td><td class="mono">E004 / P021</td><td>Slippage tier NONE (not load-bearing)</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="watchlist"><td class="mono">W01</td><td class="mono">E004 / P011</td><td>Watchlist ORDER_BY_CLOSING</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="watchlist"><td class="mono">W02</td><td class="mono">E006 / P011</td><td>Watchlist ORDER_BY_CLOSING</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="watchlist"><td class="mono">W03</td><td class="mono">E001 / P005</td><td>Watchlist NONE (the noise trap)</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="watchlist"><td class="mono">W04</td><td class="mono">E001 / P001</td><td>Watchlist NO_ORDERING_FALLBACK</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="watchlist"><td class="mono">W05</td><td class="mono">E003 / P003</td><td>Watchlist NO_ORDERING_FALLBACK</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="principle"><td class="mono">P01</td><td class="mono">E006 / P011</td><td>OK + ORDER_BY_CLOSING + procurement RAISED with documented need</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="escalation"><td class="mono">X01</td><td class="mono">E001 / P001</td><td>No feasible recovery → defer + prepared draft</td><td class="pass-cell">✓ PASS</td></tr>
+          <tr data-group="escalation"><td class="mono">X02a</td><td class="mono">E001 / P002</td><td>Draft prepared, checkpoint 2026-11-12, verifications outstanding</td><td style="font-weight:800;color:var(--short);font-size:13px;letter-spacing:.05em;white-space:nowrap">✗ RUN ERROR</td></tr>
+          <tr data-group="escalation"><td class="mono">X02b</td><td class="mono">E002 / P015</td><td>No customer escalation (paired control)</td><td class="pass-cell">✓ PASS</td></tr>
         </tbody>
       </table>
     </div>
+    <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0" id="filterNote">Showing all 20 scenarios from the V2 evaluation pass, 6 Nov 2026. R01 and X02a are recorded as run errors — see the card above the table.</p>
   </section>
 
   <!-- SECTION 2 -->
@@ -353,20 +363,41 @@
         <p style="color:var(--muted);font-size:13.5px;line-height:1.55;margin:12px 0 0">A different measure, not to be blended with the build total: the monitoring log holds <strong style="color:var(--ink)">54 runs</strong> across V1 and V2 at an estimated <strong style="color:var(--ink)">US$1.03</strong> — logged runs only. The $1.15 build total includes the estimated unlogged spend above, which by definition never enters the log.</p>
       </div>
     </div>
+    <div style="height:14px"></div>
+    <div class="card">
+      <div class="bars" style="padding:20px" id="runBars">
+        <div style="font-weight:700;font-size:15px;margin-bottom:2px">Run status mix — V2 evaluation runs, by allocated status</div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--short)"></i>Short — uncovered</span><div class="track"><div class="fill" style="background:var(--short)" data-w="100"></div></div><span class="bval">×8</span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--transfer)"></i>Covered by transfer</span><div class="track"><div class="fill" style="background:var(--transfer)" data-w="50.0"></div></div><span class="bval">×4</span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--po)"></i>Covered by PO</span><div class="track"><div class="fill" style="background:var(--po)" data-w="37.5"></div></div><span class="bval">×3</span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--ok)"></i>OK</span><div class="track"><div class="fill" style="background:var(--ok)" data-w="25.0"></div></div><span class="bval">×2</span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--alt)"></i>Covered by alternate</span><div class="track"><div class="fill" style="background:var(--alt)" data-w="12.5"></div></div><span class="bval">×1</span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--insuff)"></i>Insufficient data</span><div class="track"><div class="fill" style="background:var(--insuff)" data-w="0"></div></div><span class="bval">×0</span></div>
+        <p style="color:var(--muted);font-size:13.5px;line-height:1.55;margin:6px 0 0">18 of the 20 new-scenario runs returned an allocated status; R01 and X02a were run errors and returned none (section 01). Counted from the pass of record, <span class="mono">evals/results_v2_2026-11-06.json</span>.</p>
+      </div>
+    </div>
   </section>
 
   <!-- SECTION 3 -->
   <section aria-labelledby="s3">
     <div class="sec-head"><span class="sec-num">03</span><h2 id="s3">Cross-event allocation</h2></div>
     <p class="sec-lede">V1 assessed each event on its own. V2 allocates shared stock and inbound quantities to events <strong>chronologically, in start-date order</strong> — so a part can only be promised once. 22 of the 33 demand lines draw on a part another event also needs; allocated, 6 lines change verdict.</p>
-    <div class="card gate">
-      <div class="gate-counts">
-        <div><b>10</b><span>Contended parts</span></div>
-        <div><b>6</b><span>Lines changed verdict</span></div>
-        <div><b style="color:var(--short)">4</b><span>Flipped to short</span></div>
-        <div><b>22</b><span>Lines on shared parts</span></div>
+    <div class="card grid-donut">
+      <div class="donut-box">
+        <div class="donut" style="background:conic-gradient(var(--ok) 0 45.45%, var(--po) 45.45% 54.55%, var(--transfer) 54.55% 69.70%, var(--alt) 69.70% 72.73%, var(--short) 72.73% 93.94%, var(--insuff) 93.94% 100%)" role="img" aria-label="Donut chart of 33 demand lines in the allocated view: OK 15, covered by purchase order 3, covered by transfer 5, covered by alternate 1, short uncovered 7, insufficient data 2">
+          <div class="donut-hole"><div><b>33</b><span>Demand<br>lines</span></div></div>
+        </div>
+        <div class="exception-callout"><strong>9 exceptions</strong> — short or insufficient-data lines in the allocated view</div>
       </div>
-      <p class="gate-note">The four lines that flip were covered in the single-event view and are <strong>short in the allocated view</strong> — the single-line view cannot see any of that.</p>
+      <div class="bars" id="allocatedBars">
+        <div style="font-weight:700;font-size:15px;margin-bottom:2px">Verdict mix — allocated view, all 33 lines</div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--ok)"></i>OK</span><div class="track"><div class="fill" style="background:var(--ok)" data-w="100"></div></div><span class="bval">15<small>45.5%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--po)"></i>Covered by PO</span><div class="track"><div class="fill" style="background:var(--po)" data-w="20.0"></div></div><span class="bval">3<small>9.1%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--transfer)"></i>Covered by transfer</span><div class="track"><div class="fill" style="background:var(--transfer)" data-w="33.3"></div></div><span class="bval">5<small>15.2%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--alt)"></i>Covered by alternate</span><div class="track"><div class="fill" style="background:var(--alt)" data-w="6.7"></div></div><span class="bval">1<small>3.0%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--short)"></i>Short — uncovered</span><div class="track"><div class="fill" style="background:var(--short)" data-w="46.7"></div></div><span class="bval">7<small>21.2%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--insuff)"></i>Insufficient data</span><div class="track"><div class="fill" style="background:var(--insuff)" data-w="13.3"></div></div><span class="bval">2<small>6.1%</small></span></div>
+      </div>
     </div>
     <div style="height:14px"></div>
     <div class="card table-wrap">
@@ -380,7 +411,7 @@
         </tbody>
       </table>
     </div>
-    <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0">The other two changed lines stayed covered: E005 / P002 moved from COVERED_BY_PO to COVERED_BY_TRANSFER, and E005 / P005 from OK to COVERED_BY_TRANSFER. Pool conservation holds for every contended part — nothing is promised twice.</p>
+    <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0">The four lines that flip were covered in the single-event view and are short in the allocated view — the single-event view cannot see any of that. The other two changed lines stayed covered: E005 / P002 moved from COVERED_BY_PO to COVERED_BY_TRANSFER, and E005 / P005 from OK to COVERED_BY_TRANSFER. Pool conservation holds for every one of the 10 contended parts — nothing is promised twice.</p>
   </section>
 
   <!-- SECTION 4 -->
@@ -478,6 +509,37 @@
   </footer>
 
 </div>
+<script>
+(function(){
+  // Animate bars when they scroll into view (respects reduced motion via CSS transition override)
+  var fills = document.querySelectorAll('.fill');
+  function setWidths(scope){
+    (scope||document).querySelectorAll('.fill').forEach(function(f){ f.style.width = f.getAttribute('data-w') + '%'; });
+  }
+  // Fill bars shortly after load so they are always rendered, with the CSS transition providing the motion
+  setTimeout(function(){ setWidths(); }, 300);
+
+  // Scenario table filter
+  var buttons = document.querySelectorAll('.filters button');
+  var rows = document.querySelectorAll('#scenarioBody tr');
+  var note = document.getElementById('filterNote');
+  var labels = { all:'Showing all 20 scenarios from the V2 evaluation pass, 6 Nov 2026. R01 and X02a are recorded as run errors — see the card above the table.',
+    contention:'Showing the 6 contention scenarios — allocated verdicts when events compete for shared parts.',
+    slippage:'Showing the 5 slippage scenarios — risk tier per (line, PO) pair, including the two pairs that must not flag.',
+    watchlist:'Showing the 5 watchlist scenarios — order-by tiers, including the noise trap that must not list.',
+    principle:'Showing the 1 principle scenario — an OK verdict does not suppress a documented procurement need.',
+    escalation:'Showing the 3 escalation scenarios — customer-notification drafts, prepared and never sent, plus the paired control.' };
+  buttons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      buttons.forEach(function(b){ b.setAttribute('aria-pressed','false'); });
+      btn.setAttribute('aria-pressed','true');
+      var f = btn.getAttribute('data-filter');
+      rows.forEach(function(r){ r.style.display = (f==='all' || r.getAttribute('data-group')===f) ? '' : 'none'; });
+      if (note && labels[f]) note.textContent = labels[f];
+    });
+  });
+})();
+</script>
 <footer style="max-width:1100px;margin:28px auto 10px;padding:16px 20px 22px;border-top:1px solid rgba(140,150,170,.35);font-size:13px;line-height:1.55;color:#8a94a6;text-align:center;">Built by Anahita Jacobsen. A weekend project: a governed AI prototype for maintenance supply chain planning. All data is synthetic and hypothetical; no real operational data is used.</footer>
 </body>
 </html>
