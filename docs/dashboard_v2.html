@@ -294,9 +294,11 @@
     </div>
 
     <div style="height:14px"></div>
-    <div class="card eval-card">
-      <h3>The two misses — run failures, recorded as run</h3>
-      <p style="color:var(--muted);font-size:15px;line-height:1.6;margin:8px 0 0">R01 and X02a — both on E001 / P002 — <strong style="color:var(--ink)">failed as run errors and logged nothing</strong>; neither produced a wrong verdict. Root cause, found with the traceback intact: on a line with no shortage in either view, the horizon tool returns <span class="mono">recovery.feasible: null</span>, while the output format requires a boolean — the model intermittently copied the null instead of synthesising <span class="mono">true</span>, and validation rejected the run. The fix is in the agent layer only (the prompt rule stated plainly, validator asserts carrying messages, and one validation retry with the failure named — the project's Stage 6 pattern), verified with five consecutive clean runs on the affected line. <strong style="color:var(--ink)">The score of record stays 18/20</strong> — it is the honest record of the pass as run, not re-run until the number improved. Full analysis: <span class="mono">evals/evaluation_report.md</span>, V2 addendum.</p>
+    <div class="card stat-list">
+      <div class="stat-line"><span class="k">The two misses — R01 · X02a, both on E001 / P002</span><span class="v">2 <small>run errors</small></span></div>
+      <div class="stat-line"><span class="k">Wrong verdicts produced</span><span class="v">0</span></div>
+      <div class="stat-line"><span class="k">Score of record</span><span class="v">18/20 <small>held — not re-run</small></span></div>
+      <p style="color:var(--muted);font-size:13.5px;line-height:1.55;margin:12px 0 0">Cause, in one line: on a line short in neither view, the horizon tool returns <span class="mono">recovery.feasible: null</span> where the output format requires a boolean — the model intermittently copied the null, and validation rejected the run, loudly, with no verdict at all. Fixed in the agent layer only and verified on the line; the full account is section 10 and the addendum to <span class="mono">evals/evaluation_report.md</span>.</p>
     </div>
 
     <div style="height:14px"></div>
@@ -341,7 +343,30 @@
 
   <!-- SECTION 2 -->
   <section aria-labelledby="s2">
-    <div class="sec-head"><span class="sec-num">02</span><h2 id="s2">Runs &amp; cost — V2</h2></div>
+    <div class="sec-head"><span class="sec-num">02</span><h2 id="s2">Verdict mix — allocated view</h2></div>
+    <p class="sec-lede">The rule engines' verdict on every one of the <strong>33 demand lines</strong>, once shared parts are allocated between events in start-date order. In V1's single-event view of the same lines, <strong>19 read OK</strong>; allocated, <strong>15 do</strong> — and 9 lines are short or short of data, the ones that need a decision.</p>
+    <div class="card grid-donut">
+      <div class="donut-box">
+        <div class="donut" style="background:conic-gradient(var(--ok) 0 45.45%, var(--po) 45.45% 54.55%, var(--transfer) 54.55% 69.70%, var(--alt) 69.70% 72.73%, var(--short) 72.73% 93.94%, var(--insuff) 93.94% 100%)" role="img" aria-label="Donut chart of 33 demand lines in the allocated view: OK 15, covered by purchase order 3, covered by transfer 5, covered by alternate 1, short uncovered 7, insufficient data 2">
+          <div class="donut-hole"><div><b>33</b><span>Demand<br>lines</span></div></div>
+        </div>
+        <div class="exception-callout"><strong>9 exceptions</strong> — short or insufficient-data lines in the allocated view</div>
+      </div>
+      <div class="bars" id="allocatedBars">
+        <div style="font-weight:700;font-size:15px;margin-bottom:2px">All 33 lines, allocated view</div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--ok)"></i>OK</span><div class="track"><div class="fill" style="background:var(--ok)" data-w="100"></div></div><span class="bval">15<small>45.5%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--po)"></i>Covered by PO</span><div class="track"><div class="fill" style="background:var(--po)" data-w="20.0"></div></div><span class="bval">3<small>9.1%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--transfer)"></i>Covered by transfer</span><div class="track"><div class="fill" style="background:var(--transfer)" data-w="33.3"></div></div><span class="bval">5<small>15.2%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--alt)"></i>Covered by alternate</span><div class="track"><div class="fill" style="background:var(--alt)" data-w="6.7"></div></div><span class="bval">1<small>3.0%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--short)"></i>Short — uncovered</span><div class="track"><div class="fill" style="background:var(--short)" data-w="46.7"></div></div><span class="bval">7<small>21.2%</small></span></div>
+        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--insuff)"></i>Insufficient data</span><div class="track"><div class="fill" style="background:var(--insuff)" data-w="13.3"></div></div><span class="bval">2<small>6.1%</small></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section aria-labelledby="s3">
+    <div class="sec-head"><span class="sec-num">03</span><h2 id="s3">Runs &amp; cost — V2</h2></div>
     <p class="sec-lede">What the V2 evaluation pass cost, and what the whole V2 build cost — from the build record (<span class="mono">build/build_log.md</span>) and the monitoring log (<span class="mono">monitoring/summary.md</span>). V2 runs cost roughly 2–3× V1's: nine tools return richer payloads across a longer tool loop.</p>
     <div class="grid-2">
       <div class="card stat-list">
@@ -378,28 +403,10 @@
     </div>
   </section>
 
-  <!-- SECTION 3 -->
-  <section aria-labelledby="s3">
-    <div class="sec-head"><span class="sec-num">03</span><h2 id="s3">Cross-event allocation</h2></div>
+  <!-- SECTION 4 -->
+  <section aria-labelledby="s4">
+    <div class="sec-head"><span class="sec-num">04</span><h2 id="s4">Cross-event allocation</h2></div>
     <p class="sec-lede">V1 assessed each event on its own. V2 allocates shared stock and inbound quantities to events <strong>chronologically, in start-date order</strong> — so a part can only be promised once. 22 of the 33 demand lines draw on a part another event also needs; allocated, 6 lines change verdict.</p>
-    <div class="card grid-donut">
-      <div class="donut-box">
-        <div class="donut" style="background:conic-gradient(var(--ok) 0 45.45%, var(--po) 45.45% 54.55%, var(--transfer) 54.55% 69.70%, var(--alt) 69.70% 72.73%, var(--short) 72.73% 93.94%, var(--insuff) 93.94% 100%)" role="img" aria-label="Donut chart of 33 demand lines in the allocated view: OK 15, covered by purchase order 3, covered by transfer 5, covered by alternate 1, short uncovered 7, insufficient data 2">
-          <div class="donut-hole"><div><b>33</b><span>Demand<br>lines</span></div></div>
-        </div>
-        <div class="exception-callout"><strong>9 exceptions</strong> — short or insufficient-data lines in the allocated view</div>
-      </div>
-      <div class="bars" id="allocatedBars">
-        <div style="font-weight:700;font-size:15px;margin-bottom:2px">Verdict mix — allocated view, all 33 lines</div>
-        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--ok)"></i>OK</span><div class="track"><div class="fill" style="background:var(--ok)" data-w="100"></div></div><span class="bval">15<small>45.5%</small></span></div>
-        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--po)"></i>Covered by PO</span><div class="track"><div class="fill" style="background:var(--po)" data-w="20.0"></div></div><span class="bval">3<small>9.1%</small></span></div>
-        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--transfer)"></i>Covered by transfer</span><div class="track"><div class="fill" style="background:var(--transfer)" data-w="33.3"></div></div><span class="bval">5<small>15.2%</small></span></div>
-        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--alt)"></i>Covered by alternate</span><div class="track"><div class="fill" style="background:var(--alt)" data-w="6.7"></div></div><span class="bval">1<small>3.0%</small></span></div>
-        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--short)"></i>Short — uncovered</span><div class="track"><div class="fill" style="background:var(--short)" data-w="46.7"></div></div><span class="bval">7<small>21.2%</small></span></div>
-        <div class="bar-row"><span class="blabel"><i class="swatch" style="background:var(--insuff)"></i>Insufficient data</span><div class="track"><div class="fill" style="background:var(--insuff)" data-w="13.3"></div></div><span class="bval">2<small>6.1%</small></span></div>
-      </div>
-    </div>
-    <div style="height:14px"></div>
     <div class="card table-wrap">
       <table aria-label="Lines flipped to short under allocation">
         <thead><tr><th scope="col">Event / Part</th><th scope="col">Part</th><th scope="col">V1 view</th><th scope="col">Allocated view</th><th scope="col">Shortage</th></tr></thead>
@@ -411,13 +418,23 @@
         </tbody>
       </table>
     </div>
-    <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0">The four lines that flip were covered in the single-event view and are short in the allocated view — the single-event view cannot see any of that. The other two changed lines stayed covered: E005 / P002 moved from COVERED_BY_PO to COVERED_BY_TRANSFER, and E005 / P005 from OK to COVERED_BY_TRANSFER. Pool conservation holds for every one of the 10 contended parts — nothing is promised twice.</p>
+    <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0">The four lines that flip were covered in the single-event view and are short in the allocated view — the single-event view cannot see any of that. The other two changed lines stayed covered: E005 / P002 moved from COVERED_BY_PO to COVERED_BY_TRANSFER, and E005 / P005 from OK to COVERED_BY_TRANSFER. Pool conservation holds for every one of the 10 contended parts — nothing is promised twice. Decision precedence follows the allocated view: a line short under allocation enters the human gate (section 09) on its shortage row, whatever its single-event verdict said.</p>
   </section>
 
-  <!-- SECTION 4 -->
-  <section aria-labelledby="s4">
-    <div class="sec-head"><span class="sec-num">04</span><h2 id="s4">Slippage risk — per (line, PO)</h2></div>
+  <!-- SECTION 5 -->
+  <section aria-labelledby="s5">
+    <div class="sec-head"><span class="sec-num">05</span><h2 id="s5">Slippage risk — per (line, PO)</h2></div>
     <p class="sec-lede">Slippage attaches to the line, not the PO. Of the 6 (line, PO) pairs where a PO actually carries a line's coverage, 2 are HIGH risk and 1 is on watch at a 21-day margin (<span class="mono">WATCH_MARGIN_DAYS = 21</span> — three weeks being the minimum realistic window to react to a slipping PO). A pair only flags if the PO is <strong>load-bearing</strong> for that line and a repeat of its observed slip would break the margin.</p>
+    <div class="card gate">
+      <div class="gate-counts">
+        <div><b style="color:var(--short)">2</b><span>Slippage HIGH</span></div>
+        <div><b style="color:var(--insuff)">1</b><span>Slippage WATCH</span></div>
+        <div><b>6</b><span>Counted (line, PO) pairs</span></div>
+        <div><b>14</b><span>POs slipped — all 14</span></div>
+      </div>
+      <p class="gate-note">Every one of the 14 open POs has slipped against its promised date (by 4–15 days) — yet only 3 of the 6 counted pairs flag. Slip alone is not risk: the PO must carry the line's coverage, and a repeat slip must break what margin is left.</p>
+    </div>
+    <div style="height:14px"></div>
     <div class="card table-wrap">
       <table aria-label="Slippage-flagged (line, PO) pairs">
         <thead><tr><th scope="col">Event / Part</th><th scope="col">Part</th><th scope="col">PO</th><th scope="col">Slip (days)</th><th scope="col">Margin (days)</th><th scope="col">Tier</th></tr></thead>
@@ -431,9 +448,9 @@
     <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0">The same PO-1002 is harmless on E005 / P002: its margin there is 32 days, a repeat slip does not break it, and the tier is NONE. And E004 / P021's PO slipped 8 days against a 19-day margin but is <strong>not load-bearing</strong> — the site's own stock covers that line with or without the PO — so it correctly never flags. Margin alone never raises a flag.</p>
   </section>
 
-  <!-- SECTION 5 -->
-  <section aria-labelledby="s5">
-    <div class="sec-head"><span class="sec-num">05</span><h2 id="s5">Order-by watchlist</h2></div>
+  <!-- SECTION 6 -->
+  <section aria-labelledby="s6">
+    <div class="sec-head"><span class="sec-num">06</span><h2 id="s6">Order-by watchlist</h2></div>
     <p class="sec-lede">The watchlist stays an exception surface. 31 of the 33 order-by dates have already passed, but only 15 lines are listed — the 18 lines covered with stock physically in place are correctly not listed, because a passed order-by date changes nothing for them.</p>
     <div class="card gate">
       <div class="gate-counts">
@@ -456,17 +473,25 @@
     </div>
   </section>
 
-  <!-- SECTION 6 -->
-  <section aria-labelledby="s6">
-    <div class="sec-head"><span class="sec-num">06</span><h2 id="s6">Horizon — two clocks, forward events</h2></div>
+  <!-- SECTION 7 -->
+  <section aria-labelledby="s7">
+    <div class="sec-head"><span class="sec-num">07</span><h2 id="s7">Horizon — two clocks, forward events</h2></div>
     <p class="sec-lede">With lead times of 450–540 days on the long-lead parts, a flag raised weeks before an event is a last-minute alarm, not an early warning. The horizon model therefore runs on two clocks — and it is also why forward events had to exist: on the original six events every line sits inside three months, so neither clock has anything to discriminate.</p>
     <div class="grid-2">
       <div class="card fix-card">
         <h3>Clock 1 — order-by (procurement warning)</h3>
+        <div style="display:flex;gap:22px;flex-wrap:wrap;margin:2px 0 12px">
+          <span><b style="font-size:30px;line-height:1">≤ 6 mo</b><br><span style="color:var(--muted);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Advisory</span></span>
+          <span><b style="font-size:30px;line-height:1">≤ 3 mo</b><br><span style="color:var(--muted);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Act-now</span></span>
+        </div>
         <p>Driven by each line's order-by date. <strong>Advisory</strong> when the order-by date is within 6 months, <strong>act-now</strong> inside 3 months, <strong>escalate</strong> when it has passed with no counting PO in place. This clock is what separates the 2 lines where an order decision is still losable from the 31 where that door has closed.</p>
       </div>
       <div class="card fix-card">
         <h3>Clock 2 — event (coverage &amp; customer warning)</h3>
+        <div style="display:flex;gap:22px;flex-wrap:wrap;margin:2px 0 12px">
+          <span><b style="font-size:30px;line-height:1">6 &amp; 3 mo</b><br><span style="color:var(--muted);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Scheduled reviews</span></span>
+          <span><b style="font-size:30px;line-height:1">≥ 180 d</b><br><span style="color:var(--muted);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Long-lead line</span></span>
+        </div>
         <p>Every long-lead line (lead time ≥ 180 days — 22 of the 33) gets a <strong>scheduled coverage review at 6 and 3 months</strong> before its event, covered or not, because a covered position can deteriorate. An exception or a customer advisory is raised <strong>only on an identified material risk condition</strong> — a post-allocation shortage, a contended shortage, a HIGH slippage pair, or counted-PO coverage with no ordering fallback.</p>
       </div>
     </div>
@@ -484,9 +509,32 @@
     <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0">The three forward events are a purely additive annex — the original 33 lines and the V1 ground truth are untouched. Their lines populate every band of both clocks, including the two interaction cases: a line in a Clock 1 advisory / act-now band while covered on Clock 2, and a covered-now line carrying a Clock 1 act-now procurement action.</p>
   </section>
 
-  <!-- SECTION 7 -->
-  <section aria-labelledby="s7">
-    <div class="sec-head"><span class="sec-num">07</span><h2 id="s7">The human gate — V2</h2></div>
+  <!-- SECTION 8 -->
+  <section aria-labelledby="s8">
+    <div class="sec-head"><span class="sec-num">08</span><h2 id="s8">Grounding — answers tied to the record</h2></div>
+    <p class="sec-lede">A recommendation only counts if it can point to what it rests on. The counts below are taken from the pass of record (<span class="mono">evals/results_v2_2026-11-06.json</span>) — and before any agent ran, the ground truth itself was reproduced <strong>20/20 by an independent pure-code validator</strong> (<span class="mono">evals/validate_v2.py</span>): the agent is scored against code, not against itself.</p>
+    <div class="ground-grid">
+      <div class="card ground-card">
+        <div class="big">15<small> / 18</small></div>
+        <p><strong>Completed V2 runs cited at least one knowledge note</strong> — 83% of completions grounded their recommendation in a cited note.</p>
+        <div class="meter" aria-hidden="true"><i style="width:83%"></i></div>
+      </div>
+      <div class="card ground-card">
+        <div class="big">13<small> / 13</small></div>
+        <p><strong>Policy-driven verdicts cited their notes</strong> — every completed run landing on a short, transfer, alternate or insufficient-data verdict named the note behind it.</p>
+        <div class="meter" aria-hidden="true"><i style="width:100%"></i></div>
+      </div>
+      <div class="card ground-card">
+        <div class="big">2</div>
+        <p><strong>Citation safety-net retries fired</strong> (C03, W02) — the check caught a missing citation and both retried runs cited. The three non-citing completions (R05, W03, X02b) are the plain-OK / correctly-unflagged cases.</p>
+        <div class="meter" aria-hidden="true"><i style="width:100%;background:var(--amber)"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 9 -->
+  <section aria-labelledby="s9">
+    <div class="sec-head"><span class="sec-num">09</span><h2 id="s9">The human gate — V2</h2></div>
     <p class="sec-lede">The agent recommends. A person decides. These are the 15 assessed lines of the V2 evaluation, waiting in the V2 planner screen.</p>
     <div class="card gate">
       <div class="gate-counts">
@@ -503,12 +551,49 @@
     </div>
   </section>
 
+  <!-- SECTION 10 -->
+  <section aria-labelledby="s10">
+    <div class="sec-head"><span class="sec-num">10</span><h2 id="s10">Stage fixes — what V2 broke, and what changed</h2></div>
+    <p class="sec-lede">Three findings from the V2 pass and its design decisions — fixed in the open or held on the record, none smoothed over. Sources: <span class="mono">build/build_log.md</span> and the V2 addendum to <span class="mono">evals/evaluation_report.md</span>.</p>
+    <div class="grid-2">
+      <div class="card fix-card">
+        <h3><span class="fix-num">1</span> Run failures — loud, not wrong</h3>
+        <p>R01 and X02a produced <strong>no assessment at all</strong>. On E001 / P002 — short in neither view — <span class="mono">get_horizon</span> returns <span class="mono">recovery.feasible: null</span>, and the model intermittently copied that null into the boolean <span class="mono">feasible_recovery_exists</span> field, so validation rejected the run. The fault was in the agent layer only: the engines and the ground truth were never wrong.</p>
+        <div class="before-after">
+          <div class="ba before"><small>Before</small><b>Null copied into a boolean</b><br>Two runs crash in validation — no verdict, and nothing logged as an answer.</div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="ba after"><small>After — agent layer only</small><b>Prompt rule + validation retry</b><br>The null named in the prompt, asserts carrying messages, one retry with the failure named — verified 5/5 on E001 / P002. <strong>Score of record held at 18/20.</strong></div>
+        </div>
+      </div>
+      <div class="card fix-card">
+        <h3><span class="fix-num">2</span> One line, two primary decisions</h3>
+        <p>E006 / P011 was assessed three times (C03, W02, P01). Twice the recommended decision was <span class="mono">escalate_expedite</span>; once it was <span class="mono">place_order</span>. Both are real decisions on different dimensions of the same line — but §7 precedence puts the shortage row first, so <span class="mono">place_order</span> is the weaker reading. No scored field was affected, and the procurement action was raised in all three runs.</p>
+        <div class="before-after">
+          <div class="ba before"><small>Observed</small><b>place_order, 1 of 3 runs</b><br>The Tier A reading outran the shortage row on one run.</div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="ba after"><small>Position — held open</small><b>Variance on the record</b><br>Not resolved by re-running: a future prompt revision pins the primary-decision precedence harder.</div>
+        </div>
+      </div>
+    </div>
+    <div style="height:14px"></div>
+    <div class="card fix-card">
+      <h3><span class="fix-num">3</span> The D2 correction — 21 days changed nothing</h3>
+      <p>Widening the watch margin from the recommended 14 to the decided <strong>21 days</strong> (<span class="mono">WATCH_MARGIN_DAYS</span>) was expected to bring E004 / P021 — margin 19 — into the watch band. Recomputed in code, it changes <strong>zero flags</strong> on current data: E004's site stock (8) covers its requirement (1) with or without PO-1012, so that PO is <strong>not load-bearing</strong>, and the load-bearing condition excludes the pair at any threshold. The correction stands in the spec (§4.2 recomputation note); the wider band binds on future data.</p>
+      <div class="before-after">
+        <div class="ba before"><small>Assumption</small><b>21 days flags one more line</b><br>E004 / P021, margin 19, newly inside the wider watch band.</div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="ba after"><small>Recomputed in code</small><b>Same flags at 14 and 21 days</b><br>2 HIGH + 1 WATCH either way — the load-bearing condition, not the threshold, decides this pair.</div>
+      </div>
+    </div>
+  </section>
+
   <footer>
-    <div>MRO Control Tower — synthetic-data prototype. All V2 figures from the project's own records: <span class="mono">evals/evaluation_report.md</span> (V2 addendum) · <span class="mono">evals/results_v2_2026-11-06.json</span> · <span class="mono">evals/planner_data_v2.json</span> · <span class="mono">monitoring/summary.md</span> (V2 sections)</div>
+    <div>MRO Control Tower — synthetic-data prototype. All V2 figures from the project's own records: <span class="mono">evals/evaluation_report.md</span> (V2 addendum) · <span class="mono">evals/results_v2_2026-11-06.json</span> · <span class="mono">evals/planner_data_v2.json</span> · <span class="mono">build/build_log.md</span> · <span class="mono">monitoring/summary.md</span> (V2 sections)</div>
     <div class="mono">SNAPSHOT · 2026-11-06 · REF 2026-11-02</div>
   </footer>
 
 </div>
+
 <script>
 (function(){
   // Animate bars when they scroll into view (respects reduced motion via CSS transition override)
