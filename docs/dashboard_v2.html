@@ -331,7 +331,33 @@
 
   <!-- SECTION 2 -->
   <section aria-labelledby="s2">
-    <div class="sec-head"><span class="sec-num">02</span><h2 id="s2">Cross-event allocation</h2></div>
+    <div class="sec-head"><span class="sec-num">02</span><h2 id="s2">Runs &amp; cost — V2</h2></div>
+    <p class="sec-lede">What the V2 evaluation pass cost, and what the whole V2 build cost — from the build record (<span class="mono">build/build_log.md</span>) and the monitoring log (<span class="mono">monitoring/summary.md</span>). V2 runs cost roughly 2–3× V1's: nine tools return richer payloads across a longer tool loop.</p>
+    <div class="grid-2">
+      <div class="card stat-list">
+        <div class="stat-line"><span class="k">V2 evaluation pass</span><span class="v">30 <small>runs</small></span></div>
+        <div class="stat-line"><span class="k">Total tokens</span><span class="v">522,590</span></div>
+        <div>
+          <div class="token-split" role="img" aria-label="Token split: 483,205 input tokens and 39,385 output tokens"><div class="in" style="width:92.5%"></div><div class="out" style="width:7.5%"></div></div>
+          <div class="token-legend"><span><b>483,205</b> input tokens</span><span><b>39,385</b> output tokens</span></div>
+        </div>
+        <div class="stat-line"><span class="k">Evaluation pass cost</span><span class="v">≈ $0.68 <small>USD</small></span></div>
+        <div class="stat-line"><span class="k">Pricing basis</span><span class="v" style="font-size:15px">$1 / $5 <small>per 1M in / out</small></span></div>
+      </div>
+      <div class="card stat-list">
+        <div class="stat-line"><span class="k">Logged during the build</span><span class="v">$0.76</span></div>
+        <div class="stat-line"><span class="k">Measured dev / diagnostic runs</span><span class="v">$0.12</span></div>
+        <div class="stat-line"><span class="k">Measured subtotal</span><span class="v">$0.88</span></div>
+        <div class="stat-line"><span class="k">Estimated unlogged verification runs</span><span class="v">≈ $0.27</span></div>
+        <div class="stat-line"><span class="k">V2 build total</span><span class="v">≈ $1.15 <small>USD</small></span></div>
+        <p style="color:var(--muted);font-size:13.5px;line-height:1.55;margin:12px 0 0">A different measure, not to be blended with the build total: the monitoring log holds <strong style="color:var(--ink)">54 runs</strong> across V1 and V2 at an estimated <strong style="color:var(--ink)">US$1.03</strong> — logged runs only. The $1.15 build total includes the estimated unlogged spend above, which by definition never enters the log.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section aria-labelledby="s3">
+    <div class="sec-head"><span class="sec-num">03</span><h2 id="s3">Cross-event allocation</h2></div>
     <p class="sec-lede">V1 assessed each event on its own. V2 allocates shared stock and inbound quantities to events <strong>chronologically, in start-date order</strong> — so a part can only be promised once. 22 of the 33 demand lines draw on a part another event also needs; allocated, 6 lines change verdict.</p>
     <div class="card gate">
       <div class="gate-counts">
@@ -357,9 +383,9 @@
     <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0">The other two changed lines stayed covered: E005 / P002 moved from COVERED_BY_PO to COVERED_BY_TRANSFER, and E005 / P005 from OK to COVERED_BY_TRANSFER. Pool conservation holds for every contended part — nothing is promised twice.</p>
   </section>
 
-  <!-- SECTION 3 -->
-  <section aria-labelledby="s3">
-    <div class="sec-head"><span class="sec-num">03</span><h2 id="s3">Slippage risk — per (line, PO)</h2></div>
+  <!-- SECTION 4 -->
+  <section aria-labelledby="s4">
+    <div class="sec-head"><span class="sec-num">04</span><h2 id="s4">Slippage risk — per (line, PO)</h2></div>
     <p class="sec-lede">Slippage attaches to the line, not the PO. Of the 6 (line, PO) pairs where a PO actually carries a line's coverage, 2 are HIGH risk and 1 is on watch at a 21-day margin (<span class="mono">WATCH_MARGIN_DAYS = 21</span> — three weeks being the minimum realistic window to react to a slipping PO). A pair only flags if the PO is <strong>load-bearing</strong> for that line and a repeat of its observed slip would break the margin.</p>
     <div class="card table-wrap">
       <table aria-label="Slippage-flagged (line, PO) pairs">
@@ -374,9 +400,9 @@
     <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0">The same PO-1002 is harmless on E005 / P002: its margin there is 32 days, a repeat slip does not break it, and the tier is NONE. And E004 / P021's PO slipped 8 days against a 19-day margin but is <strong>not load-bearing</strong> — the site's own stock covers that line with or without the PO — so it correctly never flags. Margin alone never raises a flag.</p>
   </section>
 
-  <!-- SECTION 4 -->
-  <section aria-labelledby="s4">
-    <div class="sec-head"><span class="sec-num">04</span><h2 id="s4">Order-by watchlist</h2></div>
+  <!-- SECTION 5 -->
+  <section aria-labelledby="s5">
+    <div class="sec-head"><span class="sec-num">05</span><h2 id="s5">Order-by watchlist</h2></div>
     <p class="sec-lede">The watchlist stays an exception surface. 31 of the 33 order-by dates have already passed, but only 15 lines are listed — the 18 lines covered with stock physically in place are correctly not listed, because a passed order-by date changes nothing for them.</p>
     <div class="card gate">
       <div class="gate-counts">
@@ -399,9 +425,9 @@
     </div>
   </section>
 
-  <!-- SECTION 5 -->
-  <section aria-labelledby="s5">
-    <div class="sec-head"><span class="sec-num">05</span><h2 id="s5">Horizon — two clocks, forward events</h2></div>
+  <!-- SECTION 6 -->
+  <section aria-labelledby="s6">
+    <div class="sec-head"><span class="sec-num">06</span><h2 id="s6">Horizon — two clocks, forward events</h2></div>
     <p class="sec-lede">With lead times of 450–540 days on the long-lead parts, a flag raised weeks before an event is a last-minute alarm, not an early warning. The horizon model therefore runs on two clocks — and it is also why forward events had to exist: on the original six events every line sits inside three months, so neither clock has anything to discriminate.</p>
     <div class="grid-2">
       <div class="card fix-card">
@@ -427,9 +453,9 @@
     <p style="color:var(--muted);font-size:13.5px;margin:10px 2px 0">The three forward events are a purely additive annex — the original 33 lines and the V1 ground truth are untouched. Their lines populate every band of both clocks, including the two interaction cases: a line in a Clock 1 advisory / act-now band while covered on Clock 2, and a covered-now line carrying a Clock 1 act-now procurement action.</p>
   </section>
 
-  <!-- SECTION 6 -->
-  <section aria-labelledby="s6">
-    <div class="sec-head"><span class="sec-num">06</span><h2 id="s6">The human gate — V2</h2></div>
+  <!-- SECTION 7 -->
+  <section aria-labelledby="s7">
+    <div class="sec-head"><span class="sec-num">07</span><h2 id="s7">The human gate — V2</h2></div>
     <p class="sec-lede">The agent recommends. A person decides. These are the 15 assessed lines of the V2 evaluation, waiting in the V2 planner screen.</p>
     <div class="card gate">
       <div class="gate-counts">
