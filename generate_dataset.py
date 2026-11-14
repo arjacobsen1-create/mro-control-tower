@@ -111,6 +111,9 @@ EVENTS = [
     ("E004","FIN-715","A320","Heavy maintenance visit","YYC-H3","2026-12-07","2026-12-16","scheduled"),
     ("E005","FIN-820","B737-800","Engine shop visit","YUL-H1","2026-12-14","2026-12-22","scheduled"),
     ("E006","FIN-730","A321","C-check","YYZ-H2","2026-12-21","2026-12-30","scheduled"),
+    ("E007","FIN-717","A320","C-check","YYC-H3","2027-04-05","2027-04-14","scheduled"),
+    ("E008","FIN-905","A330-300","Heavy maintenance visit","YYZ-H2","2027-10-04","2027-10-13","scheduled"),
+    ("E009","FIN-822","B737-800","Engine overhaul","YUL-H1","2028-07-03","2028-07-12","scheduled"),
 ]
 ev_rows = [dict(zip(["event_id","tail_id","aircraft_model","check_type","site",
                      "planned_start","planned_end","status"], r)) for r in EVENTS]
@@ -124,6 +127,9 @@ DEMAND = [
     ("E004","P019",2), ("E004","P013",4), ("E004","P021",1), ("E004","P011",6), ("E004","P015",2),
     ("E005","P007",3), ("E005","P020",2), ("E005","P002",2), ("E005","P008",2), ("E005","P005",6),
     ("E006","P011",6), ("E006","P016",4), ("E006","P022",1), ("E006","P006",8), ("E006","P013",3),
+    ("E007","P007",1), ("E007","P004",2), ("E007","P005",6),
+    ("E008","P010",2), ("E008","P019",1), ("E008","P013",3),
+    ("E009","P001",1), ("E009","P002",1), ("E009","P003",4),
 ]
 dem_rows = [{"event_id": e, "part_id": p, "qty_required": q} for e, p, q in DEMAND]
 
@@ -143,6 +149,40 @@ EVAL = [
 ]
 eval_rows = [dict(zip(["scenario_id","event_id","part_id","expected_status",
                        "expected_shortage_qty","rationale"], r)) for r in EVAL]
+
+# ---------------------------------------------------------------- eval scenarios V2 (ground truth)
+# Cross-event allocation, PO slippage, order-by watchlist, procurement and
+# escalation scenarios from the V2 build. Generator re-synced 2026-11-14 so a
+# clean generate reproduces the published dataset exactly.
+EVAL_V2 = [
+    ('C01', 'E003', 'P001', 'OK', 0, 'SHORT_UNCOVERED', 1, 'CONTENDED_SHORT', 'NONE', 'NONE', 'NONE', 'YES', '2026-11-30', '', '', "Phantom stock: one physical unit of P001 (YUL-H1) counted by both E001 and E003 in V1. Chronological allocation: E001 (req 2, already short 1) consumes the unit; E003's entire site cover disappears. Depends on the partial-allocation-retained assumption (§3.2)."),
+    ('C02', 'E006', 'P016', 'COVERED_BY_TRANSFER', 0, 'SHORT_UNCOVERED', 3, 'CONTENDED_SHORT', 'NONE', 'NO_ORDERING_FALLBACK', 'NONE', 'YES', '2026-12-21', '', '', 'Phantom transfer: total P016 pool is 7 (3/2/2) against combined demand 10 (E002 6 + E006 4). E002 draws first; E006 ends 3 short after all network stock is committed.'),
+    ('C03', 'E006', 'P011', 'OK', 0, 'SHORT_UNCOVERED', 3, 'CONTENDED_SHORT', 'NONE', 'ORDER_BY_CLOSING', 'RAISED', 'YES', '2026-12-21', '', '', 'Three-event contention on P011: total pool 14 (YUL 4 + YYZ 6 + YYC 4) against aggregate demand 17 (E002 5 + E004 6 + E006 6). The last event absorbs the 3-unit deficit; no per-line view can see this.'),
+    ('C04', 'E006', 'P006', 'OK', 0, 'SHORT_UNCOVERED', 1, 'CONTENDED_SHORT', 'NONE', 'NONE', 'NONE', 'YES', '2026-12-21', '', '', "Phantom PO + stock: YYZ P006 stock (9) and PO-1011's balance were both counted in full by E002 and E006 in V1. After E002, PO-1011's remainder and all network stock (YUL 4 + YYC 2), E006 is 1 short. Allocated SHORT takes precedence over any slippage flag (§4.4)."),
+    ('C05', 'E005', 'P005', 'OK', 0, 'COVERED_BY_TRANSFER', 0, 'CONTENDED_COVERED', 'NONE', 'NONE', 'NONE', 'NO', '', '', '', "Reverse trap: contention is real (YUL P005 stock 20 vs combined YUL demand 22) but the network absorbs it — E005's last 2 units come by transfer. Contention is not shortage."),
+    ('C06', 'E002', 'P016', 'COVERED_BY_TRANSFER', 0, 'COVERED_BY_TRANSFER', 0, 'UNCONTENDED', 'NONE', 'NO_ORDERING_FALLBACK', 'NONE', 'NO', '', '', '', 'Control: E002 is first in priority order for P016, so allocation changes nothing for this line. Guards against an engine that shifts every contended verdict.'),
+    ('R01', 'E001', 'P002', 'COVERED_BY_PO', 0, 'COVERED_BY_PO', 0, 'UNCONTENDED', 'SLIPPAGE_HIGH', 'NO_ORDERING_FALLBACK', 'NONE', 'YES', '2026-11-12', '', '', 'PO-1002 is load-bearing for E001 (margin 4d) and has already slipped 7d; a repeat slip lands 2026-11-19, after the 2026-11-16 start. SLIPPAGE_HIGH; checkpoint = PO expected arrival 2026-11-12 (§4.6).'),
+    ('R02', 'E002', 'P006', 'COVERED_BY_PO', 0, 'COVERED_BY_PO', 0, 'UNCONTENDED', 'SLIPPAGE_HIGH', 'NO_ORDERING_FALLBACK', 'NONE', 'YES', '2026-11-20', '', '', 'PO-1011 load-bearing for E002 with the tightest margin in the data (3d) against an observed 5d slip; a repeat lands 2026-11-25, after the 2026-11-23 start. SLIPPAGE_HIGH; checkpoint 2026-11-20.'),
+    ('R03', 'E002', 'P015', 'COVERED_BY_PO', 0, 'COVERED_BY_PO', 0, 'UNCONTENDED', 'SLIPPAGE_WATCH', 'NO_ORDERING_FALLBACK', 'NONE', 'NO', '', '', '', 'PO-1007 slipped 7d but the 11d margin absorbs a repeat (lands 2026-11-19, before the start). Load-bearing and inside the decided 21-day watch band (D2): SLIPPAGE_WATCH, internal only — no customer notification (§4.6).'),
+    ('R04', 'E005', 'P002', 'COVERED_BY_PO', 0, 'COVERED_BY_TRANSFER', 0, 'CONTENDED_COVERED', 'NONE', 'NO_ORDERING_FALLBACK', 'NONE', 'NO', '', '', '', "Same PO as R01 (PO-1002, slip 7d) but E005's margin is 32d — outside the watch band, repeat slip absorbed. Risk belongs to the (line, PO) pair, not the PO; flagging the PO globally fails this."),
+    ('R05', 'E004', 'P021', 'OK', 0, 'OK', 0, 'UNCONTENDED', 'NONE', 'NONE', 'NONE', 'NO', '', '', '', 'PO-1012 is counted for E004 but not load-bearing: site stock (8) covers the requirement (1) with or without it. Presence of a PO is not dependence on it. Margin 19 is inside the decided 21-day band, so this also traps margin-only flagging (D2 note, §4.2).'),
+    ('W01', 'E004', 'P011', 'COVERED_BY_TRANSFER', 0, 'COVERED_BY_TRANSFER', 0, 'UNCONTENDED', 'NONE', 'ORDER_BY_CLOSING', 'RAISED', 'NO', '', '', '', 'Order-by 2026-11-07, 5 days after the reference date: the window is open and closing. Tier A. The P011 pool is shared with aggregate demand above the pool, so the §5.6 procurement need is documented for this line as well.'),
+    ('W02', 'E006', 'P011', 'OK', 0, 'SHORT_UNCOVERED', 3, 'CONTENDED_SHORT', 'NONE', 'ORDER_BY_CLOSING', 'RAISED', 'YES', '2026-12-21', '', '', 'Order-by 2026-11-21 (act-now). The same line is C03 in the allocated view: one line, two lenses, one decision (§5.4).'),
+    ('W03', 'E001', 'P005', 'OK', 0, 'OK', 0, 'UNCONTENDED', 'NONE', 'NONE', 'NONE', 'NO', '', '', '', 'Noise trap: order-by passed (2026-10-02) but the line is OK with 20 units on site. Stands for the 18 excluded OK lines (§5.3); listing it fails.'),
+    ('W04', 'E001', 'P001', 'SHORT_UNCOVERED', 1, 'SHORT_UNCOVERED', 1, 'UNCONTENDED', 'NONE', 'NO_ORDERING_FALLBACK', 'NONE', 'YES', '2026-11-16', '', '', 'Passed order-by on a SHORT_UNCOVERED AOG line: lead time 540 days means no ordering remedy exists inside the window. Tier B — listed for completeness; adds no new decision (§5.4).'),
+    ('W05', 'E003', 'P003', 'COVERED_BY_ALTERNATE', 0, 'COVERED_BY_ALTERNATE', 0, 'UNCONTENDED', 'NONE', 'NO_ORDERING_FALLBACK', 'NONE', 'NO', '', '', '', 'The covered-line case (§5.3): COVERED_BY_ALTERNATE with a passed order-by — coverage is a plan (alternate approval) with no ordering fallback if the plan fails. Tier B.'),
+    ('P01', 'E006', 'P011', 'OK', 0, 'SHORT_UNCOVERED', 3, 'CONTENDED_SHORT', 'NONE', 'ORDER_BY_CLOSING', 'RAISED', 'YES', '2026-12-21', '', '', "§5.6 dimension separation: single-line status OK and the order-by (2026-11-21) is in the act-now band; the procurement need is documented (P011 pool shared across three events, aggregate demand 17 > pool 14, not replenishable inside the horizon), so the procurement action is raised with its reason — and no shortage is raised on the procurement dimension (the allocated-view shortage is C03's question)."),
+    ('X01', 'E001', 'P001', 'SHORT_UNCOVERED', 1, 'SHORT_UNCOVERED', 1, 'UNCONTENDED', 'NONE', 'NO_ORDERING_FALLBACK', 'NONE', 'YES', '2026-11-16', 'NO', 'PREPARE_DRAFT', "Instantiated on E001/P001 (current short line). Every recovery lever is infeasible on the computed facts: expedite — PO-1001 expected 2026-12-05, after the event ends 2026-11-27, and a fresh order arrives 2028-04-26 (lead 540d); exchange/rotable — P001 has no approved alternate; transfer — the network pool is 1 unit, consumed by this line's own allocation, 0 remain; re-sequence — an AOG turbine blade set is the subject of the engine overhaul itself. Expected behaviour: state that no feasible recovery exists; recommend only Escalate — defer event and the §4.6 prepared-notification path."),
+    ('X02a', 'E001', 'P002', 'COVERED_BY_PO', 0, 'COVERED_BY_PO', 0, 'UNCONTENDED', 'SLIPPAGE_HIGH', 'NO_ORDERING_FALLBACK', 'NONE', 'YES', '2026-11-12', '', 'PREPARE_DRAFT', 'Instantiated on E001/P002 (SLIPPAGE_HIGH, as R01). The internal material risk crosses into customer impact: expected behaviour is the §4.6 path — a prepared draft notification (never sent by the system), checkpoint date 2026-11-12 (PO-1002 expected arrival), a recorded recovery path, and the four pre-release verifications named as outstanding for the human approver.'),
+    ('X02b', 'E002', 'P015', 'COVERED_BY_PO', 0, 'COVERED_BY_PO', 0, 'UNCONTENDED', 'SLIPPAGE_WATCH', 'NO_ORDERING_FALLBACK', 'NONE', 'NO', '', '', 'NONE', 'Instantiated on E002/P015 (SLIPPAGE_WATCH, as R03) — the paired control. The buffer absorbs a repeat slip, so the risk stays internal: monitor/expedite handling only, no draft notification, no customer advisory. Escalating this line to the customer fails the scenario exactly as missing X02a does.'),
+]
+eval_v2_rows = [dict(zip(["scenario_id","event_id","part_id","expected_status",
+                          "expected_shortage_qty","expected_allocated_status",
+                          "expected_allocated_shortage_qty","expected_contention",
+                          "expected_slippage_tier","expected_watchlist_tier",
+                          "expected_procurement_action","expected_notify_eligible",
+                          "expected_checkpoint_date","expected_feasible_recovery",
+                          "expected_customer_escalation","rationale"], r)) for r in EVAL_V2]
 
 # ---------------------------------------------------------------- maintenance history logs (filler, seeded)
 WORK = ["Overhaul","Inspection","Replacement","Repair","Borescope inspection"]
@@ -191,4 +231,5 @@ write("demand.csv", dem_rows, ["event_id","part_id","qty_required"])
 write("maintenance_logs.csv", log_rows, ["log_id","service_date","aircraft_model","site","work_type","component","parts_used","labor_hours","cost_usd","scheduled","status"])
 write("knowledge_notes.csv", note_rows, ["note_id","title","category","text"])
 write("eval_scenarios.csv", eval_rows, ["scenario_id","event_id","part_id","expected_status","expected_shortage_qty","rationale"])
+write("eval_scenarios_v2.csv", eval_v2_rows, ["scenario_id","event_id","part_id","expected_status","expected_shortage_qty","expected_allocated_status","expected_allocated_shortage_qty","expected_contention","expected_slippage_tier","expected_watchlist_tier","expected_procurement_action","expected_notify_eligible","expected_checkpoint_date","expected_feasible_recovery","expected_customer_escalation","rationale"])
 print("Done. As-of date: 2026-11-02")
