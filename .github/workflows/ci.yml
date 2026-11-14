@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Generate the synthetic dataset
+        run: python3 generate_dataset.py
+      - name: Validate dataset against ground truth
+        run: python3 validate_dataset.py
+      - name: Build the database
+        run: python3 ingest/ingest.py
+      - name: Retrieval tests
+        run: python3 ingest/test_retrieval.py
+      - name: Tool-layer tests (V1)
+        run: python3 app/test_tools.py
+      - name: Tool-layer tests (V2)
+        run: python3 app/test_tools_v2.py
+      - name: Allocation tests
+        run: python3 app/test_allocation.py
+      - name: Slippage tests
+        run: python3 app/test_slippage.py
+      - name: Watchlist tests
+        run: python3 app/test_watchlist.py
+      - name: V2 ground-truth recomputation
+        run: python3 evals/validate_v2.py
