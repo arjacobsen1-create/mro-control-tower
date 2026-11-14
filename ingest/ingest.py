@@ -22,14 +22,19 @@ TABLES = {  # table -> (csv file, expected rows)
     "parts": ("parts.csv", 24),
     "inventory": ("inventory.csv", 69),
     "purchase_orders": ("purchase_orders.csv", 14),
-    "maintenance_schedule": ("maintenance_schedule.csv", 6),
-    "demand": ("demand.csv", 33),
+    # V2 (Stage V2-3B): the forward-event annex (Amendment B / D5) added
+    # 3 events and 9 demand lines — purely additive, existing rows
+    # byte-identical. Counts below include the annex.
+    "maintenance_schedule": ("maintenance_schedule.csv", 9),
+    "demand": ("demand.csv", 42),
     "maintenance_logs": ("maintenance_logs.csv", 48),
     "knowledge_notes": ("knowledge_notes.csv", 12),
     "eval_scenarios": ("eval_scenarios.csv", 10),
+    "eval_scenarios_v2": ("eval_scenarios_v2.csv", 20),
 }
 INT_COLS = {"qty_on_hand", "qty_reserved", "reorder_point", "qty_ordered",
             "qty_received", "qty_required", "expected_shortage_qty",
+            "expected_allocated_shortage_qty",
             "lead_time_days", "unit_cost_usd", "cost_usd"}
 
 
