@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="author" content="Anahita Jacobsen" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="MRO Supply Chain Control Tower: V3 Scenario — Promised to the Wrong Airplane" />
+<meta property="og:description" content="V3 scenario: an AOG aircraft waits on a part that is in stock but committed to another aircraft. Three agents read a knowledge graph, a what-if slider shows both aircraft, and a human owns the gate." />
+<title>MRO Control Tower — V3 Scenario: Promised to the Wrong Airplane</title>
+<link rel="icon" href="data:," />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3f4f2; --surface:#ffffff; --surface2:#eef0ec; --ink:#131a1e; --muted:#5c686f; --faint:#8a959c;
+    --line:#dde1dc; --line2:#cbd2cc;
+    --navy:#1e3a5f; --navy2:#2a5480;
+    --teal:#0e7a8a; --teal-bg:#dcf2f4; --teal-deep:#0a5b67;
+    --ok:#177245; --ok-bg:#e2f2e7;
+    --po:#1d5fd1; --po-bg:#e2ebfb;
+    --short:#c62828; --short-bg:#fde7e5;
+    --insuff:#6d4fc2; --insuff-bg:#ebe6fb;
+    --shadow:0 1px 2px rgba(18,36,46,.06),0 8px 24px rgba(18,36,46,.06);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0d1417; --surface:#162026; --surface2:#1c2a31; --ink:#e9eef0; --muted:#a3b0b7; --faint:#74848c;
+      --line:#2a3a41; --line2:#35474f;
+      --navy:#17334d; --navy2:#21455f;
+      --teal:#4cc3d4; --teal-bg:#123a41; --teal-deep:#7fd6e0;
+      --ok:#4ade80; --ok-bg:#143526;
+      --po:#7aaef5; --po-bg:#1a2f52;
+      --short:#f87171; --short-bg:#4a1f1f;
+      --insuff:#b39df0; --insuff-bg:#2d2350;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Barlow",system-ui,-apple-system,Segoe UI,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--po)}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 20px 56px}
+
+  header{background:var(--navy);color:#eef4f6;margin:0 calc(50% - 50vw);padding:28px max(20px,calc(50vw - 570px)) 26px;position:relative;overflow:hidden}
+  header::after{content:"";position:absolute;inset:auto -40px -70px auto;width:340px;height:180px;background:repeating-linear-gradient(90deg,transparent 0 34px,rgba(255,255,255,.045) 34px 35px);pointer-events:none}
+  .header-top{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between;position:relative;z-index:1}
+  .live-dot{display:inline-flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#b8ccd4}
+  .live-dot i{width:8px;height:8px;border-radius:50%;background:var(--teal);display:inline-block;box-shadow:0 0 0 4px rgba(14,122,138,.18)}
+  .header-meta{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;color:#8fa8b3;text-transform:uppercase}
+  h1{font-family:"Barlow Condensed","Barlow",sans-serif;font-size:clamp(40px,6.5vw,64px);line-height:.95;letter-spacing:.01em;text-transform:uppercase;font-weight:700;margin:16px 0 10px;position:relative;z-index:1}
+  h1 span{color:var(--teal)}
+  .subtitle{max-width:760px;color:#c3d2d9;font-size:17px;line-height:1.55;margin:0;position:relative;z-index:1}
+  .subtitle strong{color:#fff;font-weight:600}
+  .meta-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;position:relative;z-index:1}
+  .meta-pills span{border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:13px;color:#dbe7eb;background:rgba(255,255,255,.06)}
+  .meta-pills b{color:#fff;font-weight:700}
+  .meta-pills code{font-family:"JetBrains Mono",monospace;font-size:12px;color:#8fdde8}
+  .back-links{margin-top:14px;position:relative;z-index:1;font-size:14px}
+  .back-links a{color:#8fdde8;margin-right:18px}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding-top:22px}
+  .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 20px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--navy2)}
+  .kpi.green::before{background:var(--ok)} .kpi.teal::before{background:var(--teal)} .kpi.red::before{background:var(--short)}
+  .kpi-label{font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:700;line-height:1.35}
+  .kpi-value{font-size:52px;line-height:1;font-weight:800;letter-spacing:-.02em;margin:10px 0 6px;font-variant-numeric:tabular-nums}
+  .kpi-value small{font-size:24px;color:var(--muted);font-weight:600}
+  .kpi-sub{font-size:14px;color:var(--muted);line-height:1.45}
+  .kpi-sub strong{color:var(--ink)}
+
+  section{margin-top:34px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .sec-num{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:700;color:#eef4f6;background:var(--teal-deep);border-radius:6px;padding:3px 8px;letter-spacing:.06em}
+  h2{font-family:"Barlow Condensed","Barlow",sans-serif;font-size:30px;line-height:1.05;text-transform:uppercase;letter-spacing:.02em;margin:0;font-weight:700}
+  .sec-lede{color:var(--muted);font-size:15.5px;max-width:780px;margin:4px 0 16px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .pad{padding:22px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+  .pill{display:inline-flex;align-items:center;gap:6px;font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.02em;padding:4px 9px;border-radius:999px;white-space:nowrap}
+  .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+  .pill.ok{background:var(--ok-bg);color:var(--ok)}
+  .pill.po{background:var(--po-bg);color:var(--po)}
+  .pill.transfer{background:var(--teal-bg);color:var(--teal-deep)}
+  .pill.short{background:var(--short-bg);color:var(--short)}
+  .pill.insuff{background:var(--insuff-bg);color:var(--insuff)}
+  .pill.plain{background:var(--surface2);color:var(--muted)}
+  .mono{font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:700}
+
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  thead th{text-align:left;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:13px 16px;background:var(--surface2);border-bottom:1px solid var(--line)}
+  tbody td{padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--surface2)}
+  .table-wrap{overflow:hidden;border-radius:var(--radius)}
+
+  /* Graph panel */
+  .graph-wrap{padding:10px 8px 4px}
+  .graph-wrap svg{width:100%;height:auto;display:block}
+  .g-node rect{fill:var(--surface2);stroke:var(--line2);stroke-width:1.5;rx:10}
+  .g-node.lit rect{fill:var(--teal-bg);stroke:var(--teal);stroke-width:2.5}
+  .g-node text{fill:var(--ink);font-family:"JetBrains Mono",monospace;font-weight:700;font-size:13px}
+  .g-node .gsub{fill:var(--muted);font-family:"Barlow",sans-serif;font-weight:500;font-size:11px}
+  .g-edge{stroke:var(--line2);stroke-width:2;fill:none}
+  .g-edge.lit{stroke:var(--teal);stroke-width:3.5}
+  .g-edge-label{fill:var(--muted);font-size:11.5px;font-family:"Barlow",sans-serif;font-weight:600}
+  .g-edge-label.lit{fill:var(--teal-deep);font-weight:700}
+  .graph-note{padding:0 22px 18px;color:var(--muted);font-size:14px}
+  .graph-note strong{color:var(--ink)}
+
+  /* Agent strip */
+  .agents{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
+  .agent{padding:18px;position:relative}
+  .agent .a-tag{font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .agent h3{margin:6px 0 2px;font-size:19px}
+  .agent p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.5}
+  .agent .a-state{margin-top:12px;font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:700}
+  .agent.waiting .a-state{color:var(--faint)}
+  .agent.working{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal-bg),var(--shadow)}
+  .agent.working .a-state{color:var(--teal-deep)}
+  .agent.done{border-color:var(--ok)}
+  .agent.done .a-state{color:var(--ok)}
+  .run-log{padding:18px 22px}
+  .run-log .rl-empty{color:var(--faint);font-size:15px;margin:0}
+  .run-step{display:flex;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line)}
+  .run-step:last-child{border-bottom:none;padding-bottom:0}
+  .run-step .who{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:700;color:var(--teal-deep);flex:none;width:74px;padding-top:2px}
+  .run-step p{margin:0;font-size:15.5px;line-height:1.55}
+  .btn{appearance:none;border:0;border-radius:10px;padding:12px 22px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;background:var(--teal);color:#fff}
+  .btn:hover{background:var(--teal-deep)}
+  .btn:disabled{opacity:.55;cursor:default}
+  .btn.ghost{background:var(--surface2);color:var(--ink);border:1px solid var(--line2)}
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+  .rec-card{margin-top:14px;padding:18px 22px;border-left:5px solid var(--teal)}
+  .rec-card h3{margin:0 0 6px;font-size:18px}
+  .rec-card p{margin:0 0 8px;color:var(--muted);font-size:15.5px;line-height:1.6}
+  .rec-card p strong{color:var(--ink)}
+
+  /* What-if */
+  .slider-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .slider-row input[type="range"]{flex:1;min-width:220px;accent-color:var(--teal);height:28px}
+  .slider-val{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:15px;white-space:nowrap}
+  .bars{padding:6px 22px 22px;display:flex;flex-direction:column;gap:16px}
+  .bar-row{display:grid;grid-template-columns:190px 1fr 96px;gap:12px;align-items:center}
+  .bar-row .blabel{font-size:14px;font-weight:600}
+  .bar-row .blabel small{display:block;color:var(--muted);font-weight:500;font-size:12.5px}
+  .track{height:18px;background:var(--surface2);border-radius:5px;overflow:hidden}
+  .fill{height:100%;border-radius:5px;width:0;transition:width .6s cubic-bezier(.2,.7,.2,1)}
+  .fill.a{background:var(--ok)}
+  .fill.b{background:var(--teal)}
+  .bar-row .bval{font-variant-numeric:tabular-nums;font-weight:700;text-align:right;font-size:15px}
+  .cost-note{padding:0 22px 18px;color:var(--muted);font-size:14.5px;line-height:1.55}
+  .cost-note strong{color:var(--ink)}
+  .cost-note .warn{color:var(--short);font-weight:700}
+
+  /* Gate */
+  .gate-line{padding:20px 22px;border-bottom:1px solid var(--line)}
+  .gate-line:last-child{border-bottom:none}
+  .gate-line .gl-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+  .gate-line h3{margin:0;font-size:17px}
+  .gate-line .gl-summary{color:var(--muted);font-size:15px;line-height:1.6;margin:0 0 12px}
+  .gate-line .gl-summary strong{color:var(--ink)}
+  .proc-badge{display:inline-flex;gap:6px;align-items:center;background:var(--short-bg);color:var(--short);border-radius:8px;padding:6px 10px;font-size:13.5px;font-weight:700;margin-bottom:12px}
+  .gate-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .gate-actions button{appearance:none;border:1px solid var(--line2);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 15px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+  .gate-actions button:hover{border-color:var(--teal);color:var(--teal-deep)}
+  .gate-actions button.approve{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+  .gate-actions button.esc{background:var(--short-bg);color:var(--short);border-color:var(--short)}
+  .gate-actions button:disabled{opacity:.5;cursor:default}
+  .gate-note{color:var(--muted);font-size:13.5px;line-height:1.5;margin:12px 0 0}
+  .gate-note strong{color:var(--short)}
+  .proc-check{display:flex;gap:8px;align-items:flex-start;font-size:14px;color:var(--muted);margin-top:12px}
+  .proc-check input{margin-top:3px}
+  .decided-line{margin-top:12px;background:var(--surface2);border-radius:8px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .decided-line .mono{font-size:12.5px}
+  .decided-line button{appearance:none;border:1px solid var(--line2);background:var(--surface);border-radius:999px;padding:4px 12px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+  .refusal{margin-top:12px;background:var(--short-bg);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--short);font-weight:600}
+  .log-table{margin-top:16px}
+  .log-table td{font-size:14px}
+
+  /* Architecture stack */
+  .stack{display:flex;flex-direction:column;gap:10px}
+  .layer{padding:16px 20px;display:flex;gap:16px;align-items:flex-start}
+  .layer .l-num{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:12px;color:#eef4f6;background:var(--teal-deep);border-radius:6px;padding:4px 9px;flex:none;margin-top:2px}
+  .layer h3{margin:0 0 3px;font-size:17px}
+  .layer p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.55}
+  .layer p strong{color:var(--ink)}
+  .layer .l-note{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--teal-deep);white-space:nowrap;font-weight:700}
+
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:13.5px;line-height:1.6;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  footer .mono{font-size:12px}
+
+  @media (max-width:900px){
+    .kpis{grid-template-columns:1fr 1fr}
+    .agents{grid-template-columns:1fr}
+    .grid-2{grid-template-columns:1fr}
+  }
+  @media (max-width:640px){
+    .grid-2{grid-template-columns:1fr}
+    .layer{flex-wrap:wrap}
+    .layer .l-note{white-space:normal;margin-left:0}
+    .bar-row{grid-template-columns:118px 1fr 52px;gap:8px}
+    .kpi-value{font-size:44px}
+    table,thead,tbody,tr,td{display:block;width:100%}
+    thead{position:absolute;left:-9999px}
+    tbody tr{padding:12px 4px;border-bottom:1px solid var(--line)}
+    tbody tr:last-child{border-bottom:none}
+    tbody td{border:none;padding:3px 16px}
+  }
+  @media (max-width:820px){
+    .agents{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .fill{transition:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="header-top">
+    <span class="live-dot"><i></i> Scenario · V3 · Synthetic data</span>
+    <span class="header-meta">MRO Control Tower · Reference date 2026-11-19</span>
+  </div>
+  <h1>Promised to the <span>Wrong Airplane</span></h1>
+  <p class="subtitle">The stock was there. It was just promised to the wrong airplane. <strong>Aircraft A is on the ground</strong> waiting for a part that is in stock — but committed to Aircraft B's planned work. Three agents read a knowledge graph, propose the move, and a human owns the gate.</p>
+  <div class="meta-pills">
+    <span>Scenario <code>V3-AOG-001</code></span>
+    <span>Agents <b>3</b> · Scout, Stock, Dispatch</span>
+    <span>Part <b>P101</b> · Fuel metering unit</span>
+    <span>A can wait <b>2 days</b> · New lead time <b>21 days</b></span>
+  </div>
+  <div class="back-links">
+    <a href="dashboard_v2.html">← V2 Dashboard</a>
+    <a href="planner_v2.html">V2 Planner</a>
+    <a href="dashboard.html">V1 Dashboard</a>
+  </div>
+</header>
+
+<div class="kpis">
+  <div class="kpi red"><div class="kpi-label">Aircraft grounded</div><div class="kpi-value">1</div><div class="kpi-sub"><strong>FIN-214</strong> · AOG · needs 3 × P101 by 2026-11-21</div></div>
+  <div class="kpi teal"><div class="kpi-label">Units on hand · all committed</div><div class="kpi-value">4 <small>/ 4</small></div><div class="kpi-sub">At <strong>YUL-H1</strong> · all committed to WO-2207 (Aircraft B)</div></div>
+  <div class="kpi"><div class="kpi-label">A's window vs lead time</div><div class="kpi-value">2 <small>vs 21 d</small></div><div class="kpi-sub">Expedite <strong>cannot</strong> help A. The only lever is the commitment.</div></div>
+  <div class="kpi green"><div class="kpi-label">Documented procurement need</div><div class="kpi-value">1</div><div class="kpi-sub">Order <strong>1 × P101 by 2026-11-23</strong> for Aircraft B — raised, not suppressed</div></div>
+</div>
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2 id="s1">The scenario — the data layer</h2></div>
+  <p class="sec-lede">One fixed story, every run. These are the raw tables. The agents never touch them directly — they read the knowledge graph in section 02.</p>
+  <div class="card table-wrap">
+    <table>
+      <thead><tr><th>What</th><th>Detail</th><th>Dates / numbers</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">FIN-214 · Aircraft A</td><td>AOG — grounded awaiting parts</td><td>Needs 3 × P101 by <strong>2026-11-21</strong> (2 days)</td></tr>
+        <tr><td class="mono">FIN-318 · Aircraft B</td><td>Planned C-check, work order WO-2207</td><td>Needs 3 × P101 by <strong>2026-12-14</strong></td></tr>
+        <tr><td class="mono">P101 · Fuel metering unit</td><td>Fits both aircraft (same fleet type)</td><td>Stock 4 · all committed to WO-2207</td></tr>
+        <tr><td class="mono">PO-3310</td><td>1 × P101 inbound</td><td>ETA <strong>2026-12-10</strong> — inside B's window, far outside A's</td></tr>
+        <tr><td class="mono">P102 · Ignition exciter</td><td>Records disagree: stores ledger 1, line count 3</td><td>INSUFFICIENT_DATA — needs a physical count</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2 id="s2">Knowledge graph — the context layer</h2></div>
+  <p class="sec-lede">The relationships the agents reason over. Watch the path light up as each agent works in section 03: the graph is what turns numbers into meaning — this part fits this aircraft, this stock is promised to that work order, this aircraft outranks that one.</p>
+  <div class="card">
+    <div class="graph-wrap"><svg id="graph" viewBox="0 -24 760 344" role="img" aria-label="Knowledge graph: Aircraft A grounded pending P101, stock committed to Aircraft B's work order, PO-3310 replenishing stock"></svg></div>
+    <p class="graph-note"><strong>Governed path:</strong> agents call the context layer only. No agent reads the raw tables in section 01 directly — the graph is the single doorway, the Integration Suite pattern from the course.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2 id="s3">The agent run — Scout, Stock, Dispatch</h2></div>
+  <p class="sec-lede">One event wakes the run. Each agent does one job, in order, and shows its reasoning as it happens. The graph above lights the path each agent is walking.</p>
+  <div class="agents" id="agents">
+    <div class="card agent waiting" data-agent="Scout">
+      <div class="a-tag">Agent 1 · Event watcher</div><h3>Scout</h3>
+      <p>Watches events. Detects the shortage on Aircraft A and wakes the run.</p>
+      <div class="a-state">WAITING</div>
+    </div>
+    <div class="card agent waiting" data-agent="Stock">
+      <div class="a-tag">Agent 2 · Graph reader</div><h3>Stock</h3>
+      <p>Reads the graph. Finds the commitment conflict and the alternatives.</p>
+      <div class="a-state">WAITING</div>
+    </div>
+    <div class="card agent waiting" data-agent="Dispatch">
+      <div class="a-tag">Agent 3 · Recommender</div><h3>Dispatch</h3>
+      <p>Builds the recommendation — with the cost to Aircraft B stated plainly.</p>
+      <div class="a-state">WAITING</div>
+    </div>
+  </div>
+  <div class="card run-log" id="run-log"><p class="rl-empty">Nothing has run yet. Press “Run the scenario” and watch the three agents work, in order.</p></div>
+  <div class="btn-row">
+    <button class="btn" id="run-btn">Run the scenario</button>
+    <button class="btn ghost" id="reset-btn" disabled>Reset run</button>
+  </div>
+  <div class="card rec-card" id="rec-card" hidden>
+    <h3>Recommendation — from Dispatch</h3>
+    <p id="rec-text"></p>
+    <p>The recommendation is the agents' output only. <strong>It commits nothing.</strong> The decision belongs to the human at the gate in section 05.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2 id="s4">What-if — move the commitment</h2></div>
+  <p class="sec-lede">Consequences first, decision second. Drag the commitment between the aircraft and watch both coverage bars move before anything is approved.</p>
+  <div class="card">
+    <div class="pad">
+      <div class="slider-row">
+        <label for="units" style="font-weight:700">Units committed to Aircraft A:</label>
+        <input type="range" id="units" min="0" max="4" step="1" value="0" />
+        <span class="slider-val" id="units-val">0 of 4 units → A</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn ghost" id="apply-rec">Apply the recommendation (3 units)</button>
+      </div>
+    </div>
+    <div class="bars">
+      <div class="bar-row">
+        <div class="blabel">Aircraft A · FIN-214<small>AOG · needs 3 by 2026-11-21 · PO too late</small></div>
+        <div class="track"><div class="fill a" id="fill-a"></div></div>
+        <div class="bval" id="val-a">0%</div>
+      </div>
+      <div class="bar-row">
+        <div class="blabel">Aircraft B · FIN-318<small>Needs 3 by 2026-12-14 · PO-3310 (1 unit) counts</small></div>
+        <div class="track"><div class="fill b" id="fill-b"></div></div>
+        <div class="bval" id="val-b">100%</div>
+      </div>
+    </div>
+    <p class="cost-note" id="cost-note">At 0 units to A, Aircraft A is uncovered and stays on the ground. Aircraft B is fully covered. <strong>Move the slider to see the trade.</strong></p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><h2 id="s5">The human gate</h2></div>
+  <p class="sec-lede">The decision is on the recommended action — never acceptance of a shortage. On a SHORT_UNCOVERED or INSUFFICIENT_DATA line, approval is not offered at all, and the engine refuses it even if asked directly. A documented procurement need stays documented whatever happens on other lines.</p>
+  <div class="card" id="gate"></div>
+  <div class="card" style="margin-top:14px">
+    <div class="pad">
+      <h3 style="margin:0 0 4px">Decision log</h3>
+      <p style="margin:0;color:var(--muted);font-size:14.5px">Every decision is logged with its time, and can be changed or undone. The log is saved in this browser only (same pattern as the V2 planner).</p>
+      <div id="log-empty" style="color:var(--faint);margin-top:14px;font-size:15px">No decisions yet — all three lines are awaiting the human.</div>
+      <div class="table-wrap log-table" id="log-wrap" hidden>
+        <table>
+          <thead><tr><th>Line</th><th>Decision</th><th>Decided at</th><th></th></tr></thead>
+          <tbody id="log-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><h2 id="s6">The architecture — BTP design, on a screen</h2></div>
+  <p class="sec-lede">This dashboard is the SAP Business AI Platform pattern, applied to a real MRO decision: events wake the agents, context tells them what things mean, guardrails decide what they are allowed to do, and a human owns the commitments.</p>
+  <div class="stack">
+    <div class="card layer"><span class="l-num">L5</span><div><h3>Human gate</h3><p>Approve or reject at the gate, logged with time, changeable. <strong>No agent commits stock.</strong> The human owns the commitment.</p></div><span class="l-note">YOU DECIDE</span></div>
+    <div class="card layer"><span class="l-num">L4</span><div><h3>Guardrails</h3><p>Approval never applies to a SHORT_UNCOVERED or INSUFFICIENT_DATA line. A documented procurement need is never suppressed by a covered line elsewhere (E006/P011 principle).</p></div><span class="l-note">GATE RULES</span></div>
+    <div class="card layer"><span class="l-num">L3</span><div><h3>Agents — Scout · Stock · Dispatch</h3><p>Three agents, one job each. Scout detects, Stock reads the graph, Dispatch recommends with the cost stated plainly.</p></div><span class="l-note">AGENT LAYER</span></div>
+    <div class="card layer"><span class="l-num">L2</span><div><h3>Knowledge graph — context layer</h3><p>Part fits aircraft. Stock is committed to a work order. AOG outranks planned. The graph is the <strong>only</strong> doorway the agents use.</p></div><span class="l-note">BUSINESS DATA CLOUD · SEMANTICS</span></div>
+    <div class="card layer"><span class="l-num">L1</span><div><h3>Data layer</h3><p>Stock positions, commitments, work orders, lead times, aircraft status. Small, fixed, synthetic — every run tells the same story.</p></div><span class="l-note">SOURCE DATA</span></div>
+  </div>
+</section>
+
+<footer>
+  <div>MRO Control Tower · V3 Scenario — designed and built by <strong>Anahita Jacobsen</strong>.<br/>Synthetic data only. The agents recommend; the human decides.</div>
+  <div class="mono">v3-engine.js · data/v3_scenario.json · tests: app/v3/test_v3.js</div>
+</footer>
+</div>
+
+<script src="v3-engine.js"></script>
+<script>
+(function () {
+  "use strict";
+  const V3 = window.MRO_V3;
+  const ctx = V3.createContext();
+  const $ = (id) => document.getElementById(id);
+
+  /* ---------- Knowledge graph rendering ---------- */
+  const NS = "http://www.w3.org/2000/svg";
+  const snap = ctx.graphSnapshot();
+  const nodeById = {};
+  snap.nodes.forEach((n) => (nodeById[n.id] = n));
+  const svg = $("graph");
+  function el(tag, attrs) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  const defs = el("defs", {});
+  defs.innerHTML = '<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a959c"/></marker>' +
+                   '<marker id="arr-lit" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e7a8a"/></marker>';
+  svg.appendChild(defs);
+  const NW = 150, NH = 52;
+  // edges first (under nodes)
+  snap.edges.forEach((edge) => {
+    const a = nodeById[edge.from], b = nodeById[edge.to];
+    let labelX = (a.x + b.x) / 2, labelY = (a.y + b.y) / 2 - 7;
+    if (edge.id === "e-priority") {
+      // Arc over the top so the priority edge (and its label) clears the P101 node.
+      const path = el("path", {
+        d: "M " + (a.x + 32) + " " + (a.y - 24) + " Q 380 -16 " + (b.x - 32) + " " + (b.y - 24),
+        class: "g-edge", "data-edge": edge.id, "marker-end": "url(#arr)",
+      });
+      svg.appendChild(path);
+      labelX = 380; labelY = -6; // above the arc, in the viewBox headroom
+    } else {
+      const line = el("line", {
+        x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: "g-edge",
+        "data-edge": edge.id, "marker-end": "url(#arr)",
+      });
+      svg.appendChild(line);
+      if (edge.id === "e-po") labelX += 14; // clear of the PO node
+    }
+    const t = el("text", {
+      x: labelX, y: labelY,
+      "text-anchor": "middle", class: "g-edge-label", "data-edge-label": edge.id,
+    });
+    if (edge.id === "e-grounded") {
+      // Two stacked lines: the full label is wider than the gap between nodes.
+      const words = edge.label.split(" ");
+      const t1 = el("tspan", { x: labelX, y: labelY - 8 });
+      t1.textContent = words[0];
+      const t2 = el("tspan", { x: labelX, dy: 14 });
+      t2.textContent = words.slice(1).join(" ");
+      t.appendChild(t1); t.appendChild(t2);
+    } else {
+      t.textContent = edge.label;
+    }
+    svg.appendChild(t);
+  });
+  snap.nodes.forEach((n) => {
+    const g = el("g", { class: "g-node", "data-node": n.id });
+    g.appendChild(el("rect", { x: n.x - NW / 2, y: n.y - NH / 2, width: NW, height: NH, rx: 10 }));
+    const t1 = el("text", { x: n.x, y: n.y - 2, "text-anchor": "middle" });
+    t1.textContent = n.label;
+    const t2 = el("text", { x: n.x, y: n.y + 15, "text-anchor": "middle", class: "gsub" });
+    t2.textContent = n.sub;
+    g.appendChild(t1); g.appendChild(t2);
+    svg.appendChild(g);
+  });
+  function lightGraph(edgeIds) {
+    document.querySelectorAll(".g-edge").forEach((e) => {
+      const on = edgeIds.includes(e.getAttribute("data-edge"));
+      e.classList.toggle("lit", on);
+      e.setAttribute("marker-end", on ? "url(#arr-lit)" : "url(#arr)");
+    });
+    document.querySelectorAll(".g-edge-label").forEach((e) =>
+      e.classList.toggle("lit", edgeIds.includes(e.getAttribute("data-edge-label"))));
+    const touched = new Set();
+    snap.edges.forEach((e) => {
+      if (edgeIds.includes(e.id)) { touched.add(e.from); touched.add(e.to); }
+    });
+    document.querySelectorAll(".g-node").forEach((g) =>
+      g.classList.toggle("lit", touched.has(g.getAttribute("data-node"))));
+  }
+
+  /* ---------- Agent run ---------- */
+  const runBtn = $("run-btn"), resetBtn = $("reset-btn"), logBox = $("run-log");
+  const STEP_MS = 1100;
+  let timers = [];
+  function setAgentState(name, state, label) {
+    const card = document.querySelector('.agent[data-agent="' + name + '"]');
+    card.classList.remove("waiting", "working", "done");
+    card.classList.add(state);
+    card.querySelector(".a-state").textContent = label;
+  }
+  runBtn.addEventListener("click", () => {
+    const { steps, recommendation } = V3.runScenario(ctx);
+    runBtn.disabled = true; resetBtn.disabled = true;
+    logBox.innerHTML = "";
+    $("rec-card").hidden = true;
+    lightGraph([]);
+    steps.forEach((step, i) => {
+      timers.push(setTimeout(() => {
+        if (i > 0) setAgentState(steps[i - 1].agent, "done", "DONE");
+        setAgentState(step.agent, "working", "WORKING…");
+        lightGraph(step.highlight);
+        const row = document.createElement("div");
+        row.className = "run-step";
+        row.innerHTML = '<span class="who"></span><p></p>';
+        row.querySelector(".who").textContent = step.agent.toUpperCase();
+        row.querySelector("p").textContent = step.message;
+        logBox.appendChild(row);
+      }, 200 + i * STEP_MS));
+    });
+    timers.push(setTimeout(() => {
+      setAgentState("Dispatch", "done", "DONE");
+      $("rec-text").innerHTML = "";
+      const strong = document.createElement("strong");
+      strong.textContent = recommendation.action.replaceAll("_", " ") + " — " +
+        recommendation.units + " units to " + recommendation.to_aircraft + ". ";
+      const span = document.createElement("span");
+      span.textContent = "Cost to Aircraft B: " + recommendation.cost_to_b;
+      $("rec-text").appendChild(strong); $("rec-text").appendChild(span);
+      $("rec-card").hidden = false;
+      resetBtn.disabled = false;
+    }, 200 + steps.length * STEP_MS));
+  });
+  resetBtn.addEventListener("click", () => {
+    timers.forEach(clearTimeout); timers = [];
+    ["Scout", "Stock", "Dispatch"].forEach((a) => setAgentState(a, "waiting", "WAITING"));
+    logBox.innerHTML = '<p class="rl-empty">Nothing has run yet. Press “Run the scenario” and watch the three agents work, in order.</p>';
+    $("rec-card").hidden = true;
+    lightGraph([]);
+    runBtn.disabled = false; resetBtn.disabled = true;
+  });
+
+  /* ---------- What-if slider ---------- */
+  const slider = $("units");
+  function renderWhatIf() {
+    const u = Number(slider.value);
+    const cov = ctx.coverage(u);
+    $("units-val").textContent = u + " of 4 units → A";
+    const fa = $("fill-a"), fb = $("fill-b");
+    fa.style.width = cov.a.pct + "%";
+    fb.style.width = cov.b.pct + "%";
+    // measure-after-write happens in verification; widths set via style here
+    fa.dataset.pct = cov.a.pct; fb.dataset.pct = cov.b.pct;
+    $("val-a").textContent = cov.a.pct + "%";
+    $("val-b").textContent = cov.b.pct + "%";
+    const note = $("cost-note");
+    if (u === 0) {
+      note.innerHTML = "At 0 units to A, Aircraft A is uncovered and stays on the ground. Aircraft B is fully covered. <strong>Move the slider to see the trade.</strong>";
+    } else if (cov.b.short > 0) {
+      note.innerHTML = "Moving <strong>" + u + " units</strong> to A: Aircraft A reaches <strong>" +
+        cov.a.pct + "%</strong>. <span class='warn'>Aircraft B falls to " + cov.b.pct + "% — short " +
+        cov.b.short + " unit.</span> That shortfall is real: it becomes gate line L-B and raises the documented procurement need (order 1 × P101 by 2026-11-23). The PO unit (ETA 2026-12-10) already counts toward B; it can never count toward A.";
+    } else {
+      note.innerHTML = "Moving <strong>" + u + " units</strong> to A: Aircraft A reaches <strong>" +
+        cov.a.pct + "%</strong> and Aircraft B stays at <strong>" + cov.b.pct +
+        "%</strong> (remaining stock plus the PO unit cover B in full).";
+    }
+  }
+  slider.addEventListener("input", renderWhatIf);
+  $("apply-rec").addEventListener("click", () => { slider.value = 3; renderWhatIf(); });
+  renderWhatIf();
+
+  /* ---------- Human gate ---------- */
+  const LSKEY = "mro_planner_v3_decisions";
+  const LINES = ctx.lines();
+  let DEC = {};
+  try { DEC = JSON.parse(localStorage.getItem(LSKEY) || "{}"); } catch (e) { DEC = {}; }
+  function persist() { try { localStorage.setItem(LSKEY, JSON.stringify(DEC)); } catch (e) {} }
+  const PILL = { COVERED_BY_TRANSFER: ["transfer", "COVERED BY TRANSFER"], COVERED_BY_PO: ["po", "COVERED BY PO"],
+    OK: ["ok", "OK"], SHORT_UNCOVERED: ["short", "SHORT UNCOVERED"], INSUFFICIENT_DATA: ["insuff", "INSUFFICIENT DATA"] };
+
+  function decide(lineId, decision, withProc) {
+    const line = LINES.find((l) => l.line_id === lineId);
+    const res = V3.Gate.decide(line, decision, { procurement_decision: withProc ? "place_order" : null });
+    const slot = document.getElementById("refusal-" + lineId);
+    if (!res.ok) { // defence in depth: the UI never offers these, the engine refuses them
+      slot.hidden = false; slot.textContent = res.reason; return;
+    }
+    slot.hidden = true;
+    DEC[lineId] = res.record;
+    persist(); renderGate();
+  }
+  function undo(lineId) { delete DEC[lineId]; persist(); renderGate(); }
+
+  function renderGate() {
+    const box = $("gate");
+    box.innerHTML = "";
+    LINES.forEach((line) => {
+      const [cls, label] = PILL[line.status] || ["plain", line.status];
+      const blocked = V3.Gate.allowedPrimary(line).every((a) => !V3.Gate.isApproval(a));
+      const div = document.createElement("div");
+      div.className = "gate-line";
+      let h = '<div class="gl-head"><h3>Line ' + line.line_id + " · " + line.aircraft_id + " · " + line.part_id +
+        '</h3><span class="pill ' + cls + '">' + label + "</span></div>";
+      h += '<p class="gl-summary">' + line.summary + "</p>";
+      if (line.procurement_need) {
+        h += '<div><span class="proc-badge">⚑ DOCUMENTED PROCUREMENT NEED — order ' +
+          line.procurement_need.qty + " × " + line.procurement_need.part_id + " by " +
+          line.procurement_need.order_by + "</span></div>";
+      }
+      const rec = DEC[line.line_id];
+      if (rec) {
+        h += '<div class="decided-line"><strong>Decided:</strong> <span>' + rec.label + "</span>" +
+          '<span class="mono">' + new Date(rec.decided_at).toLocaleString() + "</span>" +
+          (rec.procurement_decision ? '<span class="pill po">PROCUREMENT: PLACE THE ORDER</span>' : "") +
+          '<button data-undo="' + line.line_id + '">Undo / change</button></div>';
+      } else {
+        h += '<div class="gate-actions">';
+        V3.Gate.allowedPrimary(line).forEach((a) => {
+          const kind = V3.Gate.isApproval(a) ? "approve" : (a.startsWith("escalate") ? "esc" : "");
+          h += '<button class="' + kind + '" data-decide="' + line.line_id + "|" + a + '">' +
+            V3.Gate.LABELS[a] + "</button>";
+        });
+        h += "</div>";
+        if (line.procurement_need) {
+          h += '<label class="proc-check"><input type="checkbox" id="proc-' + line.line_id + '" checked />' +
+            "<span>Record the procurement decision alongside (place the order for " +
+            line.procurement_need.qty + " × " + line.procurement_need.part_id + " by " +
+            line.procurement_need.order_by + ").</span></label>";
+        }
+        if (blocked) {
+          h += '<p class="gate-note"><strong>Gate rule:</strong> no approval is offered on a ' +
+            line.status.replaceAll("_", " ") + " line. The decision is on the recommended action, never acceptance of the shortage.</p>";
+        }
+      }
+      h += '<div class="refusal" id="refusal-' + line.line_id + '" hidden></div>';
+      div.innerHTML = h;
+      box.appendChild(div);
+    });
+    box.querySelectorAll("[data-decide]").forEach((b) =>
+      b.addEventListener("click", () => {
+        const [lineId, decision] = b.getAttribute("data-decide").split("|");
+        const chk = document.getElementById("proc-" + lineId);
+        decide(lineId, decision, chk ? chk.checked : false);
+      }));
+    box.querySelectorAll("[data-undo]").forEach((b) =>
+      b.addEventListener("click", () => undo(b.getAttribute("data-undo"))));
+    renderLog();
+  }
+  function renderLog() {
+    const recs = Object.values(DEC).sort((a, b) => a.decided_at < b.decided_at ? -1 : 1);
+    $("log-empty").style.display = recs.length ? "none" : "";
+    $("log-wrap").hidden = !recs.length;
+    const body = $("log-body");
+    body.innerHTML = "";
+    recs.forEach((r) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = "<td class='mono'></td><td></td><td class='mono'></td><td></td>";
+      tr.children[0].textContent = r.line_id + " · " + r.status.replaceAll("_", " ");
+      tr.children[1].textContent = r.label + (r.procurement_decision ? " + place the order (" + r.procurement_need.qty + " × " + r.procurement_need.part_id + " by " + r.procurement_need.order_by + ")" : "");
+      tr.children[2].textContent = new Date(r.decided_at).toLocaleString();
+      const btn = document.createElement("button");
+      btn.className = "btn ghost"; btn.style.padding = "5px 12px"; btn.style.fontSize = "12.5px";
+      btn.textContent = "Undo";
+      btn.addEventListener("click", () => undo(r.line_id));
+      tr.children[3].appendChild(btn);
+      body.appendChild(tr);
+    });
+  }
+  renderGate();
+})();
+</script>
+</body>
+</html>
